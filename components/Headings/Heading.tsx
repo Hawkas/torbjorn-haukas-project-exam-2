@@ -1,52 +1,24 @@
-import { createStyles, CSSObject, Title } from '@mantine/core';
+import { Title, TitleProps } from '@mantine/core';
+import { useStyles, StyleProps } from './Heading.styles';
 
-interface StyleProps extends CSSObject {
-  smallFontSize?: string;
+interface HeadingProps extends StyleProps, TitleProps {
+  children?: React.ReactNode;
+  className?: 'displayH1' | 'primaryH1' | 'primaryH2' | 'primaryH3' | 'serifH2';
 }
 
-export const useStyles = createStyles(
-  (
-    theme,
-    {
-      fontSize,
-      color,
-      fontWeight,
-      fontFamily,
-      lineHeight,
-      letterSpacing,
-      smallFontSize,
-    }: StyleProps
-  ) => ({
-    title: {
-      color: color || theme.black,
-      fontSize: fontSize || undefined,
-      fontWeight: fontWeight || undefined,
-      lineHeight: lineHeight || 1.3,
-      fontFamily: fontFamily || undefined,
-      letterSpacing: letterSpacing,
-      [theme.fn.smallerThan('md')]: {
-        fontSize: smallFontSize || undefined,
-      },
-    },
-  })
-);
-
-// export function Heading(
-//   { fontSize, color, fontWeight, fontFamily, lineHeight, letterSpacing, smallFontSize }: StyleProps,
-//   content: string
-// ) {
-//   const { classes } = useStyles({
-//     fontSize,
-//     color,
-//     fontWeight,
-//     fontFamily,
-//     lineHeight,
-//     letterSpacing,
-//     smallFontSize,
-//   });
-//   return (
-//     <>
-//       <Title className={classes.title}></Title>
-//     </>
-//   );
-// }
+export function Heading({ className, order, blue, align, children, mt, mb, pt, pb }: HeadingProps) {
+  const { classes } = useStyles({ blue });
+  return (
+    <Title
+      mt={mt}
+      mb={mb}
+      pt={pt}
+      pb={pb}
+      className={className ? classes[`${className}`] : undefined}
+      order={order}
+      align={align}
+    >
+      {children}
+    </Title>
+  );
+}
