@@ -11,9 +11,9 @@ export const holidazeTheme: MantineThemeOverride = {
     fontFamily: 'Mulish, sans-serif',
     fontWeight: '700',
     sizes: {
-      h1: { fontSize: '2.625rem', lineHeight },
-      h2: { fontSize: '2.063rem', lineHeight },
-      h3: { fontSize: '1.625rem', lineHeight },
+      h1: { fontSize: 'clamp(2.062rem, 1.7939rem + 1.3405vw, 2.625rem)', lineHeight },
+      h2: { fontSize: 'clamp(1.625rem, 1.4164rem + 1.0429vw, 2.063rem)', lineHeight },
+      h3: { fontSize: 'clamp(1.25rem, 1.0714rem + 0.8929vw, 1.625rem)', lineHeight },
     },
   },
   other: {
@@ -23,7 +23,8 @@ export const holidazeTheme: MantineThemeOverride = {
       sm: '0.25rem',
       md: '0.5rem',
       lg: '1rem',
-      xl: '1.5rem',
+      xl: '1.25rem',
+      xxl: '1.5rem',
     },
     largeSpacing: {
       sm: '2rem',
@@ -33,15 +34,25 @@ export const holidazeTheme: MantineThemeOverride = {
       xxl: '4rem',
     },
     sectionSpacing: {
-      sm: '4.5rem',
-      md: '9rem',
-      lg: '6rem',
-      xl: '12rem',
+      xs: '4.5rem',
+      sm: '5rem',
+      md: '6rem',
+      lg: '8rem',
+      xl: '9rem',
+      xxl: '12rem',
     },
     fontFamilies: {
       display: 'Merienda, sans-serif',
       sans: 'Mulish, sans-serif',
       serif: 'Cormorant Garamond, serif',
+    },
+    fontSizes: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      md: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      xxl: '1.5rem',
     },
     lineHeights: {
       heading: 1.3,
@@ -55,6 +66,7 @@ export const holidazeTheme: MantineThemeOverride = {
     },
     containerMax: '1320px',
     fontWeights: {
+      light: 300,
       regular: 400,
       medium: 500,
       semiBold: 600,
@@ -62,18 +74,8 @@ export const holidazeTheme: MantineThemeOverride = {
       extraBold: 800,
     },
     headingSizes: {
-      display: {
-        big: '5.125rem',
-        small: '3rem',
-      },
-      primary: {
-        big: { h1: '2.625rem', h2: '2.063rem', h3: '1.625rem' },
-        small: { h1: '2.062rem', h2: '1.625rem', h3: '1.25rem' },
-      },
-      serif: {
-        big: '3.25rem',
-        small: '2.375rem',
-      },
+      display: 'clamp(3rem, 1.9881rem + 5.0595vw, 5.125rem)',
+      serif: 'clamp(2.375rem, 1.9583rem + 2.0833vw, 3.25rem)',
     },
   },
   colors: {

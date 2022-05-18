@@ -4,42 +4,109 @@ declare module '@mantine/core' {
   interface MantineThemeOther {
     gradient: CSSProperties['background'];
     brandColor: CSSProperties['backgroundColor'];
+    /** @smallSpacing - use between elements in component structures
+     * * **sm**: 0.25rem (4px)
+     * * **md**: 0.5rem (8px)
+     * * **lg**: 1rem (16px)
+     * * **xl**: 1.25rem (20px)
+     * * **xxl**: 1.5rem (24px)
+     */
     smallSpacing: {
-      sm: CSSProperties['padding-top'];
-      md: CSSProperties['padding-top'];
-      lg: CSSProperties['padding-top'];
-      xl: CSSProperties['padding-top'];
+      sm: CSSProperties['padding'];
+      md: CSSProperties['padding'];
+      lg: CSSProperties['padding'];
+      xl: CSSProperties['padding'];
+      xxl: CSSProperties['padding'];
     };
+    /**
+     * @largeSpacing use for spacing within section
+     * * **`sm`**: 2rem (32px)
+     * * **`md`**: 2.5rem (40px)
+     * * **`lg`**: 3rem (48px)
+     * * **`xl`**: 3.5rem (56px)
+     * * **`xxl`**: 4rem (64px)
+     */
     largeSpacing: {
-      sm: CSSProperties['padding-top'];
-      md: CSSProperties['padding-top'];
-      lg: CSSProperties['padding-top'];
-      xl: CSSProperties['padding-top'];
-      xxl: CSSProperties['padding-top'];
+      sm: CSSProperties['padding'];
+      md: CSSProperties['padding'];
+      lg: CSSProperties['padding'];
+      xl: CSSProperties['padding'];
+      xxl: CSSProperties['padding'];
     };
+    /**
+     * @sectionSpacing use for spacing between sections on page
+     * * **`xs`**: 4.5rem (72px)
+     * * **`sm`**: 5rem (80px)
+     * * **`md`**: 6rem (96px)
+     * * **`lg`**: 8rem (128px)
+     * * **`xl`**: 9rem (144px)
+     * * **`xxl`**: 12rem (192px)
+     */
     sectionSpacing: {
-      sm: CSSProperties['padding-top'];
-      md: CSSProperties['padding-top'];
-      lg: CSSProperties['padding-top'];
-      xl: CSSProperties['padding-top'];
+      xs: CSSProperties['padding'];
+      sm: CSSProperties['padding'];
+      md: CSSProperties['padding'];
+      lg: CSSProperties['padding'];
+      xl: CSSProperties['padding'];
+      xxl: CSSProperties['padding'];
+    };
+    /**
+     * @fontSizing font sizes in rem units
+     * * **`xs`**: 0.75rem (12px)
+     * * **`sm`**: 0.875rem (14px)
+     * * **`md`**: 1rem (16px)
+     * * **`lg`**: 1.125rem (18px)
+     * * **`xl`**: 1.25rem (20px)
+     * * **`xxl`**: 1.5rem (24px)
+     */
+    fontSizes: {
+      xs: CSSProperties['fontSize'];
+      sm: CSSProperties['fontSize'];
+      md: CSSProperties['fontSize'];
+      lg: CSSProperties['fontSize'];
+      xl: CSSProperties['fontSize'];
+      xxl: CSSProperties['fontSize'];
     };
     fontFamilies: {
       display: CSSProperties['fontFamily'];
       sans: CSSProperties['fontFamily'];
       serif: CSSProperties['fontFamily'];
     };
+    /**
+     * @lineHeights
+     * * **`heading`**: 1.3
+     * * **`body`**: 1.625
+     * * **`display`**: 1.1
+     */
     lineHeights: {
       heading: CSSProperties['lineHeight'];
       body: CSSProperties['lineHeight'];
       display: CSSProperties['lineHeight'];
     };
+    /**
+     * @letterSpacing
+     * * **`sm`**: 0.05em (5%)
+     * * **`md`**: 0.25em (25%)
+     * * **`lg`**: 0.40em (40%)
+     */
     letterSpacing: {
       sm: CSSProperties['letterSpacing'];
       md: CSSProperties['letterSpacing'];
       lg: CSSProperties['letterSpacing'];
     };
+    /** @containerMax 1320px */
     containerMax: CSSProperties['maxWidth'];
+    /**
+     * @fontWeights
+     * * **`light`**: 300
+     * * **`regular`**: 400
+     * * **`medium`**: 500
+     * * **`semiBold`**: 600
+     * * **`bold`**: 700
+     * * **`extraBold`**: 800
+     */
     fontWeights: {
+      light: CSSProperties['fontWeight'];
       regular: CSSProperties['fontWeight'];
       medium: CSSProperties['fontWeight'];
       semiBold: CSSProperties['fontWeight'];
@@ -47,26 +114,8 @@ declare module '@mantine/core' {
       extraBold: CSSProperties['fontWeight'];
     };
     headingSizes: {
-      display: {
-        big: CSSProperties['fontSize'];
-        small: CSSProperties['fontSize'];
-      };
-      primary: {
-        big: {
-          h1: CSSProperties['fontSize'];
-          h2: CSSProperties['fontSize'];
-          h3: CSSProperties['fontSize'];
-        };
-        small: {
-          h1: CSSProperties['fontSize'];
-          h2: CSSProperties['fontSize'];
-          h3: CSSProperties['fontSize'];
-        };
-      };
-      serif: {
-        big: CSSProperties['fontSize'];
-        small: CSSProperties['fontSize'];
-      };
+      display: CSSProperties['fontSize'];
+      serif: CSSProperties['fontSize'];
     };
   }
 }

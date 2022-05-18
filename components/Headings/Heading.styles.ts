@@ -7,61 +7,26 @@ export interface StyleProps {
 export const useStyles = createStyles((theme, { blue }: StyleProps) => ({
   displayH1: {
     color: theme.white,
-    fontSize: theme.other.headingSizes.display.big,
+    fontSize: theme.other.headingSizes.display,
     fontFamily: theme.other.fontFamilies.display,
     fontWeight: theme.other.fontWeights.regular,
     lineHeight: theme.other.lineHeights.display,
-    [theme.fn.smallerThan('md')]: {
-      fontSize: theme.other.headingSizes.display.small,
-    },
   },
   primaryH1: {
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[0]
-        : blue
-        ? theme.colors.blue[8]
-        : theme.black,
-    [theme.fn.smallerThan('md')]: {
-      fontSize: theme.other.headingSizes.primary.small.h1,
-    },
+    color: blue ? theme.colors.blue[8] : theme.black,
   },
   primaryH2: {
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[0]
-        : blue
-        ? theme.colors.blue[8]
-        : theme.black,
+    color: blue ? theme.colors.blue[8] : theme.black,
     letterSpacing: theme.other.letterSpacing.sm,
-    [theme.fn.smallerThan('md')]: {
-      fontSize: theme.other.headingSizes.primary.small.h2,
-    },
   },
   primaryH3: {
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[0]
-        : blue
-        ? theme.colors.blue[8]
-        : theme.black,
+    color: blue ? theme.colors.blue[8] : theme.black,
     letterSpacing: theme.other.letterSpacing.sm,
-    [theme.fn.smallerThan('md')]: {
-      fontSize: theme.other.headingSizes.primary.small.h3,
-    },
   },
   serifH2: {
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[0]
-        : blue
-        ? theme.colors.blue[8]
-        : theme.black,
-    fontSize: theme.other.headingSizes.serif.big,
+    color: blue ? theme.colors.blue[8] : theme.black,
+    fontSize: theme.other.headingSizes.serif,
     fontFamily: theme.other.fontFamilies.serif,
     fontWeight: theme.other.fontWeights.medium,
-    [theme.fn.smallerThan('md')]: {
-      fontSize: theme.other.headingSizes.serif.small,
-    },
   },
 }));
