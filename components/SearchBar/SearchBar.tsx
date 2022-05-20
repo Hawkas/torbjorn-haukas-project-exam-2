@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 import { Group, Avatar, Text, MantineColor, SelectItemProps, Autocomplete } from '@mantine/core';
 import { searchStyles } from './SearchBar.styles';
-import { solid } from '../../node_modules/@fortawesome/fontawesome-svg-core/import.macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { textStyles } from '../../globals/styles/typography';
+import { faSearch } from '@fortawesome/pro-solid-svg-icons';
 
 const charactersList = [
   {
@@ -68,7 +68,7 @@ export function SearchBar() {
         root: classes.root,
         icon: classes.icon,
       }}
-      icon={<FontAwesomeIcon icon={solid('search')} />}
+      icon={<FontAwesomeIcon icon={faSearch} />}
       iconWidth={58}
       size="xl"
       label="Plan your journey"
