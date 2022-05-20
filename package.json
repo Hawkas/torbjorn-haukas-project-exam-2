@@ -19,6 +19,10 @@
     "storybook:build": "build-storybook"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/pro-regular-svg-icons": "^6.1.1",
+    "@fortawesome/pro-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
     "@mantine/core": "4.2.2",
     "@mantine/dates": "4.2.2",
     "@mantine/hooks": "4.2.2",
@@ -27,6 +31,7 @@
     "@mantine/prism": "4.2.2",
     "@modulz/radix-icons": "^4.0.0",
     "@next/bundle-analyzer": "^12.1.4",
+    "babel-plugin-macros": "^3.1.0",
     "cookies-next": "^2.0.4",
     "dayjs": "^1.11.0",
     "next": "12.1.4",

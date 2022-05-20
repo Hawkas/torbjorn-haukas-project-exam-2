@@ -1,9 +1,11 @@
-import { MantineThemeOverride, ThemeIcon } from '@mantine/core';
+import { MantineThemeOverride } from '@mantine/core';
 
 const lineHeight = 1.3;
 
 export const holidazeTheme: MantineThemeOverride = {
+  colorScheme: 'light',
   primaryShade: 6,
+  defaultRadius: 'md',
   black: '#1A1B1E',
   fontFamily: 'Mulish, sans-serif',
   lineHeight: '1.625',
@@ -16,7 +18,15 @@ export const holidazeTheme: MantineThemeOverride = {
       h3: { fontSize: 'clamp(1.25rem, 1.0714rem + 0.8929vw, 1.625rem)', lineHeight },
     },
   },
+  shadows: {
+    xs: '0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15)',
+    sm: '0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15)',
+    md: '0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3)',
+    lg: '0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3)',
+    xl: '0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.3)',
+  },
   other: {
+    backgroundColor: '#FDFCFF',
     gradient: 'linear-gradient(91.98deg, #032D51 0%, #051524 100%)',
     brandColor: '#003355',
     smallSpacing: {
@@ -60,7 +70,8 @@ export const holidazeTheme: MantineThemeOverride = {
       display: 1.1,
     },
     letterSpacing: {
-      sm: '0.05em',
+      xs: '0.05em',
+      sm: '0.1em',
       md: '0.25em',
       lg: '0.40em',
     },

@@ -4,6 +4,7 @@ declare module '@mantine/core' {
   interface MantineThemeOther {
     gradient: CSSProperties['background'];
     brandColor: CSSProperties['backgroundColor'];
+    backgroundColor: CSSProperties['backgroundColor'];
     /** @smallSpacing - use between elements in component structures
      * * **sm**: 0.25rem (4px)
      * * **md**: 0.5rem (8px)
@@ -85,11 +86,13 @@ declare module '@mantine/core' {
     };
     /**
      * @letterSpacing
-     * * **`sm`**: 0.05em (5%)
+     * * **`xs`**: 0.05em (5%)
+     * * **`sm`**: 0.10em (10%)
      * * **`md`**: 0.25em (25%)
      * * **`lg`**: 0.40em (40%)
      */
     letterSpacing: {
+      xs: CSSProperties['letterSpacing'];
       sm: CSSProperties['letterSpacing'];
       md: CSSProperties['letterSpacing'];
       lg: CSSProperties['letterSpacing'];

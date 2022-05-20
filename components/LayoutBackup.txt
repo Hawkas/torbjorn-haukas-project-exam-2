@@ -1,0 +1,140 @@
+import React, { useRef, useState } from 'react';
+import {
+  Anchor,
+  AppShell,
+  Navbar,
+  Header,
+  Footer,
+  GroupedTransition,
+  MediaQuery,
+  Burger,
+  useMantineTheme,
+  createStyles,
+  Text,
+} from '@mantine/core';
+import Image from 'next/image';
+import logoSvg from '../public/logobig.svg';
+import { settings } from '../globals/constants/settings';
+import { NavMenu } from './Header/Navigation/NavMenu';
+import { containerStyles } from '../globals/styles/containerStyles.styles';
+import useFilledState from '../globals/hooks/useFilledState';
+
+const { menuBreak, headerHeight } = settings;
+const duration = 500;
+interface layoutProps {
+  content: React.ReactNode;
+}
+const useStyles = createStyles((theme) => ({
+  header: {
+    transition: 'all 0.5s linear 0s',
+    borderBottom: '1px solid transparent',
+  },
+  transparent: {
+    backgroundColor: 'transparent',
+  },
+  filled: {
+    borderColor: theme.white,
+    backgroundColor: theme.fn.rgba(theme.colors.blue[8], 1),
+  },
+  headerInner: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '100%',
+  },
+  vertical: {
+    display: 'none',
+    flexDirection: 'column',
+    [theme.fn.smallerThan(menuBreak)]: {
+      display: 'flex',
+    },
+    '& > *': {
+      padding: theme.other.smallSpacing.lg,
+    },
+  },
+  horizontal: {
+    display: 'flex',
+    gap: '2.5rem',
+    paddingTop: theme.other.smallSpacing.sm,
+    [theme.fn.smallerThan(menuBreak)]: {
+      display: 'none',
+    },
+  },
+  main: {
+    width: '100%',
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+}));
+
+export default function Layout({ content }: layoutProps) {
+  const { classes, cx } = useStyles();
+  const {
+    classes: { container },
+  } = containerStyles();
+  const theme = useMantineTheme();
+  const [opened, setOpened] = useState(false);
+  const filledState = useFilledState();
+  return (
+    <>
+      <AppShell
+        classNames={{
+          main: classes.main,
+        }}
+        padding={0}
+        header={
+          <Header
+            fixed
+            className={cx(
+              classes.header,
+              { [classes.transparent]: !filledState && !opened },
+              { [classes.filled]: filledState || opened }
+            )}
+            height={headerHeight}
+          >
+            <div className={cx(container, classes.headerInner)}>
+              <Anchor href="/" style={{ display: 'flex', alignItems: 'center' }}>
+                <Image src={logoSvg} alt="Holidaze logo" width={152} height={31}></Image>
+              </Anchor>
+              <MediaQuery largerThan={menuBreak} styles={{ display: 'none' }}>
+                <Burger
+                  opened={opened}
+                  onClick={() => setOpened((o) => !o)}
+                  size="md"
+                  color={theme.white}
+                />
+              </MediaQuery>
+              <div className={classes.horizontal}>
+                <NavMenu menuBreak={menuBreak}></NavMenu>
+              </div>
+            </div>
+          </Header>
+        }
+        navbar={
+          <GroupedTransition
+            mounted={opened}
+            transitions={{
+              container: { duration, transition: 'slide-right', timingFunction: 'ease' },
+              contents: { duration: duration / 2, transition: 'fade', timingFunction: 'ease' },
+            }}
+            duration={200}
+            timingFunction="ease"
+          >
+            {(styles) => (
+              <Navbar fixed style={styles.container} className={classes.vertical}>
+                <NavMenu menuBreak={menuBreak}></NavMenu>
+              </Navbar>
+            )}
+          </GroupedTransition>
+        }
+        footer={
+          <Footer height={60} p="md">
+            <Text>Scroll position: {`${filledState}`}</Text>
+          </Footer>
+        }
+      >
+        {content}
+      </AppShell>
+    </>
+  );
+}

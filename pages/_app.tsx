@@ -1,22 +1,17 @@
-import { GetServerSidePropsContext } from 'next';
-import { useState } from 'react';
 import { AppProps } from 'next/app';
-import { getCookie, setCookies } from 'cookies-next';
 import Head from 'next/head';
-import { MantineProvider, ColorScheme, ColorSchemeProvider, ThemeIcon } from '@mantine/core';
+import { MantineProvider, ScrollArea } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import Layout from '../components/Layout';
 import { holidazeTheme } from '../globals/styles/holidazeTheme';
+import { GlobalCss } from '../components/GlobalCss';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { useState } from 'react';
+config.autoAddCss = false;
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+export default function App(props: AppProps) {
   const { Component, pageProps } = props;
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
-  const toggleColorScheme = (value?: ColorScheme) => {
-    const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
-    setColorScheme(nextColorScheme);
-    setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
-  };
-
   return (
     <>
       <Head>
@@ -24,22 +19,17 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
-
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{ colorScheme, ...holidazeTheme }}
-        >
-          <NotificationsProvider>
-            <Layout content={<Component {...pageProps} />} />
-          </NotificationsProvider>
-        </MantineProvider>
-      </ColorSchemeProvider>
+      <MantineProvider
+        emotionOptions={{ key: 'holidaze' }}
+        withGlobalStyles
+        withNormalizeCSS
+        theme={holidazeTheme}
+      >
+        <GlobalCss />
+        <NotificationsProvider>
+          <Layout content={<Component {...pageProps} />} />
+        </NotificationsProvider>
+      </MantineProvider>
     </>
   );
 }
-
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-});

@@ -1,6 +1,6 @@
 import { NavLink, NavLinkProps } from './NavLink';
 
-export function NavLinks({ menuBreak }: Pick<NavLinkProps, 'menuBreak'>) {
+export function NavMenu({ menuBreak }: Pick<NavLinkProps, 'menuBreak'>) {
   return (
     <>
       <NavLink href="/" menuBreak={menuBreak} component="a">

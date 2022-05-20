@@ -1,47 +1,10 @@
 import { forwardRef } from 'react';
-import {
-  Group,
-  Avatar,
-  Text,
-  MantineColor,
-  SelectItemProps,
-  Autocomplete,
-  createStyles,
-} from '@mantine/core';
-import { collectAssets } from 'next/dist/build/webpack/plugins/middleware-plugin';
+import { Group, Avatar, Text, MantineColor, SelectItemProps, Autocomplete } from '@mantine/core';
+import { searchStyles } from './SearchBar.styles';
+import { solid } from '../../node_modules/@fortawesome/fontawesome-svg-core/import.macro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { textStyles } from '../../globals/styles/typography';
 
-const useStyles = createStyles((theme) => ({
-  searchbar: {
-    width: '100%',
-    minHeight: '66px',
-    padding: `${theme.other.smallSpacing.lg} ${theme.other.smallSpacing.xl}`,
-    boxShadow: '0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.3)',
-    borderRadius: theme.radius.md,
-  },
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-    margin: '0 auto',
-    minWidth: '288px',
-    maxWidth: '648px',
-  },
-  label: {
-    fontWeight: theme.other.fontWeights.bold,
-    fontSize: theme.other.fontSizes.sm,
-    letterSpacing: theme.other.letterSpacing.lg,
-    color: theme.white,
-    textShadow: '0px 8px 12px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.3)',
-    textAlign: 'center',
-    marginBottom: theme.other.smallSpacing.xxl,
-    textTransform: 'uppercase',
-  },
-}));
 const charactersList = [
   {
     image: 'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
@@ -92,15 +55,22 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 );
 
 export function SearchBar() {
-  const { classes } = useStyles();
+  const { classes, cx } = searchStyles();
+  const {
+    classes: { subHeader },
+  } = textStyles();
   return (
     <Autocomplete
       classNames={{
         input: classes.searchbar,
         wrapper: classes.wrapper,
-        label: classes.label,
+        label: cx(subHeader, classes.label),
         root: classes.root,
+        icon: classes.icon,
       }}
+      icon={<FontAwesomeIcon icon={solid('search')} />}
+      iconWidth={58}
+      size="xl"
       label="Plan your journey"
       placeholder="Search for accommodations"
       itemComponent={AutoCompleteItem}
