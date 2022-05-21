@@ -13,11 +13,11 @@ declare module '@mantine/core' {
      * * **xxl**: 1.5rem (24px)
      */
     smallSpacing: {
-      sm: CSSProperties['padding'];
-      md: CSSProperties['padding'];
-      lg: CSSProperties['padding'];
-      xl: CSSProperties['padding'];
-      xxl: CSSProperties['padding'];
+      sm: CSSProperties['paddingTop'];
+      md: CSSProperties['paddingTop'];
+      lg: CSSProperties['paddingTop'];
+      xl: CSSProperties['paddingTop'];
+      xxl: CSSProperties['paddingTop'];
     };
     /**
      * @largeSpacing use for spacing within section
@@ -28,11 +28,11 @@ declare module '@mantine/core' {
      * * **`xxl`**: 4rem (64px)
      */
     largeSpacing: {
-      sm: CSSProperties['padding'];
-      md: CSSProperties['padding'];
-      lg: CSSProperties['padding'];
-      xl: CSSProperties['padding'];
-      xxl: CSSProperties['padding'];
+      sm: CSSProperties['paddingTop'];
+      md: CSSProperties['paddingTop'];
+      lg: CSSProperties['paddingTop'];
+      xl: CSSProperties['paddingTop'];
+      xxl: CSSProperties['paddingTop'];
     };
     /**
      * @sectionSpacing use for spacing between sections on page
@@ -44,12 +44,12 @@ declare module '@mantine/core' {
      * * **`xxl`**: 12rem (192px)
      */
     sectionSpacing: {
-      xs: CSSProperties['padding'];
-      sm: CSSProperties['padding'];
-      md: CSSProperties['padding'];
-      lg: CSSProperties['padding'];
-      xl: CSSProperties['padding'];
-      xxl: CSSProperties['padding'];
+      xs: CSSProperties['paddingTop'];
+      sm: CSSProperties['paddingTop'];
+      md: CSSProperties['paddingTop'];
+      lg: CSSProperties['paddingTop'];
+      xl: CSSProperties['paddingTop'];
+      xxl: CSSProperties['paddingTop'];
     };
     /**
      * @fontSizing font sizes in rem units

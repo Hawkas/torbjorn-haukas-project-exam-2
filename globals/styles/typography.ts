@@ -20,6 +20,7 @@ export const textStyles = createStyles((theme) => ({
     fontWeight: theme.other.fontWeights.medium,
   },
   subHeader: {
+    color: theme.colors.gray[6],
     fontSize: theme.other.fontSizes.sm,
     fontWeight: theme.other.fontWeights.bold,
     lineHeight: '1',
@@ -38,10 +39,18 @@ export const textStyles = createStyles((theme) => ({
     lineHeight: theme.other.lineHeights.heading,
   },
   buttonAlt: {
+    color: theme.colors.blue[6],
     fontSize: theme.other.fontSizes.md,
     fontWeight: theme.other.fontWeights.bold,
     lineHeight: '1',
     letterSpacing: theme.other.letterSpacing.md,
+    textTransform: 'uppercase',
+    [theme.fn.largerThan(808)]: {
+      fontSize: theme.other.fontSizes.sm,
+    },
+    [theme.fn.largerThan(914)]: {
+      fontSize: theme.other.fontSizes.md,
+    },
   },
   buttonPrimary: {
     fontSize: theme.other.fontSizes.md,

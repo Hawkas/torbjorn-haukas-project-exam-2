@@ -86,7 +86,7 @@ export const holidazeTheme: MantineThemeOverride = {
     },
     headingSizes: {
       display: 'clamp(3rem, 1.9881rem + 5.0595vw, 5.125rem)',
-      serif: 'clamp(2.375rem, 1.9583rem + 2.0833vw, 3.25rem)',
+      serif: 'clamp(2.375rem, 2.1157rem + 1.2963vw, 3.25rem)',
     },
   },
   colors: {
