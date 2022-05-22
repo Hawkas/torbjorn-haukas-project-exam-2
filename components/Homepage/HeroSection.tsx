@@ -1,9 +1,8 @@
-import { BackgroundImage, Center, Box, Grid, Title } from '@mantine/core';
-import heroImg from '../../public/fjordview-2556w.jpg';
+import { BackgroundImage, Box, Center, Grid, Title } from '@mantine/core';
+import { textStyles } from '@styles/typography';
+import { containerStyles } from '../../globals/styles/containerStyles';
 import { SearchBar } from '../SearchBar/SearchBar';
-import { containerStyles } from '../../globals/styles/containerStyles.styles';
 import { heroStyles } from './HeroSection.styles';
-import { textStyles } from '../../globals/styles/typography';
 
 export function HeroSection() {
   const { classes } = heroStyles();
@@ -15,7 +14,7 @@ export function HeroSection() {
   } = textStyles();
   return (
     <Box className={classes.fluidContainer} component="header" px="0">
-      <BackgroundImage src={heroImg.src}>
+      <BackgroundImage src="/fjordview-2556w.jpg">
         <Box className={classes.imageOverlay}>
           <Center className={container}>
             <Grid

@@ -1,9 +1,9 @@
-import { forwardRef } from 'react';
-import { Group, Avatar, Text, MantineColor, SelectItemProps, Autocomplete } from '@mantine/core';
-import { searchStyles } from './SearchBar.styles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { textStyles } from '../../globals/styles/typography';
 import { faSearch } from '@fortawesome/pro-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Autocomplete, Avatar, Group, MantineColor, SelectItemProps, Text } from '@mantine/core';
+import { forwardRef } from 'react';
+import { textStyles } from '../../globals/styles/typography';
+import { searchStyles } from './SearchBar.styles';
 
 const charactersList = [
   {

@@ -1,35 +1,58 @@
-import React from 'react';
-import { Button, ButtonProps, createStyles } from '@mantine/core';
-import { textStyles } from '../../globals/styles/typography';
+import React, { MouseEventHandler } from 'react';
+import { Button, ButtonProps, createStyles, useMantineTheme } from '@mantine/core';
+import { textStyles } from '@styles/typography';
 
-const buttonStyles = createStyles((theme, _param, getRef) => ({
-  primaryButton: {
-    ref: getRef('primaryButton'),
-  },
+const buttonStyles = createStyles((theme) => ({
   button: {
     padding: `${theme.other.smallSpacing.md} ${theme.other.smallSpacing.xxl}`,
     height: theme.other.largeSpacing.xl,
-    [`&.${getRef('primaryButton')}`]: {
-      background: theme.other.gradient,
-      boxShadow: theme.shadows.sm,
-    },
   },
 }));
-export function PrimaryButton({ onClick, mt, mb, component, sx, children }: ButtonProps<'button'>) {
+
+interface MyButton
+  extends Pick<
+      ButtonProps<'button'>,
+      'mt' | 'mb' | 'sx' | 'children' | 'variant' | 'type' | 'className'
+    >,
+    Pick<ButtonProps<'a'>, 'href'> {
+  primary?: boolean;
+  component?: 'button' | 'a';
+  clickEvent?: MouseEventHandler;
+}
+
+export function PrimaryButton({
+  primary,
+  clickEvent,
+  component,
+  mt,
+  mb,
+  sx,
+  children,
+  variant,
+  href,
+  type,
+  className,
+}: MyButton) {
+  const theme = useMantineTheme();
   const { classes, cx } = buttonStyles();
   const { classes: textClass } = textStyles();
+
   return (
     <>
       <Button
-        onClick={onClick || undefined}
-        component={component || undefined}
+        type={type}
+        href={href}
+        gradient={primary ? { from: theme.colors.blue[8], to: '#051524', deg: 92 } : undefined}
+        variant={variant || 'gradient'}
+        onClick={clickEvent || undefined}
+        component={component || 'button'}
         radius="md"
         size="xl"
         mt={mt || undefined}
         mb={mb || undefined}
         sx={sx || undefined}
         classNames={{ label: textClass.buttonPrimary }}
-        className={cx(classes.button, classes.primaryButton)}
+        className={cx(classes.button, className)}
       >
         {children}
       </Button>

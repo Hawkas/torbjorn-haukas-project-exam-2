@@ -1,4 +1,5 @@
-import { MantineNumberSize, useMantineTheme } from '@mantine/core';
+import { MantineNumberSize } from '@mantine/core';
+
 interface Settings {
   menuBreak: MantineNumberSize;
   headerHeight: number;

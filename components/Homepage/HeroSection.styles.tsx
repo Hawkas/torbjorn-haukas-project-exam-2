@@ -1,5 +1,5 @@
 import { createStyles } from '@mantine/core';
-import { settings } from '../../globals/constants/settings';
+import { settings } from '@globals/settings';
 
 const { headerHeight } = settings;
 

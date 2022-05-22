@@ -1,5 +1,4 @@
 import { createStyles, MantineNumberSize } from '@mantine/core';
-import { settings } from '../../globals/constants/settings';
 
 export const dropdownStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
   vertical: {

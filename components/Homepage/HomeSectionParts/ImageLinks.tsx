@@ -1,9 +1,7 @@
 import React from 'react';
-import hotel from '/public/large_hotel_1000w-667h.jpg';
-import guesthouse from '/public/large_guesthouse_1000w-667h.jpg';
-import bnb from '/public/large_bnb_1000w-667h.jpg';
-import ImageLink from './ImageLink';
 import { SimpleGrid } from '@mantine/core';
+import { bnb, guesthouse, hotel } from '@globals/images';
+import ImageLink from './ImageLink';
 
 export function ImageLinks() {
   return (

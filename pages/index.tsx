@@ -1,14 +1,11 @@
-import { Welcome } from '../components/Welcome/Welcome';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { HeroSection } from '../components/Homepage/HeroSection';
-import { Box } from '@mantine/core';
-import { IntroSection } from '../components/Homepage/IntroSection';
+import { HeroSection } from '@Homepage/HeroSection';
+import { RestOfThePage } from '@Homepage/RestOfThePage';
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <IntroSection />
+      <RestOfThePage />
     </>
   );
 }

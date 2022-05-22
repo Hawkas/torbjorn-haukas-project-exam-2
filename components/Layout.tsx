@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { AppShell, Header, Footer, createStyles, Text } from '@mantine/core';
-import { settings } from '../globals/constants/settings';
-import useFilledState from '../globals/hooks/useFilledState';
-import { HeaderDropdown } from './Header/HeaderDropdown';
-import { HeaderTop } from './Header/HeaderTop';
+import { settings } from '@globals/settings';
+import useFilledState from '@hooks/useFilledState';
 import { useRouter } from 'next/router';
+import { HeaderDropdown, HeaderTop } from './Header';
 
 const { menuBreak, headerHeight } = settings;
 interface layoutProps {

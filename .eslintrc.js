@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
     'mantine',
+    'prettier',
     'plugin:@next/next/recommended',
     'plugin:jest/recommended',
     'plugin:storybook/recommended',

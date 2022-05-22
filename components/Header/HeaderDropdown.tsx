@@ -20,7 +20,7 @@ export function HeaderDropdown({ menuBreak, opened }: HeaderProps) {
       >
         {(styles) => (
           <Navbar fixed style={styles.container} className={classes.vertical}>
-            <NavMenu menuBreak={menuBreak}></NavMenu>
+            <NavMenu menuBreak={menuBreak} />
           </Navbar>
         )}
       </GroupedTransition>

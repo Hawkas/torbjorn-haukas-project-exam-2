@@ -37,6 +37,7 @@ export const textStyles = createStyles((theme) => ({
     fontSize: theme.other.fontSizes.xs,
     fontWeight: theme.other.fontWeights.bold,
     lineHeight: theme.other.lineHeights.heading,
+    letterSpacing: theme.other.letterSpacing.sm,
   },
   buttonAlt: {
     color: theme.colors.blue[6],
@@ -57,10 +58,10 @@ export const textStyles = createStyles((theme) => ({
     fontWeight: theme.other.fontWeights.bold,
   },
   info: {
-    fontWeight: theme.other.fontWeights.bold,
+    fontWeight: theme.other.fontWeights.medium,
   },
   infoAlt: {
-    fontWeight: theme.other.fontWeights.bold,
+    fontWeight: theme.other.fontWeights.medium,
     lineHeight: theme.other.lineHeights.display,
     letterSpacing: theme.other.letterSpacing.sm,
   },
