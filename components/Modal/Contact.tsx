@@ -39,9 +39,8 @@ const useStyles = createStyles((theme) => {
       marginBottom: `calc(${theme.other.largeSpacing.sm} - ${outerEdge})`,
       borderLeft: 0,
 
-      [breakPoint]: {
+      [paddingBreak]: {
         padding: `calc(${theme.other.smallSpacing.lg} - ${outerEdge})`,
-        paddingLeft: theme.spacing.md,
       },
     },
     fieldInput: {
@@ -74,8 +73,8 @@ const useStyles = createStyles((theme) => {
       flex: '0 0 312px',
       paddingLeft: `calc(${theme.other.largeSpacing.sm} - ${outerEdge})`,
 
-      [breakPoint]: {
-        marginBottom: theme.spacing.sm,
+      [paddingBreak]: {
+        padding: `calc(${theme.other.smallSpacing.lg} - ${outerEdge})`,
       },
     },
 
@@ -109,7 +108,7 @@ const useStyles = createStyles((theme) => {
   };
 });
 
-export function GetInTouch() {
+export function Contact() {
   const { classes, cx } = useStyles();
   const { classes: textClass } = textStyles();
   return (
@@ -128,7 +127,7 @@ export function GetInTouch() {
         </div>
 
         <form className={classes.form} onSubmit={(event) => event.preventDefault()}>
-          <Text component="h2" className={cx(classes.title, textClass.primaryH3)}>
+          <Text mb={52} component="h2" className={cx(classes.title, textClass.primaryH3)}>
             Send us a message
           </Text>
 

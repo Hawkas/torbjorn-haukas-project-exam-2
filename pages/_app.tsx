@@ -1,12 +1,14 @@
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { MantineProvider } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
+import { GlobalCss } from '@components/GlobalCss';
+import Layout from '@components/Layout';
+import { Contact } from '@components/Modal/Contact';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import Layout from '@components/Layout';
+import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from '@styles/holidazeTheme';
-import { GlobalCss } from '@components/GlobalCss';
+import { AppProps } from 'next/app';
+import Head from 'next/head';
 
 config.autoAddCss = false;
 
@@ -21,9 +23,11 @@ export default function App(props: AppProps) {
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
         <GlobalCss />
-        <NotificationsProvider>
-          <Layout content={<Component {...pageProps} />} />
-        </NotificationsProvider>
+        <ModalsProvider modals={{ contact: Contact }}>
+          <NotificationsProvider>
+            <Layout content={<Component {...pageProps} />} />
+          </NotificationsProvider>
+        </ModalsProvider>
       </MantineProvider>
     </>
   );
