@@ -40,7 +40,6 @@ export function ArticleImage({ image, tallImg }: ArticleImageProps) {
     <>
       <Image
         imageProps={{ height: image.height, width: image.width }}
-        // Can't override inline styles with css-in-js here, and I'm not willing to use !important.
         radius="xs"
         height="100%"
         classNames={{

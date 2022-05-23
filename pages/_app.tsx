@@ -1,4 +1,3 @@
-import { GlobalCss } from '@components/GlobalCss';
 import Layout from '@components/Layout';
 import { Contact } from '@components/Modal/Contact';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -21,7 +20,6 @@ export default function App(props: AppProps) {
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
-        <GlobalCss />
         <ModalsProvider modals={{ contact: Contact }}>
           <NotificationsProvider>
             <Layout content={<Component {...pageProps} />} />

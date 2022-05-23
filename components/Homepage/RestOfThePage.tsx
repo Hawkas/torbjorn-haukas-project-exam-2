@@ -43,7 +43,6 @@ export function RestOfThePage() {
           </Center>
         </Container>
       </article>
-      <Contact />
     </>
   );
 }
