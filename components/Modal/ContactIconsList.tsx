@@ -59,7 +59,7 @@ interface ContactIconsListProps {
   data?: ContactIconProps[];
 }
 
-const MOCKDATA = [
+const contactData = [
   { title: 'Email', description: 'holi@daze.no', icon: faAt },
   { title: 'Phone', description: '+47 80085101', icon: faPhone },
   {
@@ -74,7 +74,7 @@ const MOCKDATA = [
   },
 ];
 
-export function ContactIconsList({ data = MOCKDATA }: ContactIconsListProps) {
+export function ContactIconsList({ data = contactData }: ContactIconsListProps) {
   const items = data.map((item, index) => <ContactIcon key={index} {...item} />);
   return (
     <Group direction="column" sx={(theme) => ({ gap: theme.other.largeSpacing.md })}>

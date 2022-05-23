@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 import { Button, ButtonProps, createStyles, useMantineTheme } from '@mantine/core';
 import { textStyles } from '@styles/typography';
 
@@ -9,53 +9,31 @@ const buttonStyles = createStyles((theme) => ({
   },
 }));
 
-interface MyButton
-  extends Pick<
-      ButtonProps<'button'>,
-      'mt' | 'mb' | 'sx' | 'children' | 'variant' | 'type' | 'className'
-    >,
-    Pick<ButtonProps<'a'>, 'href'> {
+interface MyButton {
   primary?: boolean;
-  component?: 'button' | 'a';
-  clickEvent?: MouseEventHandler;
+  component?: 'a' | 'button';
 }
-
 export function PrimaryButton({
   primary,
-  clickEvent,
   component,
-  mt,
-  mb,
-  sx,
-  children,
+  gradient,
   variant,
-  href,
-  type,
-  className,
-}: MyButton) {
+  ...others
+}: MyButton & Omit<ButtonProps<'button'>, 'component'> & Omit<ButtonProps<'a'>, 'component'>) {
   const theme = useMantineTheme();
   const { classes, cx } = buttonStyles();
   const { classes: textClass } = textStyles();
-
   return (
-    <>
-      <Button
-        type={type}
-        href={href}
-        gradient={primary ? { from: theme.colors.blue[8], to: '#051524', deg: 92 } : undefined}
-        variant={variant || 'gradient'}
-        onClick={clickEvent || undefined}
-        component={component || 'button'}
-        radius="md"
-        size="xl"
-        mt={mt || undefined}
-        mb={mb || undefined}
-        sx={sx || undefined}
-        classNames={{ label: textClass.buttonPrimary }}
-        className={cx(classes.button, className)}
-      >
-        {children}
-      </Button>
-    </>
+    <Button
+      href={others.href}
+      radius={others.radius || 'md'}
+      size={others.size || 'xl'}
+      component={component || 'button'}
+      gradient={primary ? { from: theme.colors.blue[8], to: '#051524', deg: 92 } : undefined}
+      variant={variant || 'gradient'}
+      classNames={{ label: textClass.buttonPrimary, ...others.classNames }}
+      className={cx(classes.button, others.className)}
+      {...others}
+    />
   );
 }

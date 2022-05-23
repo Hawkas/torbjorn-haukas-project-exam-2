@@ -1,13 +1,6 @@
 import React, { MouseEventHandler } from 'react';
 import Logo from '@public/logobig.svg';
-import {
-  Anchor,
-  Burger,
-  MediaQuery,
-  useMantineTheme,
-  MantineNumberSize,
-  Image,
-} from '@mantine/core';
+import { Anchor, Burger, MediaQuery, useMantineTheme, MantineNumberSize } from '@mantine/core';
 
 import { containerStyles } from '@styles/containerStyles';
 import { headerStyles } from './HeaderTop.styles';

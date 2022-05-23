@@ -1,18 +1,8 @@
-import React from 'react';
-import {
-  Paper,
-  Text,
-  TextInput,
-  Textarea,
-  Button,
-  Group,
-  SimpleGrid,
-  createStyles,
-  Title,
-} from '@mantine/core';
-import { ContactIconsList } from './ContactIconsList';
-import { textStyles } from '@styles/typography';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
+import { createStyles, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
+import { textStyles } from '@styles/typography';
+import React from 'react';
+import { ContactIconsList } from './ContactIconsList';
 
 const useStyles = createStyles((theme) => {
   const breakPoint = theme.fn.smallerThan('sm');

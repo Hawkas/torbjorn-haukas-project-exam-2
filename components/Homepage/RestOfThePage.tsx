@@ -1,5 +1,4 @@
 import { Contact } from '@components/Modal/Contact';
-import { ContactIconsList } from '@components/Modal/ContactIconsList';
 import { fishingVillage, sunset } from '@globals/images';
 import { ImageLinks } from '@Homepage/HomeSectionParts/ImageLinks';
 import { Center, Container, useMantineTheme } from '@mantine/core';
