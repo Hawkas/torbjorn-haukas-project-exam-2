@@ -1,104 +1,15 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { createStyles, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
+import { faClose } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ActionIcon, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
+import { useModals, ContextModalProps } from '@mantine/modals';
 import { textStyles } from '@styles/typography';
 import React from 'react';
 import { ContactIconsList } from './ContactIconsList';
-
-const useStyles = createStyles((theme) => {
-  const breakPoint = theme.fn.smallerThan('sm');
-  const paddingBreak = theme.fn.largerThan('sm');
-  const outerEdge = '4px';
-
-  return {
-    wrapper: {
-      display: 'flex',
-      backgroundColor: theme.white,
-      borderRadius: theme.radius.lg,
-      padding: outerEdge,
-      border: `1px solid ${theme.colors.gray[2]}`,
-
-      [breakPoint]: {
-        flexDirection: 'column',
-      },
-    },
-
-    form: {
-      flex: 1,
-      padding: `calc(${theme.other.largeSpacing.sm} - ${outerEdge})`,
-      paddingLeft: `calc(${theme.other.largeSpacing.xxl} - ${outerEdge})`,
-      marginBottom: `calc(${theme.other.largeSpacing.sm} - ${outerEdge})`,
-      borderLeft: 0,
-
-      [paddingBreak]: {
-        padding: `calc(${theme.other.smallSpacing.lg} - ${outerEdge})`,
-      },
-    },
-    fieldInput: {
-      flex: 1,
-
-      '& + &': {
-        marginLeft: theme.spacing.md,
-
-        [breakPoint]: {
-          marginLeft: 0,
-          marginTop: theme.spacing.md,
-        },
-      },
-    },
-
-    fieldsGroup: {
-      display: 'flex',
-
-      [breakPoint]: {
-        flexDirection: 'column',
-      },
-    },
-
-    contacts: {
-      position: 'relative',
-      borderRadius: theme.radius.lg - 2,
-      backgroundImage: theme.fn.linearGradient(92, theme.colors.blue[8], '#051524'),
-      border: '1px solid transparent',
-      padding: theme.other.largeSpacing.sm,
-      flex: '0 0 312px',
-      paddingLeft: `calc(${theme.other.largeSpacing.sm} - ${outerEdge})`,
-
-      [paddingBreak]: {
-        padding: `calc(${theme.other.smallSpacing.lg} - ${outerEdge})`,
-      },
-    },
-
-    title: {
-      marginBottom: theme.other.largeSpacing.md,
-      fontSize: theme.other.fontSizes.xxl,
-      fontWeight: theme.other.fontWeights.semiBold,
-    },
-    root: {
-      position: 'relative',
-    },
-    textInput: {
-      padding: theme.other.smallSpacing.lg,
-      minHeight: theme.other.largeSpacing.xl,
-    },
-    label: {
-      position: 'absolute',
-      zIndex: 9,
-      top: '-7px',
-      left: -4,
-      backgroundColor: theme.white,
-      padding: `0 ${theme.other.smallSpacing.sm}`,
-      marginLeft: theme.other.smallSpacing.lg,
-    },
-    control: {
-      marginTop: theme.other.largeSpacing.md,
-      [breakPoint]: {
-        flex: 1,
-      },
-    },
-  };
-});
+import { useStyles } from './Contact.styles';
 
 export function Contact() {
+  const modals = useModals();
   const { classes, cx } = useStyles();
   const { classes: textClass } = textStyles();
   return (
@@ -110,13 +21,19 @@ export function Contact() {
             className={cx(classes.title, textClass.primaryH3)}
             sx={{ color: '#fff' }}
           >
-            Contact information
+            Contact details
           </Text>
 
-          <ContactIconsList />
+          <ContactIconsList className={classes.iconList} />
         </div>
 
         <form className={classes.form} onSubmit={(event) => event.preventDefault()}>
+          <ActionIcon
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+            onClick={() => modals.closeModal('contact')}
+          >
+            <FontAwesomeIcon icon={faClose} />
+          </ActionIcon>
           <Text mb={52} component="h2" className={cx(classes.title, textClass.primaryH3)}>
             Send us a message
           </Text>

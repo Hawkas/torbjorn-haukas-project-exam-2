@@ -1,5 +1,4 @@
 import Layout from '@components/Layout';
-import { Contact } from '@components/Modal/Contact';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { MantineProvider } from '@mantine/core';
@@ -8,7 +7,8 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from '@styles/holidazeTheme';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-
+import React from 'react';
+import { FormModal, formModalSettings } from '../components/Modal/FormModal';
 config.autoAddCss = false;
 
 export default function App(props: AppProps) {
@@ -20,7 +20,7 @@ export default function App(props: AppProps) {
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
-        <ModalsProvider modals={{ contact: Contact }}>
+        <ModalsProvider modals={{ contact: FormModal }} modalProps={formModalSettings}>
           <NotificationsProvider>
             <Layout content={<Component {...pageProps} />} />
           </NotificationsProvider>

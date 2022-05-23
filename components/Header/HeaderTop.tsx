@@ -1,14 +1,7 @@
-import React, { MouseEventHandler } from 'react';
-import {
-  Anchor,
-  Burger,
-  MediaQuery,
-  useMantineTheme,
-  MantineNumberSize,
-  Image,
-} from '@mantine/core';
-
+import { Anchor, Burger, MantineNumberSize, MediaQuery, useMantineTheme } from '@mantine/core';
+import Logo from '@public/logobig.svg';
 import { containerStyles } from '@styles/containerStyles';
+import React, { MouseEventHandler } from 'react';
 import { headerStyles } from './HeaderTop.styles';
 import { NavMenu } from './Navigation/NavMenu';
 
@@ -29,7 +22,7 @@ export function HeaderTop({ opened, menuBreak, clickEvent }: HeaderProps) {
     <>
       <div className={cx(container, classes.headerInner)}>
         <Anchor href="/" style={{ display: 'flex', alignItems: 'center' }}>
-          <Image src="/logobig.svg" />
+          <Logo />
         </Anchor>
         <MediaQuery largerThan={menuBreak} styles={{ display: 'none' }}>
           <Burger opened={opened} onClick={setOpened} size="md" color={theme.white} />

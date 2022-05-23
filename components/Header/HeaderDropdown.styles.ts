@@ -2,13 +2,17 @@ import { createStyles, MantineNumberSize } from '@mantine/core';
 
 export const dropdownStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
   vertical: {
+    height: '100vh',
     display: 'none',
     flexDirection: 'column',
     [theme.fn.smallerThan(menuBreak)]: {
       display: 'flex',
     },
     '& > *': {
-      padding: theme.other.smallSpacing.lg,
+      padding: theme.other.largeSpacing.sm,
+      [theme.fn.smallerThan('xs')]: {
+        padding: theme.other.smallSpacing.lg,
+      },
     },
   },
 }));

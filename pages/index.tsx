@@ -1,5 +1,6 @@
 import { HeroSection } from '@Homepage/HeroSection';
 import { RestOfThePage } from '@Homepage/RestOfThePage';
+import { ScrollArea } from '@mantine/core';
 import Head from 'next/head';
 
 export default function HomePage() {

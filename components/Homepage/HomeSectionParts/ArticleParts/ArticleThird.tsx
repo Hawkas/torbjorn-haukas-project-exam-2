@@ -1,10 +1,21 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
+import { Contact } from '@components/Modal/Contact';
 import { Text, useMantineTheme } from '@mantine/core';
+import { useModals } from '@mantine/modals';
 import React from 'react';
 import { ArticleText } from './ArticleText';
 
 export function ArticleThird() {
+  const modals = useModals();
   const theme = useMantineTheme();
+  const openContactModal = () => {
+    modals.openContextModal('contact', {
+      innerProps: {
+        id: 'contact',
+        modalBody: <Contact />,
+      },
+    });
+  };
   return (
     <>
       <ArticleText align="center" subheader="Get in touch" title="Need any help?">
@@ -16,7 +27,12 @@ export function ArticleThird() {
           If you have any questions or are in need of assistance, don’t hesitate to get in touch.
         </Text>
       </ArticleText>
-      <PrimaryButton mt={theme.other.largeSpacing.md} variant="default" component="button">
+      <PrimaryButton
+        mt={theme.other.largeSpacing.md}
+        variant="default"
+        component="button"
+        onClick={openContactModal}
+      >
         Contact us
       </PrimaryButton>
     </>

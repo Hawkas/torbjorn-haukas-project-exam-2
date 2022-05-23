@@ -57,6 +57,7 @@ function ContactIcon({ icon, title, description, className, ...others }: Contact
 
 interface ContactIconsListProps {
   data?: ContactIconProps[];
+  className?: string;
 }
 
 const contactData = [
@@ -74,10 +75,14 @@ const contactData = [
   },
 ];
 
-export function ContactIconsList({ data = contactData }: ContactIconsListProps) {
+export function ContactIconsList({ data = contactData, className }: ContactIconsListProps) {
   const items = data.map((item, index) => <ContactIcon key={index} {...item} />);
   return (
-    <Group direction="column" sx={(theme) => ({ gap: theme.other.largeSpacing.md })}>
+    <Group
+      direction="column"
+      className={className}
+      sx={(theme) => ({ gap: theme.other.largeSpacing.md })}
+    >
       {items}
     </Group>
   );

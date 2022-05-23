@@ -9,17 +9,19 @@ const { menuBreak, headerHeight } = settings;
 interface layoutProps {
   content: React.ReactNode;
 }
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, _params, getRef) => ({
   header: {
-    transition: 'all 0.25s linear 0s',
+    paddingRight: 'var(--removed-scroll-width)',
+    transition: 'background-color 0.25s linear 0s',
     borderBottom: '1px solid transparent',
-  },
-  transparent: {
     backgroundColor: 'transparent',
+    [`&.${getRef('filled')}`]: {
+      borderColor: theme.colors.gray[3],
+      backgroundColor: theme.fn.rgba(theme.colors.blue[8], 0.9),
+    },
   },
   filled: {
-    borderColor: theme.colors.gray[3],
-    backgroundColor: theme.fn.rgba(theme.colors.blue[8], 0.9),
+    ref: getRef('filled'),
   },
   main: {
     width: '100%',
@@ -46,7 +48,7 @@ export default function Layout({ content }: layoutProps) {
         header={
           <Header
             fixed
-            className={cx(classes.header, headerCheck ? classes.transparent : classes.filled)}
+            className={cx(classes.header, { [classes.filled]: !headerCheck })}
             height={headerHeight}
           >
             <HeaderTop menuBreak={menuBreak} clickEvent={clickEvent} opened={opened} />
