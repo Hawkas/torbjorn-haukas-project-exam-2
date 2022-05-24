@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { AppShell, Header, Footer, createStyles, Text } from '@mantine/core';
+import { ReactNode, useState } from 'react';
+import { AppShell, Header, Footer, createStyles, Text, AppShellProps } from '@mantine/core';
 import { settings } from '@globals/settings';
 import useFilledState from '@hooks/useFilledState';
 import { useRouter } from 'next/router';
 import { HeaderDropdown, HeaderTop } from './Header';
+import { AppProps } from 'next/app';
+import { NextComponentType, NextPageContext } from 'next';
 
 const { menuBreak, headerHeight } = settings;
-interface layoutProps {
-  content: React.ReactNode;
-}
+
 const useStyles = createStyles((theme, _params, getRef) => ({
   header: {
     paddingRight: 'var(--removed-scroll-width)',
@@ -29,7 +29,12 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     paddingBottom: 0,
   },
 }));
-export default function Layout({ content }: layoutProps) {
+
+type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> & {
+  children?: React.ReactNode;
+};
+
+export default function Layout({ children, ...others }: Props) {
   const { classes, cx } = useStyles();
   const [opened, setOpened] = useState(false);
   const filledState = useFilledState();
@@ -39,36 +44,34 @@ export default function Layout({ content }: layoutProps) {
     setOpened((o) => !o);
   };
   return (
-    <>
-      <AppShell
-        classNames={{
-          main: classes.main,
-        }}
-        padding={0}
-        header={
-          <Header
-            fixed
-            className={cx(classes.header, { [classes.filled]: !headerCheck })}
-            height={headerHeight}
-          >
-            <HeaderTop menuBreak={menuBreak} clickEvent={clickEvent} opened={opened} />
-          </Header>
-        }
-        navbar={<HeaderDropdown menuBreak={menuBreak} opened={opened} />}
-        footer={
-          <Footer
-            height={158}
-            p="md"
-            sx={(theme) => ({
-              background: theme.other.gradient,
-            })}
-          >
-            <Text>Scroll position: {`${filledState}`}</Text>
-          </Footer>
-        }
-      >
-        {content}
-      </AppShell>
-    </>
+    <AppShell
+      classNames={{
+        main: classes.main,
+      }}
+      padding={0}
+      header={
+        <Header
+          fixed
+          className={cx(classes.header, { [classes.filled]: !headerCheck })}
+          height={headerHeight}
+        >
+          <HeaderTop menuBreak={menuBreak} clickEvent={clickEvent} opened={opened} />
+        </Header>
+      }
+      navbar={<HeaderDropdown menuBreak={menuBreak} opened={opened} />}
+      footer={
+        <Footer
+          height={158}
+          p="md"
+          sx={(theme) => ({
+            background: theme.other.gradient,
+          })}
+        >
+          <Text>Scroll position: {`${filledState}`}</Text>
+        </Footer>
+      }
+    >
+      {children}
+    </AppShell>
   );
 }

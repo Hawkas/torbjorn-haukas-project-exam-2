@@ -2,14 +2,32 @@ import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ActionIcon, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
-import { useModals, ContextModalProps } from '@mantine/modals';
+import { useForm, zodResolver } from '@mantine/form';
+import { useModals } from '@mantine/modals';
 import { textStyles } from '@styles/typography';
-import React from 'react';
-import { ContactIconsList } from './ContactIconsList';
+import { z } from 'zod';
 import { useStyles } from './Contact.styles';
+import { ContactIconsList } from './ContactIconsList';
+
+const contactSchema = z.object({
+  name: z.string().min(1, { message: 'Please enter your name' }),
+  email: z.string().email({ message: 'Invalid email' }),
+  subject: z
+    .string()
+    .min(1, { message: 'Your message needs a subject' })
+    .max(40, { message: 'Must be fewer than 40 characters' }),
+  message: z
+    .string()
+    .min(25, { message: 'Must be 25 or more characters long' })
+    .max(1000, { message: 'Please limit your message to 1000 characters' }),
+});
 
 export function Contact() {
   const modals = useModals();
+  const form = useForm({
+    schema: zodResolver(contactSchema),
+    initialValues: { name: '', email: '', subject: '', message: '' },
+  });
   const { classes, cx } = useStyles();
   const { classes: textClass } = textStyles();
   return (
@@ -27,7 +45,7 @@ export function Contact() {
           <ContactIconsList className={classes.iconList} />
         </div>
 
-        <form className={classes.form} onSubmit={(event) => event.preventDefault()}>
+        <form className={classes.form} onSubmit={form.onSubmit((values) => console.log(values))}>
           <ActionIcon
             sx={{ position: 'absolute', top: 0, right: 0 }}
             onClick={() => modals.closeModal('contact')}
@@ -40,14 +58,15 @@ export function Contact() {
 
           <div>
             <TextInput
-              mt="xl"
               classNames={{
                 label: cx(classes.label, textClass.label),
                 root: classes.root,
                 input: classes.textInput,
               }}
+              mt="xl"
               label="Name"
               placeholder="Enter your name"
+              {...form.getInputProps('name', { type: 'input' })}
             />
 
             <TextInput
@@ -59,6 +78,7 @@ export function Contact() {
               mt="xl"
               label="Email"
               placeholder="Enter your email"
+              {...form.getInputProps('email')}
             />
 
             <TextInput
@@ -70,6 +90,7 @@ export function Contact() {
               mt="xl"
               label="Subject"
               placeholder="Enter a subject"
+              {...form.getInputProps('subject')}
             />
 
             <Textarea
@@ -82,10 +103,11 @@ export function Contact() {
               label="Message"
               placeholder="Enter your message"
               minRows={5}
+              {...form.getInputProps('message')}
             />
 
             <Group position="right">
-              <PrimaryButton type="button" primary className={classes.control}>
+              <PrimaryButton type="submit" primary className={classes.control}>
                 Send message
               </PrimaryButton>
             </Group>

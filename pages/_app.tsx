@@ -5,10 +5,10 @@ import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from '@styles/holidazeTheme';
-import { AppProps } from 'next/app';
+import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import React from 'react';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
+
 config.autoAddCss = false;
 
 export default function App(props: AppProps) {
@@ -22,7 +22,7 @@ export default function App(props: AppProps) {
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
         <ModalsProvider modals={{ contact: FormModal }} modalProps={formModalSettings}>
           <NotificationsProvider>
-            <Layout content={<Component {...pageProps} />} />
+            <Layout children={<Component {...pageProps} />} />
           </NotificationsProvider>
         </ModalsProvider>
       </MantineProvider>

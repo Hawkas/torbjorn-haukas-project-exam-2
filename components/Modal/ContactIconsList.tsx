@@ -4,24 +4,21 @@ import { Box, createStyles, Group, Text } from '@mantine/core';
 import { textStyles } from '@styles/typography';
 import React from 'react';
 
-const useStyles = createStyles((theme) => ({
+const iconStyles = createStyles((theme) => ({
   wrapper: {
     display: 'flex',
     alignItems: 'center',
     color: theme.white,
   },
-
   icon: {
     fontSize: '35px',
     backgroundColor: 'transparent',
   },
-
   title: {
     color: theme.fn.rgba(theme.white, 0.75),
     margin: 0,
     marginBottom: theme.other.smallSpacing.sm,
   },
-
   description: {
     margin: 0,
     color: theme.white,
@@ -36,7 +33,7 @@ interface ContactIconProps extends Omit<React.ComponentPropsWithoutRef<'div'>, '
 }
 
 function ContactIcon({ icon, title, description, className, ...others }: ContactIconProps) {
-  const { classes, cx } = useStyles();
+  const { classes, cx } = iconStyles();
   const { classes: textClass } = textStyles();
   return (
     <div className={cx(classes.wrapper, className)} {...others}>

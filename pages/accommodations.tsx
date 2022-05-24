@@ -1,7 +1,6 @@
 import Head from 'next/head';
-import { Welcome } from '../components/Welcome/Welcome';
 
-export default function HomePage() {
+export default function Accommodations() {
   const title = 'Accommodations | Holidaze';
   return (
     <>
@@ -14,7 +13,6 @@ export default function HomePage() {
           key="description"
         />
       </Head>
-      <Welcome />
       <p>Accommodations</p>
     </>
   );
