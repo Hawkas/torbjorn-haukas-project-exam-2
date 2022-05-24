@@ -1,50 +1,74 @@
 import NextAuth from 'next-auth';
-import Auth0Provider from 'next-auth/providers/auth0';
-// import EmailProvider from "next-auth/providers/email"
-// import AppleProvider from "next-auth/providers/apple"
+import CredentialsProvider from 'next-auth/providers/credentials';
+import axios from 'axios';
+import type { DefaultJWT } from 'next-auth/jwt';
 
+type Credentials =
+  | {
+      email: string;
+      password: string;
+    }
+  | undefined;
+
+type User = {
+  jwt: string;
+  user: {
+    id: number | string;
+    username: string;
+    email: string;
+  };
+};
+function makeToken(user: User, token: DefaultJWT): void {
+  token.jwt = user.jwt;
+  token.id = user.user.id;
+  token.name = user.user.username;
+  token.email = user.user.email;
+}
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
-    // EmailProvider({
-    //   server: process.env.EMAIL_SERVER,
-    //   from: process.env.EMAIL_FROM,
-    // }),
-    // AppleProvider({
-    //   clientId: process.env.APPLE_ID,
-    //   clientSecret: {
-    //     appleId: process.env.APPLE_ID,
-    //     teamId: process.env.APPLE_TEAM_ID,
-    //     privateKey: process.env.APPLE_PRIVATE_KEY,
-    //     keyId: process.env.APPLE_KEY_ID,
-    //   },
-    // }),
-    Auth0Provider({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      // @ts-ignore
-      domain: process.env.AUTH0_DOMAIN,
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. 'Sign in with...')
+      name: 'Credentials',
+      // The credentials is used to generate a suitable form on the sign in page.
+      // You can specify whatever fields you are expecting to be submitted.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: 'Email', type: 'text', placeholder: 'Enter your email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        try {
+          const user = (inputValues: Credentials) => {
+            if (!inputValues) return;
+            return { email: inputValues.email, password: inputValues.password };
+          };
+
+          if (!user(credentials)) return null;
+          const { ...values } = user(credentials);
+          const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/local`, {
+            identifier: values.email,
+            password: values.password,
+          });
+          if (!data) return null;
+          return data;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      },
     }),
   ],
-  // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
-  // https://next-auth.js.org/configuration/databases
-  //
-  // Notes:
-  // * You must install an appropriate node_module for your database
-  // * The Email provider requires a database (OAuth providers do not)
-  // database: process.env.DATABASE_URL,
-
-  // The secret should be set to a reasonably long random string.
-  // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
-  // a separate secret is defined explicitly for encrypting the JWT.
   secret: process.env.SECRET,
-
+  theme: {
+    colorScheme: 'light',
+    brandColor: '#003355',
+    logo: '../../../public/logobig.svg',
+  },
   session: {
-    // Use JSON Web Tokens for session instead of database sessions.
-    // This option can be used with or without a database for users/accounts.
-    // Note: `strategy` should be set to 'jwt' if no database is used.
     strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
@@ -76,7 +100,7 @@ export default NextAuth({
   // pages is not specified for that route.
   // https://next-auth.js.org/configuration/pages
   pages: {
-    // signIn: '/auth/signin',  // Displays signin buttons
+    signIn: '/auth/signin', // Displays signin buttons
     // signOut: '/auth/signout', // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
@@ -90,13 +114,21 @@ export default NextAuth({
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
     // async session({ session, token, user }) { return session },
-    // async jwt({ token, user, account, profile, isNewUser }) { return token }
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        token.jwt = user.jwt;
+        token.id = user.id;
+        //@ts-ignore
+        token.name = user.user.username;
+        //@ts-ignore
+        token.email = user.user.email;
+      }
+      return Promise.resolve(token);
+    },
+    async session({ session, user }) {
+      session.jwt = user.jwt;
+      session.id = user.id;
+      return Promise.resolve(session);
+    },
   },
-
-  // Events are useful for logging
-  // https://next-auth.js.org/configuration/events
-  events: {},
-
-  // Enable debug messages in the console if you are having problems
-  debug: false,
 });
