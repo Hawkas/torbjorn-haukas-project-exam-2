@@ -1,5 +1,5 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { Contact } from '@components/Modal/Contact';
+import { Contact } from '@components/Modal/Contact/Contact';
 import { Text, useMantineTheme } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import React from 'react';

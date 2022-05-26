@@ -1,11 +1,15 @@
-import { ReactNode, useState } from 'react';
-import { AppShell, Header, Footer, createStyles, Text, AppShellProps } from '@mantine/core';
-import { settings } from '@globals/settings';
-import useFilledState from '@hooks/useFilledState';
+import { useState } from 'react';
+import { AppShell, Header, Footer, createStyles } from '@mantine/core';
+import { settings } from 'lib/settings';
+import useFilledState from 'lib/hooks/useFilledState';
 import { useRouter } from 'next/router';
 import { HeaderDropdown, HeaderTop } from './Header';
-import { AppProps } from 'next/app';
-import { NextComponentType, NextPageContext } from 'next';
+
+import { containerStyles } from '@styles/containerStyles';
+
+import { textStyles } from '@styles/typography';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { FooterContent } from './Footer/FooterContent';
 
 const { menuBreak, headerHeight } = settings;
 
@@ -28,6 +32,9 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
+  footer: {
+    background: theme.fn.linearGradient(92, theme.colors.blue[8], '#051524'),
+  },
 }));
 
 type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> & {
@@ -35,7 +42,12 @@ type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> & {
 };
 
 export default function Layout({ children, ...others }: Props) {
+  const { data: session } = useSession();
   const { classes, cx } = useStyles();
+  const { classes: textClass } = textStyles();
+  const {
+    classes: { container },
+  } = containerStyles();
   const [opened, setOpened] = useState(false);
   const filledState = useFilledState();
   const router = useRouter();
@@ -60,14 +72,8 @@ export default function Layout({ children, ...others }: Props) {
       }
       navbar={<HeaderDropdown menuBreak={menuBreak} opened={opened} />}
       footer={
-        <Footer
-          height={158}
-          p="md"
-          sx={(theme) => ({
-            background: theme.other.gradient,
-          })}
-        >
-          <Text>Scroll position: {`${filledState}`}</Text>
+        <Footer height={214} className={classes.footer}>
+          <FooterContent />
         </Footer>
       }
     >

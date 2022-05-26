@@ -6,6 +6,7 @@ export const FormModal = ({
   id = 'formModal',
   innerProps,
 }: ContextModalProps<{ modalBody: React.ReactElement; id: string }>) => {
+  if (innerProps.id) id = innerProps.id;
   return <>{innerProps.modalBody}</>;
 };
 export const formModalSettings: ModalSettings = {
@@ -25,4 +26,5 @@ export const formModalSettings: ModalSettings = {
   padding: 0,
   withCloseButton: false,
   overflow: 'outside',
+  centered: true,
 };

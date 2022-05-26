@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ActionIcon, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
-import { textStyles } from '@styles/typography';
+import { textStyles } from 'lib/styles/typography';
 import { z } from 'zod';
 import { useStyles } from './Contact.styles';
 import { ContactIconsList } from './ContactIconsList';

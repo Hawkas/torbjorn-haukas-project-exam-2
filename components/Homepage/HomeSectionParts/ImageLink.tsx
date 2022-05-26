@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, useMantineTheme, Image, Paper, Box, createStyles } from '@mantine/core';
-import { textStyles } from '@styles/typography';
+import { textStyles } from 'lib/styles/typography';
 
 interface ImageLink {
   text: string;

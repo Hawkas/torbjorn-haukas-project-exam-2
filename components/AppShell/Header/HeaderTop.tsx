@@ -1,6 +1,7 @@
 import { Anchor, Burger, MantineNumberSize, MediaQuery, useMantineTheme } from '@mantine/core';
 import Logo from '@public/logobig.svg';
-import { containerStyles } from '@styles/containerStyles';
+import { containerStyles } from 'lib/styles/containerStyles';
+import Link from 'next/link';
 import React, { MouseEventHandler } from 'react';
 import { headerStyles } from './HeaderTop.styles';
 import { NavMenu } from './Navigation/NavMenu';
@@ -21,9 +22,11 @@ export function HeaderTop({ opened, menuBreak, clickEvent }: HeaderProps) {
   return (
     <>
       <div className={cx(container, classes.headerInner)}>
-        <Anchor href="/" style={{ display: 'flex', alignItems: 'center' }}>
-          <Logo />
-        </Anchor>
+        <Link href="/" passHref>
+          <Anchor component="a" className={classes.logo}>
+            <Logo />
+          </Anchor>
+        </Link>
         <MediaQuery largerThan={menuBreak} styles={{ display: 'none' }}>
           <Burger opened={opened} onClick={setOpened} size="md" color={theme.white} />
         </MediaQuery>

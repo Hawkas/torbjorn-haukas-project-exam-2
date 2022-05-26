@@ -17,13 +17,14 @@
     "baseUrl": ".",
     "paths": {
       "@Buttons/*": ["components/Buttons/*"],
+      "@AppShell/*": ["components/AppShell/*"],
       "@Homepage/*": ["components/Homepage/*"],
-      "@styles/*": ["globals/styles/*"],
-      "@hooks/*": ["globals/hooks/*"],
-      "@helpers/*": ["globals/helpers/*"],
+      "@styles/*": ["lib/styles/*"],
+      "@hooks/*": ["lib/hooks/*"],
+      "@helpers/*": ["lib/helpers/*"],
       "@public/*": ["public/*"],
       "@components/*": ["components/*"],
-      "@globals/*": ["globals/*"]
+      "@globals/*": ["lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

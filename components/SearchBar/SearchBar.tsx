@@ -2,7 +2,7 @@ import { faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Autocomplete, Avatar, Group, MantineColor, SelectItemProps, Text } from '@mantine/core';
 import { forwardRef } from 'react';
-import { textStyles } from '../../globals/styles/typography';
+import { textStyles } from '../../lib/styles/typography';
 import { searchStyles } from './SearchBar.styles';
 
 const charactersList = [

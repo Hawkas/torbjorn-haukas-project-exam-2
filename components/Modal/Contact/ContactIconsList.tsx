@@ -1,7 +1,7 @@
 import { faAt, faClock, faLocationDot, faPhone } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, createStyles, Group, Text } from '@mantine/core';
-import { textStyles } from '@styles/typography';
+import { textStyles } from 'lib/styles/typography';
 import React from 'react';
 
 const iconStyles = createStyles((theme) => ({

@@ -1,9 +1,7 @@
-import { Contact } from '@components/Modal/Contact';
-import { fishingVillage, sunset } from '@globals/images';
+import { fishingVillage, sunset } from 'lib/images';
 import { ImageLinks } from '@Homepage/HomeSectionParts/ImageLinks';
 import { Center, Container, useMantineTheme } from '@mantine/core';
-import { containerStyles } from '@styles/containerStyles';
-import React from 'react';
+import { containerStyles } from 'lib/styles/containerStyles';
 import {
   ArticleFirst,
   ArticleGrid,

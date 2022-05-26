@@ -15,4 +15,8 @@ export const headerStyles = createStyles((theme, menuBreak: MantineNumberSize) =
       display: 'none',
     },
   },
+  logo: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));

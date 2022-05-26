@@ -1,6 +1,6 @@
 import React from 'react';
 import { SimpleGrid } from '@mantine/core';
-import { bnb, guesthouse, hotel } from '@globals/images';
+import { bnb, guesthouse, hotel } from 'lib/images';
 import ImageLink from './ImageLink';
 
 export function ImageLinks() {

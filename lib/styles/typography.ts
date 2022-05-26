@@ -68,6 +68,10 @@ export const textStyles = createStyles((theme) => ({
   breadcrumb: {
     fontSize: 'clamp(0.875rem, 0.7188rem + 0.7813vw, 1rem)',
   },
+  finePrint: {
+    fontSize: theme.other.fontSizes.xs,
+    color: theme.colors.gray[5],
+  },
   priceBig: {
     fontSize: theme.other.fontSizes.xxl,
     lineHeight: theme.other.lineHeights.heading,

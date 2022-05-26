@@ -1,6 +1,6 @@
 import React from 'react';
 import { Title, Text, useMantineTheme, TextProps } from '@mantine/core';
-import { textStyles } from '@styles/typography';
+import { textStyles } from 'lib/styles/typography';
 
 interface TextBlockProps extends TextProps<'p'> {
   subheader: string;

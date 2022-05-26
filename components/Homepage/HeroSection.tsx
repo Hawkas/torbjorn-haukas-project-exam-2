@@ -1,6 +1,6 @@
 import { BackgroundImage, Box, Center, Grid, Title } from '@mantine/core';
-import { textStyles } from '@styles/typography';
-import { containerStyles } from '../../globals/styles/containerStyles';
+import { textStyles } from 'lib/styles/typography';
+import { containerStyles } from '../../lib/styles/containerStyles';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { heroStyles } from './HeroSection.styles';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps, createStyles, useMantineTheme } from '@mantine/core';
-import { textStyles } from '@styles/typography';
+import { textStyles } from 'lib/styles/typography';
 
 const buttonStyles = createStyles((theme) => ({
   button: {

@@ -7,6 +7,7 @@ export const useStyles = createStyles((theme) => {
 
   return {
     wrapper: {
+      position: 'relative',
       display: 'flex',
       backgroundColor: theme.white,
       borderRadius: theme.radius.lg,
@@ -69,6 +70,7 @@ export const useStyles = createStyles((theme) => {
         order: 1,
         marginTop: theme.other.largeSpacing.xl,
       },
+      paddingBottom: theme.other.largeSpacing.xxl,
     },
     iconList: {
       marginLeft: '-4px',
