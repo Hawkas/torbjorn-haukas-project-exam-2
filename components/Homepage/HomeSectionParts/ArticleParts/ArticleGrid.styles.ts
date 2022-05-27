@@ -9,7 +9,7 @@ const heightScaling = (
 };
 export type ImageObject = { height: number; width: number; src: string; alt?: string };
 
-export const articleStyles = createStyles((theme, image: ImageObject, getRef) => ({
+export const useArticleStyles = createStyles((theme, image: ImageObject, getRef) => ({
   imageTaller: {
     ref: getRef('imageTaller'),
   },

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, ButtonProps, createStyles, useMantineTheme } from '@mantine/core';
-import { textStyles } from 'lib/styles/typography';
+import { useTextStyles } from 'lib/styles/typography';
 
-const buttonStyles = createStyles((theme) => ({
+const useButtonStyles = createStyles((theme) => ({
   button: {
     padding: `${theme.other.smallSpacing.md} ${theme.other.smallSpacing.xxl}`,
     height: theme.other.largeSpacing.xl,
@@ -21,8 +21,8 @@ export function PrimaryButton({
   ...others
 }: MyButton & Omit<ButtonProps<'button'>, 'component'> & Omit<ButtonProps<'a'>, 'component'>) {
   const theme = useMantineTheme();
-  const { classes, cx } = buttonStyles();
-  const { classes: textClass } = textStyles();
+  const { classes, cx } = useButtonStyles();
+  const { classes: textClass } = useTextStyles();
   return (
     <Button
       href={others.href}

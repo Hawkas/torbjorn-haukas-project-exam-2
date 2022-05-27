@@ -8,7 +8,7 @@ export function ArticleFirst() {
   return (
     <>
       <ArticleText subheader="We are Holidaze" title="We help you find accommodations">
-        <Text inherit component="p">
+        <Text m={0} inherit component="p">
           Holidaze is here to help travellers like you find lodging that suits your budget and
           needs. Whether you’d prefer to stay in the city of Bergen or a cozy cabin surrounded by
           spruce and pine trees, we’ll assist you in finding a comfortable place to relax during

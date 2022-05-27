@@ -1,6 +1,6 @@
 import { createStyles, MantineNumberSize } from '@mantine/core';
 
-export const headerStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
+export const useHeaderStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
   headerInner: {
     display: 'flex',
     justifyContent: 'space-between',

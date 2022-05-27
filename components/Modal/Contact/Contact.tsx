@@ -1,10 +1,11 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { submitMessage } from '@helpers/handleMessage';
 import { ActionIcon, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
-import { textStyles } from 'lib/styles/typography';
+import { useTextStyles } from 'lib/styles/typography';
 import { z } from 'zod';
 import { useStyles } from './Contact.styles';
 import { ContactIconsList } from './ContactIconsList';
@@ -29,7 +30,7 @@ export function Contact() {
     initialValues: { name: '', email: '', subject: '', message: '' },
   });
   const { classes, cx } = useStyles();
-  const { classes: textClass } = textStyles();
+  const { classes: textClass } = useTextStyles();
   return (
     <Paper shadow="md" radius="lg">
       <div className={classes.wrapper}>
@@ -45,7 +46,7 @@ export function Contact() {
           <ContactIconsList className={classes.iconList} />
         </div>
 
-        <form className={classes.form} onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form className={classes.form} onSubmit={form.onSubmit((values) => submitMessage(values))}>
           <ActionIcon
             sx={{ position: 'absolute', top: 0, right: 0 }}
             onClick={() => modals.closeModal('contact')}

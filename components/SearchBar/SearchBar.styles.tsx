@@ -1,6 +1,6 @@
 import { createStyles } from '@mantine/core';
 
-export const searchStyles = createStyles((theme) => ({
+export const useSearchStyles = createStyles((theme) => ({
   searchbar: {
     width: '100%',
     padding: theme.other.smallSpacing.xl,

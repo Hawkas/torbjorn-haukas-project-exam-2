@@ -5,9 +5,9 @@ import useFilledState from 'lib/hooks/useFilledState';
 import { useRouter } from 'next/router';
 import { HeaderDropdown, HeaderTop } from './Header';
 
-import { containerStyles } from '@styles/containerStyles';
+import { useContainerStyles } from '@styles/containerStyles';
 
-import { textStyles } from '@styles/typography';
+import { useTextStyles } from '@styles/typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FooterContent } from './Footer/FooterContent';
 
@@ -30,6 +30,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   main: {
     width: '100%',
     paddingTop: 0,
+    minHeight: 'calc(100vh - 213px)',
     paddingBottom: 0,
   },
   footer: {
@@ -44,10 +45,10 @@ type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> & {
 export default function Layout({ children, ...others }: Props) {
   const { data: session } = useSession();
   const { classes, cx } = useStyles();
-  const { classes: textClass } = textStyles();
+  const { classes: textClass } = useTextStyles();
   const {
     classes: { container },
-  } = containerStyles();
+  } = useContainerStyles();
   const [opened, setOpened] = useState(false);
   const filledState = useFilledState();
   const router = useRouter();

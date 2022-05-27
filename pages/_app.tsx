@@ -9,6 +9,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
 import { SessionProvider, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 config.autoAddCss = false;
 type AppPropsWithAuth = AppProps & {
@@ -51,12 +52,18 @@ export default function App(props: AppPropsWithAuth) {
 type AuthProps = {
   children: JSX.Element;
 };
-function Auth({ children }: AuthProps) {
-  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
-  const { status } = useSession({ required: true });
 
+function Auth({ children }: AuthProps) {
+  const router = useRouter();
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/');
+    },
+  });
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <p style={{ margin: '0 auto', marginTop: '160px', fontSize: '82px' }}>HOLD UP</p>;
   }
 
   return children;

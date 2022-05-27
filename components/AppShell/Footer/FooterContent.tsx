@@ -1,15 +1,15 @@
 import { createStyles, Text, Box, Anchor } from '@mantine/core';
-import { containerStyles } from '@styles/containerStyles';
+import { useContainerStyles } from '@styles/containerStyles';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import Logo from '@public/logobig.svg';
-import { textStyles } from '@styles/typography';
+import { useTextStyles } from '@styles/typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useModals } from '@mantine/modals';
 import { SignIn } from '@components/Modal/LogIn/SignIn';
 import { useRouter } from 'next/router';
 
-const footerStyles = createStyles((theme) => ({
+const useFooterStyles = createStyles((theme) => ({
   wrapper: {
     display: 'flex',
     height: '100%',
@@ -46,11 +46,11 @@ export function FooterContent() {
   const router = useRouter();
   const { data: session } = useSession();
   const modals = useModals();
-  const { classes, cx } = footerStyles();
-  const { classes: textClass } = textStyles();
+  const { classes, cx } = useFooterStyles();
+  const { classes: textClass } = useTextStyles();
   const {
     classes: { container },
-  } = containerStyles();
+  } = useContainerStyles();
   const openSignInModal = () => {
     modals.openContextModal('signIn', {
       innerProps: {
@@ -71,12 +71,13 @@ export function FooterContent() {
           <PrimaryButton
             variant="outline"
             className={classes.logIn}
-            onClick={() =>
-              signOut({
-                callbackUrl: process.env.NEXTAUTH_URL,
+            onClick={async () => {
+              const data = await signOut({
+                callbackUrl: '/',
                 redirect: router.pathname === '/admin' ? true : false,
-              })
-            }
+              });
+              if (data) router.push(data.url);
+            }}
           >
             Log out
           </PrimaryButton>

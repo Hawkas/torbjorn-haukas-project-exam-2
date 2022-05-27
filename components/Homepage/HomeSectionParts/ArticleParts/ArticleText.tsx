@@ -1,6 +1,6 @@
 import React from 'react';
 import { Title, Text, useMantineTheme, TextProps } from '@mantine/core';
-import { textStyles } from 'lib/styles/typography';
+import { useTextStyles } from 'lib/styles/typography';
 
 interface TextBlockProps extends TextProps<'p'> {
   subheader: string;
@@ -8,7 +8,7 @@ interface TextBlockProps extends TextProps<'p'> {
 }
 export function ArticleText({ subheader, title, children, mt, align }: TextBlockProps) {
   const theme = useMantineTheme();
-  const { classes: textClass } = textStyles();
+  const { classes: textClass } = useTextStyles();
   return (
     <>
       <Title

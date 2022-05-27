@@ -4,7 +4,7 @@ export type LinkStyleProps = {
   menuBreak: MantineNumberSize;
 };
 
-export const navStyles = createStyles((theme, { menuBreak }: LinkStyleProps, getRef) => ({
+export const useNavStyles = createStyles((theme, { menuBreak }: LinkStyleProps, getRef) => ({
   button: { display: 'flex', justifyContent: 'flex-start' },
   links: {
     color: theme.black,

@@ -1,9 +1,9 @@
 import { Anchor, Burger, MantineNumberSize, MediaQuery, useMantineTheme } from '@mantine/core';
 import Logo from '@public/logobig.svg';
-import { containerStyles } from 'lib/styles/containerStyles';
+import { useContainerStyles } from 'lib/styles/containerStyles';
 import Link from 'next/link';
 import React, { MouseEventHandler } from 'react';
-import { headerStyles } from './HeaderTop.styles';
+import { useHeaderStyles } from './HeaderTop.styles';
 import { NavMenu } from './Navigation/NavMenu';
 
 export interface HeaderProps {
@@ -14,10 +14,10 @@ export interface HeaderProps {
 
 export function HeaderTop({ opened, menuBreak, clickEvent }: HeaderProps) {
   const theme = useMantineTheme();
-  const { classes, cx } = headerStyles(menuBreak);
+  const { classes, cx } = useHeaderStyles(menuBreak);
   const {
     classes: { container },
-  } = containerStyles();
+  } = useContainerStyles();
   const setOpened = clickEvent;
   return (
     <>

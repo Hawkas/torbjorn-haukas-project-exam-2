@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ActionIcon, TextInput, Group, Text, LoadingOverlay, Alert } from '@mantine/core';
 import { zodResolver, useForm } from '@mantine/form';
 import { useModals } from '@mantine/modals';
-import { textStyles } from '@styles/typography';
+import { useTextStyles } from '@styles/typography';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { string, z } from 'zod';
 import { useStyles } from '../Contact/Contact.styles';
 
@@ -27,6 +27,7 @@ interface Credentials {
   password: string;
 }
 type Results = ResponseObject;
+
 async function modalSignIn(values: Credentials) {
   const response: any = signIn('credentials', {
     redirect: false,
@@ -39,7 +40,9 @@ async function modalSignIn(values: Credentials) {
 export function SignIn() {
   const modals = useModals();
   const router = useRouter();
+
   const { data: session } = useSession();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const form = useForm({
@@ -47,9 +50,13 @@ export function SignIn() {
     initialValues: { email: '', password: '' },
   });
   const { classes, cx } = useStyles();
-  const { classes: textClass } = textStyles();
+  const { classes: textClass } = useTextStyles();
   const loadingToggle = () => setLoading((o) => !o);
   const errorToggle = () => setError((o) => !o);
+
+  useEffect(() => {
+    router.prefetch('/admin');
+  });
 
   async function handleSignIn(values: Credentials) {
     loadingToggle();
@@ -98,6 +105,7 @@ export function SignIn() {
                 input: classes.textInput,
               }}
               mt="xl"
+              type="email"
               label="Email"
               placeholder="Enter your email"
               {...form.getInputProps('email')}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, createStyles } from '@mantine/core';
 import { ImageObject } from './ArticleGrid.styles';
 
-export const imageStyles = createStyles((theme, _param, getRef) => ({
+export const useImgStyles = createStyles((theme, _param, getRef) => ({
   tallImg: {
     ref: getRef('tallImg'),
   },
@@ -35,7 +35,7 @@ export interface ArticleImageProps {
 }
 
 export function ArticleImage({ image, tallImg }: ArticleImageProps) {
-  const { classes, cx } = imageStyles();
+  const { classes, cx } = useImgStyles();
   return (
     <>
       <Image

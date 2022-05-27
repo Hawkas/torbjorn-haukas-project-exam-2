@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, useMantineTheme, Image, Paper, Box, createStyles } from '@mantine/core';
-import { textStyles } from 'lib/styles/typography';
+import { useTextStyles } from 'lib/styles/typography';
 
 interface ImageLink {
   text: string;
@@ -8,7 +8,7 @@ interface ImageLink {
   href?: string;
 }
 
-const imageLinkStyles = createStyles((theme, _params, getRef) => ({
+const useImageStyles = createStyles((theme, _params, getRef) => ({
   image: {
     ref: getRef('image'),
     transform: 'scale(1)',
@@ -37,8 +37,8 @@ const imageLinkStyles = createStyles((theme, _params, getRef) => ({
 
 export default function ImageLink({ text, imgSrc, href }: ImageLink) {
   const theme = useMantineTheme();
-  const { classes } = imageLinkStyles();
-  const { classes: textClass } = textStyles();
+  const { classes } = useImageStyles();
+  const { classes: textClass } = useTextStyles();
   return (
     <>
       <Box className={classes.root} component="a" href={href}>

@@ -1,7 +1,7 @@
 import { fishingVillage, sunset } from 'lib/images';
 import { ImageLinks } from '@Homepage/HomeSectionParts/ImageLinks';
 import { Center, Container, useMantineTheme } from '@mantine/core';
-import { containerStyles } from 'lib/styles/containerStyles';
+import { useContainerStyles } from 'lib/styles/containerStyles';
 import {
   ArticleFirst,
   ArticleGrid,
@@ -13,7 +13,7 @@ export function RestOfThePage() {
   const theme = useMantineTheme();
   const {
     classes: { container },
-  } = containerStyles();
+  } = useContainerStyles();
 
   return (
     <>

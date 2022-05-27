@@ -1,6 +1,6 @@
 import { createStyles } from '@mantine/core';
 
-export const textStyles = createStyles((theme) => ({
+export const useTextStyles = createStyles((theme) => ({
   displayH1: {
     color: theme.white,
     fontSize: theme.other.headingSizes.display,

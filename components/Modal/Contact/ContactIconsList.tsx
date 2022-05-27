@@ -1,7 +1,7 @@
 import { faAt, faClock, faLocationDot, faPhone } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, createStyles, Group, Text } from '@mantine/core';
-import { textStyles } from 'lib/styles/typography';
+import { useTextStyles } from 'lib/styles/typography';
 import React from 'react';
 
 const iconStyles = createStyles((theme) => ({
@@ -34,7 +34,7 @@ interface ContactIconProps extends Omit<React.ComponentPropsWithoutRef<'div'>, '
 
 function ContactIcon({ icon, title, description, className, ...others }: ContactIconProps) {
   const { classes, cx } = iconStyles();
-  const { classes: textClass } = textStyles();
+  const { classes: textClass } = useTextStyles();
   return (
     <div className={cx(classes.wrapper, className)} {...others}>
       <Box mr="sm">

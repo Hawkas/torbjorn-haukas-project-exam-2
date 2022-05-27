@@ -1,24 +1,27 @@
 import { BackgroundImage, Box, Center, Grid, Title } from '@mantine/core';
-import { textStyles } from 'lib/styles/typography';
-import { containerStyles } from '../../lib/styles/containerStyles';
+import { useTextStyles } from 'lib/styles/typography';
+import { HomepageProps } from 'pages';
+import React from 'react';
+import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
+import { useContainerStyles } from '../../lib/styles/containerStyles';
 import { SearchBar } from '../SearchBar/SearchBar';
-import { heroStyles } from './HeroSection.styles';
+import { useHeroStyle } from './HeroSection.styles';
 
-export function HeroSection() {
-  const { classes } = heroStyles();
+export function HeroSection({ data }: HomepageProps) {
+  const { classes, cx } = useHeroStyle();
   const {
-    classes: { container },
-  } = containerStyles();
+    classes: { container, firstContainer },
+  } = useContainerStyles();
   const {
     classes: { displayH1 },
-  } = textStyles();
+  } = useTextStyles();
   return (
     <Box className={classes.fluidContainer} component="header" px="0">
       <BackgroundImage src="/fjordview-2556w.jpg">
         <Box className={classes.imageOverlay}>
-          <Center className={container}>
+          <Center>
             <Grid
-              className={classes.contentGrid}
+              className={cx(container, firstContainer, classes.contentGrid)}
               gutter={0}
               grow
               justify="center"
@@ -33,7 +36,7 @@ export function HeroSection() {
                 </Title>
               </Grid.Col>
               <Grid.Col span={12}>
-                <SearchBar />
+                <SearchBar data={data} />
               </Grid.Col>
             </Grid>
           </Center>

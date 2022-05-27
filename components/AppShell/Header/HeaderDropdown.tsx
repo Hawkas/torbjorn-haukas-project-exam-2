@@ -1,12 +1,12 @@
 import { GroupedTransition, Navbar } from '@mantine/core';
-import { dropdownStyles } from './HeaderDropdown.styles';
+import { useDropdownStyles } from './HeaderDropdown.styles';
 import { NavMenu } from './Navigation/NavMenu';
 import { HeaderProps } from './HeaderTop';
 
 const duration = 500;
 
 export function HeaderDropdown({ menuBreak, opened }: HeaderProps) {
-  const { classes } = dropdownStyles(menuBreak);
+  const { classes } = useDropdownStyles(menuBreak);
   return (
     <>
       <GroupedTransition

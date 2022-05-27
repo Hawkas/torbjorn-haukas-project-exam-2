@@ -1,6 +1,6 @@
 import { createStyles, MantineNumberSize } from '@mantine/core';
 
-export const dropdownStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
+export const useDropdownStyles = createStyles((theme, menuBreak: MantineNumberSize) => ({
   vertical: {
     height: '100vh',
     display: 'none',

@@ -1,6 +1,6 @@
 import { Grid, useMantineTheme } from '@mantine/core';
 import React from 'react';
-import { articleStyles, ImageObject } from './ArticleGrid.styles';
+import { useArticleStyles, ImageObject } from './ArticleGrid.styles';
 import { ArticleImage } from './ArticleImage';
 
 interface ArticleBlockProps {
@@ -12,7 +12,7 @@ interface ArticleBlockProps {
 
 export function ArticleGrid({ image, tallImg, imageLeft, children }: ArticleBlockProps) {
   const theme = useMantineTheme();
-  const { classes, cx } = articleStyles(image);
+  const { classes, cx } = useArticleStyles(image);
   return (
     <Grid
       mt={theme.other.sectionSpacing.lg}

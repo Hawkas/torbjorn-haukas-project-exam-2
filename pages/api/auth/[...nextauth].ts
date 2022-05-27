@@ -1,8 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import Auth0Provider from 'next-auth/providers/auth0';
 import axios from 'axios';
-import logo from '../../../public/LogoBlue.png';
+
 type Credentials =
   | {
       email: string;
@@ -27,6 +26,8 @@ export default NextAuth({
     //   clientSecret: process.env.AUTH0_CLIENT_SECRET,
     //   issuer: process.env.AUTH0_ISSUER,
     // }),
+    //! I use credentials because I want my login in a modal and this was the easiest to implement.
+    //! Implementing 0Auth when I have a single user would also be silly.
     CredentialsProvider({
       name: 'Holidaze',
       credentials: {
@@ -35,17 +36,23 @@ export default NextAuth({
       },
       async authorize(credentials) {
         try {
+          // This is to make typescript shut up
           const user = (inputValues: Credentials) => {
+            // and to confirm the NextAuth API correctly received the input values before making the request.
             if (!inputValues?.email || !inputValues?.password) return;
             return { email: inputValues.email, password: inputValues.password };
           };
-          console.log(user(credentials));
+          // console.log(user(credentials));
           if (!user(credentials)) return null;
+          // Now typescript will believe these values exist and stop bickering.
           const { ...values } = user(credentials);
+
           const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/local`, {
             identifier: values.email,
             password: values.password,
           });
+          console.log('FROM CREDENTIALS PROVIDER:');
+          console.log(data);
           if (!data) return null;
           return data;
         } catch (error) {
@@ -55,10 +62,11 @@ export default NextAuth({
       },
     }),
   ],
+  // Theme for backup login page, in case someone tries to go to /admin directly.
   theme: {
     colorScheme: 'light',
     brandColor: '#003355',
-    logo: 'https://i.imgur.com/iSAhDFQ.png',
+    logo: 'https://i.imgur.com/iSAhDFQ.png', // Apparently I can't use images from my public folder directly?
   },
   session: {
     strategy: 'jwt',

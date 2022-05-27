@@ -1,9 +1,11 @@
+import { faLocationDot } from '@fortawesome/pro-regular-svg-icons';
 import { faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Autocomplete, Avatar, Group, MantineColor, SelectItemProps, Text } from '@mantine/core';
+import { HomepageProps } from 'pages';
 import { forwardRef } from 'react';
-import { textStyles } from '../../lib/styles/typography';
-import { searchStyles } from './SearchBar.styles';
+import { useTextStyles } from '../../lib/styles/typography';
+import { useSearchStyles } from './SearchBar.styles';
 
 const charactersList = [
   {
@@ -29,24 +31,28 @@ const charactersList = [
   },
 ];
 
-const data = charactersList.map((item) => ({ ...item, value: item.label }));
+const datum = charactersList.map((item) => ({ ...item, value: item.label }));
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
-  description: string;
+  location: string;
   image: string;
+  type: string;
 }
 
 const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ description, value, image, ...others }: ItemProps, ref) => (
+  ({ location, value, image, type, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
       <Group noWrap>
-        <Avatar src={image} />
-
+        <Avatar size="xl" alt={value} src={image} />
         <div>
-          <Text>{value}</Text>
-          <Text size="xs" color="dimmed">
-            {description}
+          <Text weight="600">{value}</Text>
+          <Text size="sm" color="dimmed">
+            <FontAwesomeIcon style={{ marginRight: '8px' }} icon={faLocationDot} />
+            {location}
+          </Text>
+          <Text size="xs" color="#003355">
+            {type}
           </Text>
         </div>
       </Group>
@@ -54,11 +60,17 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
   )
 );
 
-export function SearchBar() {
-  const { classes, cx } = searchStyles();
+export function SearchBar({ data }: HomepageProps) {
+  const autoComplete = data.map((item) => ({
+    image: item.images.cover.thumbnail.src,
+    value: item.name,
+    location: item.location,
+    type: item.type,
+  }));
+  const { classes, cx } = useSearchStyles();
   const {
     classes: { subHeader },
-  } = textStyles();
+  } = useTextStyles();
   return (
     <Autocomplete
       classNames={{
@@ -74,10 +86,10 @@ export function SearchBar() {
       label="Plan your journey"
       placeholder="Search for accommodations"
       itemComponent={AutoCompleteItem}
-      data={data}
+      data={autoComplete}
       filter={(value, item) =>
         item.value.toLowerCase().includes(value.toLowerCase().trim()) ||
-        item.description.toLowerCase().includes(value.toLowerCase().trim())
+        item.location.toLowerCase().includes(value.toLowerCase().trim())
       }
     />
   );
