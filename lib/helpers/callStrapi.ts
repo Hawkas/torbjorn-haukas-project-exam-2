@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
 import { AccommodationsArray } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
 
@@ -28,28 +29,39 @@ const wildcardQuery = qs.stringify(
   { encodeValuesOnly: true }
 );
 
-export const fetchAccommodations = async () => {
+export const rawAccommodations = async () => {
   const headers = { Authorization: `Bearer ${process.env.API_PUBLIC_TOKEN}` };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/accommodations?${productsQuery}`;
+  const url = `/accommodations?${productsQuery}`;
   const method = 'GET';
   const params = { method, url, headers };
+
   try {
     const results: AxiosResponse = await axios.request(params);
+    console.log('PERFORMED API CALL CALLSTRAPI!!');
+    return results.data;
 
-    const { data } = removeFluff(results.data);
-    return { data };
+    // Stringify and push to array.
   } catch (error: any) {
-    // console.log(error);
-    return { error: `${error}` };
+    console.log(error);
+    return;
   }
 };
 
-// Since Strapi for whatever reason decides to nest images fifteen layers deep,
+// I preserve the raw data above for later use.
+export const fetchAccommodations = async () => {
+  const rawData = await rawAccommodations();
+  return removeFluff(await rawData);
+};
+
+// Since I decided to use Strapi's components system to make collection types where,
+// for example, the amount of room-types per hotel may vary, the data structure is deeply nested and messy.
+
+// On top of that, images are bundled with a ton of extra information that I have no use of in the front-end.
 // I'd rather just map out these values in a pattern I can actually remember, with only the values I'll be using.
 
 // Boilerplate warning.
 
-function removeFluff(rawData: Accommodations): AccommodationsArray {
+export function removeFluff(rawData: Accommodations): AccommodationsArray {
   const mappedData = rawData.data.map((item) => {
     // Unpackage all the stuff that's already easy to reach.
     const {

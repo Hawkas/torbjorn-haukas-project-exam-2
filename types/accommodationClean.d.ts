@@ -1,3 +1,5 @@
+import type { Amenities, AttributesRoom, ContactInfo } from './accommodationRaw';
+
 export interface AccommodationsArray {
   data: AccommodationClean[];
 }
@@ -13,30 +15,11 @@ export interface AccommodationClean {
   maxGuests: number;
   baths: string;
   beds: string;
-  rooms: AccommodationsCleanRoom[];
-  images: Images;
+  rooms: AttributesRoom[];
+  images: CleanImages;
 }
 
-export interface Amenities {
-  id: number;
-  wifi: boolean;
-  airCondition: boolean;
-  elevator: boolean;
-  freeParking: boolean;
-  petsAllowed: boolean;
-  kitchen: boolean;
-  television: boolean;
-  refrigerator: boolean;
-}
-
-export interface ContactInfo {
-  id: number;
-  email: string;
-  address: string;
-  phone: string;
-}
-
-export interface Images {
+export interface CleanImages {
   cover: Cover;
   rooms: ImagesRoom[];
 }
@@ -57,19 +40,4 @@ export interface ImageSizes {
 export interface ImagesRoom {
   id: number;
   image: Omit<Cover, 'thumbnail'>;
-}
-
-export interface AccommodationsCleanRoom {
-  id: number;
-  price: number;
-  doubleBeds: number;
-  singleBeds: number;
-  bathrooms: number;
-  roomName: string;
-  features: Feature[];
-}
-
-export interface Feature {
-  id: number;
-  feature: string;
 }

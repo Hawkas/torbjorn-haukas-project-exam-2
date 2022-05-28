@@ -1,7 +1,15 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { faClose, faCircleExclamation } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, TextInput, Group, Text, LoadingOverlay, Alert } from '@mantine/core';
+import {
+  ActionIcon,
+  TextInput,
+  Group,
+  Text,
+  LoadingOverlay,
+  Alert,
+  PasswordInput,
+} from '@mantine/core';
 import { zodResolver, useForm } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from '@styles/typography';
@@ -12,7 +20,7 @@ import { string, z } from 'zod';
 import { useStyles } from '../Contact/Contact.styles';
 
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Invalid email' }),
+  email: z.string().email({ message: 'Must be a valid email address' }),
   password: z.string().min(1, { message: 'Please enter your password' }),
 });
 
@@ -105,20 +113,19 @@ export function SignIn() {
                 input: classes.textInput,
               }}
               mt="xl"
-              type="email"
               label="Email"
               placeholder="Enter your email"
               {...form.getInputProps('email')}
             />
 
-            <TextInput
+            <PasswordInput
               classNames={{
                 label: cx(classes.label, textClass.label),
                 root: classes.root,
                 input: classes.textInput,
+                innerInput: classes.textInput,
               }}
               mt="xl"
-              type="password"
               label="Password"
               placeholder="Enter your password"
               {...form.getInputProps('password')}

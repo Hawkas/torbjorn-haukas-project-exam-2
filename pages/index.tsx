@@ -2,22 +2,24 @@ import { fetchAccommodations } from '@helpers/callStrapi';
 import { getMessage } from '@helpers/handleMessage';
 import { HeroSection } from '@Homepage/HeroSection';
 import { RestOfThePage } from '@Homepage/RestOfThePage';
+import { useLocalStorage } from '@mantine/hooks';
+
 import { GetStaticProps } from 'next';
 import { Session } from 'next-auth';
 import Head from 'next/head';
+import { useContext, useEffect } from 'react';
 import { AccommodationClean, AccommodationsArray } from 'types/accommodationClean';
 import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
 
-export interface HomepageProps {
+export interface DataProps {
   data: AccommodationClean[];
 }
-
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
   return { props: data };
 };
 
-export default function Page(props: HomepageProps) {
+export default function Page(props: DataProps) {
   return (
     <>
       <Head>

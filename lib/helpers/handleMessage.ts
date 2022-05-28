@@ -1,7 +1,9 @@
 import type { Message } from 'types/messages';
 
 export const getMessage = async () => {
-  const response = await fetch('api/messages');
+  const response = await fetch('/api/messages', {
+    method: 'GET',
+  });
   const data = await response.json();
   console.log(data);
 };

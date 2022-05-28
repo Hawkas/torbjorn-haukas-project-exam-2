@@ -2,7 +2,7 @@ import { faLocationDot } from '@fortawesome/pro-regular-svg-icons';
 import { faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Autocomplete, Avatar, Group, MantineColor, SelectItemProps, Text } from '@mantine/core';
-import { HomepageProps } from 'pages';
+import { DataProps } from 'pages';
 import { forwardRef } from 'react';
 import { useTextStyles } from '../../lib/styles/typography';
 import { useSearchStyles } from './SearchBar.styles';
@@ -60,7 +60,7 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
   )
 );
 
-export function SearchBar({ data }: HomepageProps) {
+export function SearchBar({ data }: DataProps) {
   const autoComplete = data.map((item) => ({
     image: item.images.cover.thumbnail.src,
     value: item.name,

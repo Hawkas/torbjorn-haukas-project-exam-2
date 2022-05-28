@@ -4,11 +4,9 @@ import { settings } from 'lib/settings';
 import useFilledState from 'lib/hooks/useFilledState';
 import { useRouter } from 'next/router';
 import { HeaderDropdown, HeaderTop } from './Header';
-
 import { useContainerStyles } from '@styles/containerStyles';
-
 import { useTextStyles } from '@styles/typography';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { FooterContent } from './Footer/FooterContent';
 
 const { menuBreak, headerHeight } = settings;
@@ -38,17 +36,12 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> & {
+type Props = Omit<React.ComponentPropsWithRef<'div'>, 'title'> & {
   children?: React.ReactNode;
 };
 
 export default function Layout({ children, ...others }: Props) {
-  const { data: session } = useSession();
   const { classes, cx } = useStyles();
-  const { classes: textClass } = useTextStyles();
-  const {
-    classes: { container },
-  } = useContainerStyles();
   const [opened, setOpened] = useState(false);
   const filledState = useFilledState();
   const router = useRouter();
@@ -58,6 +51,7 @@ export default function Layout({ children, ...others }: Props) {
   };
   return (
     <AppShell
+      ref={others.ref}
       classNames={{
         main: classes.main,
       }}

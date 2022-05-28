@@ -1,7 +1,7 @@
 import Layout from '@AppShell/Layout';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { MantineProvider } from '@mantine/core';
+import { LoadingOverlay, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from 'lib/styles/holidazeTheme';
@@ -15,6 +15,7 @@ config.autoAddCss = false;
 type AppPropsWithAuth = AppProps & {
   Component: { auth?: boolean };
 };
+
 export default function App(props: AppPropsWithAuth) {
   const {
     Component,
@@ -63,7 +64,18 @@ function Auth({ children }: AuthProps) {
     },
   });
   if (status === 'loading') {
-    return <p style={{ margin: '0 auto', marginTop: '160px', fontSize: '82px' }}>HOLD UP</p>;
+    return (
+      <div
+        style={{
+          marginTop: '60px',
+          position: 'relative',
+          height: 'calc(100% - 60px)',
+          width: '100%',
+        }}
+      >
+        <LoadingOverlay visible={true} />
+      </div>
+    );
   }
 
   return children;
