@@ -9,7 +9,17 @@ const useStyles = createStyles((theme, { darkBg }: StyleProps) => ({
   fluidContainer: {
     backgroundColor: darkBg ? theme.colors.blue[7] : theme.colors.blue[0],
     width: '100%',
+    position: 'relative',
     paddingTop: 'var(--mantine-header-height)',
+    '&:after': {
+      position: 'absolute',
+      content: `" "`,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: '4px',
+      backgroundColor: theme.colors.gray[1],
+    },
   },
   title: {
     display: 'flex',

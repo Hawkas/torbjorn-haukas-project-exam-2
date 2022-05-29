@@ -14,5 +14,4 @@ const useFilledState = () => {
 
   return filledState;
 };
-
 export default useFilledState;
