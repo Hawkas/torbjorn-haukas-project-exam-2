@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: holidaze
+    env: node
+    region: frankfurt
+    plan: starter
+    buildCommand: yarn; yarn build
+    startCommand: yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXTAUTH_URL
+        fromService:
+          name: holidaze
+          type: web
+          property: host
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_API_URL
+        value: strapi-sult:10000/api
+      - key: API_PUBLIC_TOKEN
+        sync: false
+      - key: REVALIDATE_SECRET
+        generateValue: true
+      - key: FONTAWESOME_NPM_AUTH_TOKEN
+        sync: false
