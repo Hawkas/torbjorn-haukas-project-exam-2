@@ -7,6 +7,8 @@ services:
     buildCommand: yarn; yarn build
     startCommand: yarn start
     envVars:
+      - key: NODE_VERSION
+        value: 16.13.2
       - key: NODE_ENV
         value: production
       - key: NEXTAUTH_URL

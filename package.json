@@ -74,8 +74,5 @@
   },
   "resolutions": {
     "@types/react": "17.0.43"
-  },
-  "engines": {
-    "node": "16.13.2"
   }
 }
