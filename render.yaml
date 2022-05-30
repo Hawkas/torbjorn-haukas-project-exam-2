@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: holidaze
+    name: next-js
     env: node
     region: frankfurt
     plan: starter
