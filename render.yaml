@@ -12,7 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXTAUTH_URL
-        value: host
+        sync: https://holidaze.onrender.com
       - key: NEXTAUTH_SECRET
         generateValue: true
       - key: NEXT_PUBLIC_API_URL
