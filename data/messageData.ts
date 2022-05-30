@@ -8,4 +8,11 @@ export const messages: Message[] = [
     subject: 'hello idiot',
     message: "i'd like to talk about your insurance policy",
   },
+  {
+    id: 2,
+    name: 'Torbjorn Haukaas',
+    email: 'torbjorn@telefon.com',
+    subject: 'hello moron',
+    message: "i'd like to talk about your ducks",
+  },
 ];
