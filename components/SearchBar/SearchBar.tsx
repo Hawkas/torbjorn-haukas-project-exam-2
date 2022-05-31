@@ -35,38 +35,50 @@ const datum = charactersList.map((item) => ({ ...item, value: item.label }));
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
-  location: string;
-  image: string;
-  type: string;
+  location?: string;
+  image?: string;
+  type?: string;
 }
 
 const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ location, value, image, type, ...others }: ItemProps, ref) => (
-    <div ref={ref} {...others}>
-      <Group noWrap>
-        <Avatar size="xl" alt={value} src={image} />
-        <div>
-          <Text weight="600">{value}</Text>
-          <Text size="sm" color="dimmed">
-            <FontAwesomeIcon style={{ marginRight: '8px' }} icon={faLocationDot} />
-            {location}
-          </Text>
-          <Text size="xs" color="#003355">
-            {type}
+  ({ location, value, image, type, ...others }: ItemProps, ref) => {
+    if (!value)
+      return (
+        <div ref={ref} {...others}>
+          <Text weight="600" color={'red'}>
+            The API seems to have disappeared, so there's nothing
           </Text>
         </div>
-      </Group>
-    </div>
-  )
+      );
+    return (
+      <div ref={ref} {...others}>
+        <Group noWrap>
+          <Avatar size="xl" alt={value} src={image} />
+          <div>
+            <Text weight="600">{value}</Text>
+            <Text size="sm" color="dimmed">
+              <FontAwesomeIcon style={{ marginRight: '8px' }} icon={faLocationDot} />
+              {location}
+            </Text>
+            <Text size="xs" color="#003355">
+              {type}
+            </Text>
+          </div>
+        </Group>
+      </div>
+    );
+  }
 );
 
 export function SearchBar({ data }: DataProps) {
-  const autoComplete = data.map((item) => ({
-    image: item.images.cover.thumbnail.src,
-    value: item.name,
-    location: item.location,
-    type: item.type,
-  }));
+  const autoComplete = data
+    ? data.map((item) => ({
+        image: item.images.cover.thumbnail.src,
+        value: item.name,
+        location: item.location,
+        type: item.type,
+      }))
+    : [{ value: '' }];
   const { classes, cx } = useSearchStyles();
   const {
     classes: { subHeader },

@@ -12,10 +12,11 @@ import { AccommodationClean, AccommodationsArray } from 'types/accommodationClea
 import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
 
 export interface DataProps {
-  data: AccommodationClean[];
+  data: AccommodationClean[] | false;
 }
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
+  if (!data) return { props: { data: false } };
   return { props: data };
 };
 

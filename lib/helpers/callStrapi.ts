@@ -50,6 +50,7 @@ export const rawAccommodations = async () => {
 // I preserve the raw data above for later use.
 export const fetchAccommodations = async () => {
   const rawData = await rawAccommodations();
+  if (!rawData) return false;
   return removeFluff(await rawData);
 };
 

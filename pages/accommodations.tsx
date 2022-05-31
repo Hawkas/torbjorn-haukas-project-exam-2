@@ -8,6 +8,7 @@ import { DataProps } from 'pages';
 import { useContext, useEffect } from 'react';
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
+  if (!data) return { props: { data: false } };
   return { props: data };
 };
 
