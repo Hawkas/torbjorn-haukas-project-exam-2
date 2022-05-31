@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.npmrc
 
 # testing
 /coverage
@@ -37,5 +38,3 @@ yarn-error.log*
 # storybook
 storybook-static
 
-# fontawesome
-fontawesome.npmrc
