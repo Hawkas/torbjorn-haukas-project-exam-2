@@ -101,7 +101,8 @@ export function SearchBar({ data }: DataProps) {
       data={autoComplete}
       filter={(value, item) =>
         item.value.toLowerCase().includes(value.toLowerCase().trim()) ||
-        item.location.toLowerCase().includes(value.toLowerCase().trim())
+        item.location.toLowerCase().includes(value.toLowerCase().trim()) ||
+        item.type.toLowerCase().includes(value.toLowerCase().trim())
       }
     />
   );

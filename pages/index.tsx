@@ -1,3 +1,4 @@
+import type { SessionType } from '@AppShell/Header/Navigation/NavMenu';
 import { fetchAccommodations } from '@helpers/callStrapi';
 import { getMessage } from '@helpers/handleMessage';
 import { HeroSection } from '@Homepage/HeroSection';
@@ -6,18 +7,18 @@ import { useLocalStorage } from '@mantine/hooks';
 
 import { GetStaticProps } from 'next';
 import { Session } from 'next-auth';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 import { AccommodationClean, AccommodationsArray } from 'types/accommodationClean';
 import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
 
 export interface DataProps {
-  data: AccommodationClean[] | false;
+  data: AccommodationClean[] | null;
 }
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
-  if (!data) return { props: { data: false } };
-  return { props: data };
+  return { props: { data } };
 };
 
 export default function Page(props: DataProps) {

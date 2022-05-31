@@ -21,7 +21,12 @@ export function ArticleSecond() {
           try to set aside a little time for sightseeing the first time you stay in Bergen.
         </Text>
       </ArticleText>
-      <PrimaryButton href="/accommodations" mt={theme.other.largeSpacing.md} primary component="a">
+      <PrimaryButton
+        href="/accommodations?location=bergen"
+        mt={theme.other.largeSpacing.md}
+        primary
+        component="a"
+      >
         Accommodations in Bergen
       </PrimaryButton>
     </>

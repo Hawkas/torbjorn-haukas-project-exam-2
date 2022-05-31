@@ -16,27 +16,23 @@ export function NavLink({ children, component, href, onClick, menuBreak }: NavLi
   const { classes, cx } = useNavStyles({ menuBreak });
   const buttonCheck = component === 'button';
   const AnchorLink = (
-    <>
-      <Anchor
-        href={href}
-        className={cx(
-          classes.links,
-          { [classes.active]: router.pathname === href },
-          { [classes.button]: buttonCheck }
-        )}
-        component={component || 'a'}
-        children={children}
-        onClick={onClick}
-      />
-    </>
+    <Anchor
+      href={href}
+      className={cx(
+        classes.links,
+        { [classes.active]: router.pathname === href },
+        { [classes.button]: buttonCheck }
+      )}
+      component={component || 'a'}
+      children={children}
+      onClick={onClick}
+    />
   );
   return buttonCheck ? (
     AnchorLink
   ) : (
-    <>
-      <Link passHref href={href}>
-        {AnchorLink}
-      </Link>
-    </>
+    <Link passHref href={href}>
+      {AnchorLink}
+    </Link>
   );
 }

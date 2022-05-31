@@ -1,6 +1,6 @@
 import { GroupedTransition, Navbar } from '@mantine/core';
 import { useDropdownStyles } from './HeaderDropdown.styles';
-import { NavMenu } from './Navigation/NavMenu';
+import { NavMenu, SessionType } from './Navigation/NavMenu';
 import { HeaderProps } from './HeaderTop';
 
 const duration = 500;

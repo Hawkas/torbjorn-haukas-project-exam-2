@@ -22,9 +22,9 @@ export function RestOfThePage() {
           <ArticleGrid image={fishingVillage}>
             <ArticleFirst />
           </ArticleGrid>
-          <section>
+          <aside>
             <ImageLinks />
-          </section>
+          </aside>
         </Container>
       </article>
       <article>

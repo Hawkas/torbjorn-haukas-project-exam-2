@@ -1,9 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { AccommodationsArray } from 'types/accommodationClean';
+import { AccommodationClean, AccommodationsArray } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
-
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const qs = require('qs');
 const productsQuery = qs.stringify(
@@ -28,7 +26,9 @@ const wildcardQuery = qs.stringify(
   },
   { encodeValuesOnly: true }
 );
-
+//? This function only fetches files using an internal address to my API, which is hosted on the same cloud application as the site.
+//* As such, it will never work if run client-side. But it shouldn't rerun unless the page is rebuilt anyway.
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 export const rawAccommodations = async () => {
   const headers = { Authorization: `Bearer ${process.env.API_PUBLIC_TOKEN}` };
   const url = `/accommodations?${productsQuery}`;
@@ -50,7 +50,7 @@ export const rawAccommodations = async () => {
 // I preserve the raw data above for later use.
 export const fetchAccommodations = async () => {
   const rawData = await rawAccommodations();
-  if (!rawData) return false;
+  if (!rawData) return null;
   return removeFluff(await rawData);
 };
 
@@ -62,7 +62,7 @@ export const fetchAccommodations = async () => {
 
 // Boilerplate warning.
 
-export function removeFluff(rawData: Accommodations): AccommodationsArray {
+export function removeFluff(rawData: Accommodations): AccommodationClean[] {
   const mappedData = rawData.data.map((item) => {
     // Unpackage all the stuff that's already easy to reach.
     const {
@@ -139,5 +139,5 @@ export function removeFluff(rawData: Accommodations): AccommodationsArray {
       },
     };
   });
-  return { data: mappedData };
+  return mappedData;
 }

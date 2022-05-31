@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useModals } from '@mantine/modals';
 import { SignIn } from '@components/Modal/LogIn/SignIn';
 import { useRouter } from 'next/router';
+import type { SessionType } from '@AppShell/Header/Navigation/NavMenu';
 
 const useFooterStyles = createStyles((theme) => ({
   wrapper: {
@@ -43,8 +44,8 @@ const useFooterStyles = createStyles((theme) => ({
 }));
 
 export function FooterContent() {
-  const router = useRouter();
   const { data: session } = useSession();
+  const router = useRouter();
   const modals = useModals();
   const { classes, cx } = useFooterStyles();
   const { classes: textClass } = useTextStyles();

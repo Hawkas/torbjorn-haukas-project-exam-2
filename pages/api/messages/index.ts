@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { messages } from 'data/messageData';
 import { Message } from 'types/messages';
+import { getSession } from 'next-auth/react';
 
-export default function messageHandler(
+export default async function messageHandler(
   req: NextApiRequest,
   res: NextApiResponse<Message[] | Message>
 ) {
@@ -10,10 +11,15 @@ export default function messageHandler(
     query: { id },
     method,
   } = req;
-
+  const session = await getSession({ req });
   switch (method) {
     case 'GET':
-      res.status(200).json(messages);
+      if (session) {
+        res.status(200).json(messages);
+      } else {
+        res.status(405).end(`You must be an admin to view or edit this content`);
+      }
+
       break;
     case 'POST':
       const { name, email, subject, message } = req.body;
@@ -23,7 +29,7 @@ export default function messageHandler(
       res.status(201).json(newMessage);
       break;
     default:
-      res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+      res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

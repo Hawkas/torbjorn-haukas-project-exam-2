@@ -29,9 +29,11 @@ export const useTextStyles = createStyles((theme) => ({
   },
   cardHeader: {
     fontSize: theme.other.fontSizes.md,
-    fontWeight: theme.other.fontWeights.regular,
+    fontWeight: theme.other.fontWeights.medium,
     lineHeight: '1',
     letterSpacing: theme.other.letterSpacing.xs,
+    marginTop: 0,
+    marginBottom: 0,
   },
   label: {
     fontSize: theme.other.fontSizes.xs,

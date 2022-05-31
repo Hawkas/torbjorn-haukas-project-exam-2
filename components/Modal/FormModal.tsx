@@ -16,7 +16,6 @@ export const formModalSettings: ModalSettings = {
       backgroundColor: 'transparent',
       boxShadow: '0',
       maxWidth: '948px',
-      marginLeft: 0,
     },
     inner: {},
   }),

@@ -1,3 +1,4 @@
+import { CardSection } from '@components/Accommodations/CardSection';
 import { HeaderSection } from '@components/Accommodations/HeaderSection';
 import { fetchAccommodations } from '@helpers/callStrapi';
 import { useLocalStorage } from '@mantine/hooks';
@@ -6,10 +7,10 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { DataProps } from 'pages';
 import { useContext, useEffect } from 'react';
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
-  if (!data) return { props: { data: false } };
-  return { props: data };
+  return { props: { data } };
 };
 
 export default function Accommodations(props: DataProps) {
@@ -26,6 +27,7 @@ export default function Accommodations(props: DataProps) {
         />
       </Head>
       <HeaderSection />
+      <CardSection data={props.data} />
     </>
   );
 }

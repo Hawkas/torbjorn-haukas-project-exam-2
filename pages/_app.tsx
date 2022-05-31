@@ -5,18 +5,18 @@ import { LoadingOverlay, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from 'lib/styles/holidazeTheme';
-import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
-import { SessionProvider, useSession } from 'next-auth/react';
+import { getSession, SessionProvider, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import App, { AppProps } from 'next/app';
 
 config.autoAddCss = false;
 type AppPropsWithAuth = AppProps & {
   Component: { auth?: boolean };
 };
 
-export default function App(props: AppPropsWithAuth) {
+export default function MyApp(props: AppPropsWithAuth) {
   const {
     Component,
     pageProps: { session, ...pageProps },
@@ -50,9 +50,10 @@ export default function App(props: AppPropsWithAuth) {
     </SessionProvider>
   );
 }
-type AuthProps = {
+
+interface AuthProps {
   children: JSX.Element;
-};
+}
 
 function Auth({ children }: AuthProps) {
   const router = useRouter();

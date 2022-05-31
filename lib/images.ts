@@ -1,3 +1,10 @@
+export interface ImageObject {
+  src: string;
+  height: number;
+  width: number;
+  alt: string;
+}
+
 export const hotel = {
   src: '/hotel.jpg',
   height: 667,

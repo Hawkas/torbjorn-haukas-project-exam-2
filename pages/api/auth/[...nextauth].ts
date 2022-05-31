@@ -51,8 +51,6 @@ export default NextAuth({
             identifier: values.email,
             password: values.password,
           });
-          console.log('FROM CREDENTIALS PROVIDER:');
-          console.log(data);
           if (!data) return null;
           return data;
         } catch (error) {
