@@ -35,19 +35,6 @@ export default function Page(props: DataProps) {
       </Head>
       <HeroSection data={props.data} />
       <RestOfThePage />
-      <button onClick={() => getMessage()}>TEST</button>
-      {/* <h1>Content...</h1>
-
-      <div>
-        {initialData.attributes.map((each, index) => {
-          return (
-            <div key={index}>
-              <h3>{each.name}</h3>
-              <p>{each.description}</p>
-            </div>
-          );
-        })}
-      </div> */}
     </>
   );
 }

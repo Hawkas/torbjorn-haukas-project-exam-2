@@ -13,15 +13,17 @@ const useStyles = createStyles(
   (theme, { light, big, blue }: Pick<IconTextProps, 'light' | 'big' | 'blue'>) => ({
     icon: {
       color: blue ? theme.colors.blue[8] : theme.colors.gray[4],
-      fontSize: big ? theme.other.fontSizes.lg : theme.other.fontSizes.sm,
+      minWidth: big ? '1.40625rem' : undefined,
     },
     text: {
+      display: 'flex',
+      flexWrap: 'nowrap',
+      alignItems: 'baseline',
+      alignContent: 'baseline',
+      gap: big ? '8px' : '4px',
       color: blue ? theme.colors.blue[6] : theme.colors.gray[6],
       fontSize: big ? theme.other.fontSizes.lg : theme.other.fontSizes.sm,
       fontWeight: light ? theme.other.fontWeights.regular : theme.other.fontWeights.medium,
-    },
-    wrapper: {
-      alignContent: 'baseline',
     },
   })
 );
@@ -29,9 +31,9 @@ const useStyles = createStyles(
 export function IconText({ text, icon, light, big, blue }: IconTextProps) {
   const { classes } = useStyles({ light, big, blue });
   return (
-    <Group position="left" spacing={big ? 8 : 4}>
-      <FontAwesomeIcon className={classes.icon} icon={icon} />
-      <Text className={classes.text}>{text}</Text>
-    </Group>
+    <Text className={classes.text}>
+      <FontAwesomeIcon fixedWidth className={classes.icon} icon={icon} />
+      {text}
+    </Text>
   );
 }

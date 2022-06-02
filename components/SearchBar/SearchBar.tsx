@@ -1,52 +1,42 @@
-import { faLocationDot } from '@fortawesome/pro-regular-svg-icons';
-import { faSearch } from '@fortawesome/pro-solid-svg-icons';
+import { faLocationDot, faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Autocomplete, Avatar, Group, MantineColor, SelectItemProps, Text } from '@mantine/core';
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  Divider,
+  Group,
+  Loader,
+  MantineColor,
+  SelectItemProps,
+  Text,
+} from '@mantine/core';
+import { useRouter } from 'next/router';
 import { DataProps } from 'pages';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import { useTextStyles } from '../../lib/styles/typography';
 import { useSearchStyles } from './SearchBar.styles';
-
-const charactersList = [
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
-    label: 'Bender Bending Rodríguez',
-    description: 'Fascinated with cooking, though has no sense of taste',
-  },
-
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
-    label: 'Carol Miller',
-    description: 'One of the richest people on Earth',
-  },
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/homer-simpson.png',
-    label: 'Homer Simpson',
-    description: 'Overweight, lazy, and often ignorant',
-  },
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/spongebob-squarepants.png',
-    label: 'Spongebob Squarepants',
-    description: 'Not just a sponge',
-  },
-];
-
-const datum = charactersList.map((item) => ({ ...item, value: item.label }));
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
   location?: string;
   image?: string;
   type?: string;
+  slug: string;
 }
 
 const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ location, value, image, type, ...others }: ItemProps, ref) => {
+  ({ location, value, image, type, slug, ...others }: ItemProps, ref) => {
+    // As this list isn't actually rendered as HTML under the input itself,
+    // I can't make use of next/link, and I have to push the url with router
+    //* This makes the page transition rather slow, but oh well.
+
     if (!value)
+      // In case of API failure, or when I inevitably take down the API.
       return (
         <div ref={ref} {...others}>
           <Text weight="600" color={'red'}>
-            The API seems to have disappeared, so there's nothing
+            The API is gone, so there's nothing
           </Text>
         </div>
       );
@@ -54,32 +44,60 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
       <div ref={ref} {...others}>
         <Group noWrap>
           <Avatar size="xl" alt={value} src={image} />
-          <div>
-            <Text weight="600">{value}</Text>
-            <Text size="sm" color="dimmed">
-              <FontAwesomeIcon style={{ marginRight: '8px' }} icon={faLocationDot} />
-              {location}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              gap: '8px',
+              alignSelf: 'center',
+              minHeight: '100%',
+            }}
+          >
+            <Text weight="600" sx={{ lineHeight: 1.1 }}>
+              {value}
             </Text>
-            <Text size="xs" color="#003355">
-              {type}
-            </Text>
-          </div>
+            <Box>
+              <Text
+                size="sm"
+                color="dimmed"
+                sx={{
+                  display: 'flex',
+                  gap: '4px',
+                  alignContent: 'baseline',
+                  alignItems: 'baseline',
+                }}
+              >
+                <FontAwesomeIcon
+                  style={{ color: ' #a7acb4', fontSize: '10px', lineHeight: 1 }}
+                  icon={faLocationDot}
+                />
+                {location}
+              </Text>
+              <Text size="xs" color="#003355">
+                {type}
+              </Text>
+            </Box>
+          </Box>
         </Group>
       </div>
     );
   }
 );
 
-export function SearchBar({ data }: DataProps) {
+export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const autoComplete = data
     ? data.map((item) => ({
         image: item.images.cover.thumbnail.src,
         value: item.name,
         location: item.location,
         type: item.type,
+        slug: item.slug,
       }))
     : [{ value: '' }];
-  const { classes, cx } = useSearchStyles();
+  const { classes, cx } = useSearchStyles({ noLabel });
   const {
     classes: { subHeader },
   } = useTextStyles();
@@ -91,11 +109,22 @@ export function SearchBar({ data }: DataProps) {
         label: cx(subHeader, classes.label),
         root: classes.root,
         icon: classes.icon,
+        dropdown: classes.dropdown,
       }}
-      icon={<FontAwesomeIcon icon={faSearch} />}
+      disabled={loading}
+      icon={loading ? <Loader size={20} /> : <FontAwesomeIcon icon={faSearch} />}
       iconWidth={58}
       size="xl"
-      label="Plan your journey"
+      nothingFound={
+        <div>
+          <Text weight="600">No results matching your query</Text>
+        </div>
+      }
+      onItemSubmit={(item) => {
+        setLoading(true);
+        router.push(`/accommodations/${item.slug}`);
+      }}
+      label={noLabel ? undefined : 'Plan your journey'}
       placeholder="Search for accommodations"
       itemComponent={AutoCompleteItem}
       data={autoComplete}

@@ -39,7 +39,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   main: {
     width: '100%',
     paddingTop: 0,
-    minHeight: 'calc(100vh - 213px)',
+    minHeight: `calc(100vh + ${headerHeight}px)`,
     paddingBottom: 0,
   },
   footer: {

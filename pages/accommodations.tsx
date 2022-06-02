@@ -1,5 +1,6 @@
 import { CardSection } from '@components/Accommodations/CardSection';
 import { HeaderSection } from '@components/Accommodations/HeaderSection';
+import { SearchBar } from '@components/SearchBar/SearchBar';
 
 import { fetchAccommodations } from '@helpers/callStrapi';
 
@@ -27,6 +28,7 @@ export default function Accommodations(props: DataProps) {
         />
       </Head>
       <HeaderSection />
+      {/* <SearchBar noLabel data={props.data} /> */}
       <CardSection data={props.data} />
     </>
   );

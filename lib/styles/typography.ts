@@ -45,6 +45,7 @@ export const useTextStyles = createStyles((theme) => ({
     color: theme.colors.blue[6],
     fontSize: theme.other.fontSizes.md,
     fontWeight: theme.other.fontWeights.bold,
+    margin: 0,
     lineHeight: '1',
     letterSpacing: theme.other.letterSpacing.md,
     textTransform: 'uppercase',
@@ -57,7 +58,7 @@ export const useTextStyles = createStyles((theme) => ({
   },
   buttonPrimary: {
     fontSize: theme.other.fontSizes.md,
-    fontWeight: theme.other.fontWeights.bold,
+    fontWeight: theme.other.fontWeights.semiBold,
   },
   info: {
     fontWeight: theme.other.fontWeights.medium,

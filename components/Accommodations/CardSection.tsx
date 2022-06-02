@@ -104,12 +104,12 @@ export function CardSection({ data }: DataProps) {
   const content = CardGrid(dataArray, wrapBp, classes);
 
   useEffect(() => {
-    setTransitionStage(true);
     if (!data) return;
     const newData = filterArray(data, router);
     setDataArray((o) => {
       return newData;
     });
+    setTransitionStage(true);
   }, []);
   useDidUpdate(() => {
     setTransitionStage(false);

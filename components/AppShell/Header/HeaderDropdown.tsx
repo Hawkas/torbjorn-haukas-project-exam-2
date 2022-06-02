@@ -4,7 +4,7 @@ import { NavMenu } from './Navigation/NavMenu';
 import { HeaderProps } from './HeaderTop';
 import React from 'react';
 
-const duration = 500;
+const duration = 300;
 
 export function HeaderDropdown({
   menuBreak,

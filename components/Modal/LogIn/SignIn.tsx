@@ -113,6 +113,7 @@ export function SignIn() {
                 input: classes.textInput,
               }}
               mt="xl"
+              autoComplete="email"
               label="Email"
               placeholder="Enter your email"
               {...form.getInputProps('email')}
@@ -127,6 +128,7 @@ export function SignIn() {
               }}
               mt="xl"
               label="Password"
+              autoComplete="password"
               placeholder="Enter your password"
               {...form.getInputProps('password')}
             />
