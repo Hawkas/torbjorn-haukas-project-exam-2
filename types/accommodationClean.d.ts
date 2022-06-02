@@ -7,7 +7,9 @@ export interface AccommodationsArray {
 export interface AccommodationClean {
   id: number;
   name: string;
+  slug: string;
   location: string;
+  description: string;
   type: string;
   contactInfo: ContactInfo;
   amenities: Amenities;

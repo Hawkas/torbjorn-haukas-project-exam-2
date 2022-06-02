@@ -3,10 +3,11 @@ import { useTextStyles } from 'lib/styles/typography';
 import type { ImageObject } from '@globals/images';
 import type { Cover, ImageSizes } from 'types/accommodationClean';
 
-type ImageProps = Partial<ImageObject> & Partial<Omit<Cover, 'alt'>>;
+export type ImageProps = Partial<ImageObject> & Partial<Omit<Cover, 'alt'>>;
 interface ImageLink {
   text: string;
   image: ImageProps;
+  cards?: boolean;
 }
 const useImageStyles = createStyles((theme, _params, getRef) => ({
   image: {
@@ -35,19 +36,19 @@ const useImageStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export default function ImageLink({ text, image, cards }: ImageLink & { cards?: boolean }) {
+export default function ImageLink({ text, image, cards }: ImageLink) {
   const theme = useMantineTheme();
   const { classes } = useImageStyles();
   const { classes: textClass } = useTextStyles();
   return (
-    <Box className={classes.root}>
+    <Box className={cards ? undefined : classes.root}>
       <Image
         imageProps={{
           height: image.height || image.medium?.height,
           width: image.width || image.medium?.width,
         }}
         classNames={{
-          image: classes.image,
+          image: cards ? undefined : classes.image,
         }}
         radius="xs"
         src={image.src || image.medium?.src}
@@ -57,6 +58,7 @@ export default function ImageLink({ text, image, cards }: ImageLink & { cards?: 
       <Box component="div" mt="-xl" className={classes.labelContainer}>
         <Paper radius="xs" p={theme.other.smallSpacing.lg} shadow="sm">
           <Text
+            lineClamp={1}
             component={cards ? 'h2' : 'p'}
             className={cards ? textClass.cardHeader : textClass.buttonAlt}
           >

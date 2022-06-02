@@ -2,7 +2,7 @@ import { handleChange } from '@helpers/handleQueryChange';
 import { Chips, Chip, createStyles } from '@mantine/core';
 import { useTextStyles } from '@styles/typography';
 import { NextRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useChipStyles = createStyles((theme, _params, getRef) => ({
   chips: {
@@ -38,6 +38,9 @@ export function LocationChips({ router }: { router: NextRouter }) {
   const [chipValue, setChipValue] = useState(
     router.query.location ? `${router.query.location}` : 'all'
   );
+  useEffect(() => {
+    setChipValue(`${router.query.location || 'all'}`);
+  }, []);
   const { classes, cx } = useChipStyles();
 
   const chipItem = [

@@ -10,9 +10,9 @@ interface Links {
   href: string;
   component: 'a' | 'button';
   value: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
 }
-export function NavMenu({ menuBreak }: Pick<NavLinkProps, 'menuBreak'>) {
+export function NavMenu({ menuBreak, onClick }: Pick<NavLinkProps, 'menuBreak' | 'onClick'>) {
   const modals = useModals();
   const { data: session, status } = useSession();
   const openContactModal = () => {
@@ -24,10 +24,10 @@ export function NavMenu({ menuBreak }: Pick<NavLinkProps, 'menuBreak'>) {
     });
   };
   const links: Links[] = [
-    { href: '/', component: 'a', value: 'Home' },
-    { href: '/accommodations', component: 'a', value: 'Accommodations' },
+    { href: '/', component: 'a', value: 'Home', onClick: onClick },
+    { href: '/accommodations', component: 'a', value: 'Accommodations', onClick: onClick },
     { href: '', component: 'button', value: 'Contact us', onClick: openContactModal },
-    { href: '/admin', component: 'a', value: 'Admin' },
+    { href: '/admin', component: 'a', value: 'Admin', onClick: onClick },
   ];
   const navMenu = links.map((item, index) => {
     if (!session && item.value === 'Admin') return;

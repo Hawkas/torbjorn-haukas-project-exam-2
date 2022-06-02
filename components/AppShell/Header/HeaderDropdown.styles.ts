@@ -8,7 +8,15 @@ export const useDropdownStyles = createStyles((theme, menuBreak: MantineNumberSi
     [theme.fn.smallerThan(menuBreak)]: {
       display: 'flex',
     },
-    '& > *': {
+    '& a:not(:nth-of-type(6)': {
+      padding: theme.other.largeSpacing.sm,
+      [theme.fn.smallerThan('xs')]: {
+        padding: theme.other.smallSpacing.lg,
+      },
+    },
+  },
+  menu: {
+    '& a.mantine-Anchor-root': {
       padding: theme.other.largeSpacing.sm,
       [theme.fn.smallerThan('xs')]: {
         padding: theme.other.smallSpacing.lg,

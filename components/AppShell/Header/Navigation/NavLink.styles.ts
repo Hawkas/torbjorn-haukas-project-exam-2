@@ -12,6 +12,12 @@ export const useNavStyles = createStyles((theme, { menuBreak }: LinkStyleProps, 
     fontWeight: theme.other.fontWeights.medium,
     fontSize: theme.fontSizes.md,
     letterSpacing: theme.other.letterSpacing.sm,
+    [theme.fn.smallerThan(menuBreak)]: {
+      padding: theme.other.largeSpacing.sm,
+      [theme.fn.smallerThan('xs')]: {
+        padding: theme.other.smallSpacing.lg,
+      },
+    },
     [theme.fn.largerThan(menuBreak)]: {
       color: theme.fn.rgba(theme.white, 0.75),
       '&:hover': {

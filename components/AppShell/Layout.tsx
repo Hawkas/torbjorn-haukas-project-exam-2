@@ -15,7 +15,7 @@ const { menuBreak, headerHeight } = settings;
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   content: {
-    transition: 'opacity 1s',
+    transition: 'opacity 0.5s ease-in-out',
   },
   fadeIn: {
     opacity: 1,
@@ -61,7 +61,7 @@ export default function Layout({ children, ...others }: Props) {
   const [displayChildren, setDisplayChildren] = useState(children);
   const [transitionStage, setTransitionStage] = useState(false);
 
-  // The inputs on the chips seem to re-render the whole page and I have no idea why.
+  // Inputs changing on the location chips seem to re-render the whole page and I have no idea why.
   const [routerPath, setRouterPath] = useState(router.pathname);
 
   // Make the page content fade in immediately
@@ -97,7 +97,13 @@ export default function Layout({ children, ...others }: Props) {
           <HeaderTop menuBreak={menuBreak} clickEvent={clickEvent} opened={opened} />
         </Header>
       }
-      navbar={<HeaderDropdown menuBreak={menuBreak} opened={opened} />}
+      navbar={
+        <HeaderDropdown
+          menuBreak={menuBreak}
+          opened={opened}
+          onClick={() => setOpened((o) => !o)}
+        />
+      }
       footer={
         <Footer height={214} className={classes.footer}>
           <FooterContent />

@@ -43,11 +43,18 @@ const useTypeStyles = createStyles((theme, _params, getRef) => ({
         minWidth: '108px',
       },
     },
+
     //? Only when single row
     '&:not(:first-of-type)': {
       borderWidth: '0 0 0 1px',
       borderColor: theme.colors.gray[1],
     },
+    [theme.fn.largerThan(594)]: {
+      [`&.${getRef('segmentControlActive')}:last-of-type`]: {
+        borderWidth: '0 0 0 0',
+      },
+    },
+
     //? Adjust last button, as its border being transparent reveals the white background.
     [theme.fn.smallerThan(594)]: {
       //? basically 50% minus the random faux-border padding.
@@ -88,6 +95,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
   const [typeValue, setTypeValue] = useState(router.query.type ? `${router.query.type}` : 'all');
   const [transition, setTransition] = useState(0);
   useEffect(() => {
+    setTypeValue(`${router.query.type || 'all'}`);
     setTimeout(() => {
       setTransition(200);
     }, 500);

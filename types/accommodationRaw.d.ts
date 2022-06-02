@@ -10,6 +10,7 @@ export interface AccommodationObject {
 
 export interface AccommodationAttributes {
   name: string;
+  slug: string;
   type: string;
   description: string;
   location: string;

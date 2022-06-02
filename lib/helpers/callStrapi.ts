@@ -71,8 +71,10 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       type,
       images,
       amenities,
+      description,
       contactInfo,
       rooms,
+      slug,
     } = item.attributes;
     const { attributes: coverImg } = images.cover.data;
 
@@ -107,7 +109,9 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
     return {
       id: item.id,
       name: hotelName,
+      slug,
       location,
+      description,
       type,
       contactInfo,
       amenities,

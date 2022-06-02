@@ -1,11 +1,12 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { faClose } from '@fortawesome/pro-regular-svg-icons';
+import { faCheckCircle, faCircleExclamation, faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { submitMessage } from '@helpers/handleMessage';
-import { ActionIcon, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Alert, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from 'lib/styles/typography';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useStyles } from './Contact.styles';
 import { ContactIconsList } from './ContactIconsList';
@@ -29,6 +30,11 @@ export function Contact() {
     schema: zodResolver(contactSchema),
     initialValues: { name: '', email: '', subject: '', message: '' },
   });
+
+  // Since the messages use the NextJS api, they should only fail to submit if, well,
+  // the whole site is down. I'll save the effort and just let it be empty if it doesnt connect.
+  //* Validation errors are of course displayed.
+  const [success, setSuccess] = useState('waiting');
   const { classes, cx } = useStyles();
   const { classes: textClass } = useTextStyles();
   return (
@@ -46,7 +52,13 @@ export function Contact() {
           <ContactIconsList className={classes.iconList} />
         </div>
 
-        <form className={classes.form} onSubmit={form.onSubmit((values) => submitMessage(values))}>
+        <form
+          className={classes.form}
+          onSubmit={form.onSubmit(async (values) => {
+            const response = await submitMessage(values);
+            if (response) setSuccess('success');
+          })}
+        >
           <ActionIcon
             sx={{ position: 'absolute', top: 0, right: 0 }}
             onClick={() => modals.closeModal('contact')}
@@ -107,7 +119,24 @@ export function Contact() {
               {...form.getInputProps('message')}
             />
 
-            <Group position="right">
+            <Group position={success === 'success' ? 'apart' : 'right'}>
+              {success === 'success' ? (
+                <Alert
+                  withCloseButton
+                  closeButtonLabel="Close alert"
+                  title="Message sent"
+                  icon={<FontAwesomeIcon icon={faCheckCircle} />}
+                  color="green"
+                  onClose={() => {
+                    setSuccess('waiting');
+                  }}
+                  mt={40}
+                >
+                  We'll get back to you as soon as we're able
+                </Alert>
+              ) : (
+                <></>
+              )}
               <PrimaryButton type="submit" primary className={classes.control}>
                 Send message
               </PrimaryButton>

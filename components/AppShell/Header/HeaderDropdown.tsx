@@ -1,11 +1,16 @@
 import { GroupedTransition, Navbar } from '@mantine/core';
 import { useDropdownStyles } from './HeaderDropdown.styles';
-import { NavMenu, SessionType } from './Navigation/NavMenu';
+import { NavMenu } from './Navigation/NavMenu';
 import { HeaderProps } from './HeaderTop';
+import React from 'react';
 
 const duration = 500;
 
-export function HeaderDropdown({ menuBreak, opened }: HeaderProps) {
+export function HeaderDropdown({
+  menuBreak,
+  opened,
+  onClick,
+}: HeaderProps & { onClick: React.MouseEventHandler }) {
   const { classes } = useDropdownStyles(menuBreak);
   return (
     <>
@@ -20,7 +25,7 @@ export function HeaderDropdown({ menuBreak, opened }: HeaderProps) {
       >
         {(styles) => (
           <Navbar fixed style={styles.container} className={classes.vertical}>
-            <NavMenu menuBreak={menuBreak} />
+            <NavMenu menuBreak={menuBreak} onClick={onClick} />
           </Navbar>
         )}
       </GroupedTransition>

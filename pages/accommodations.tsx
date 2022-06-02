@@ -1,12 +1,12 @@
 import { CardSection } from '@components/Accommodations/CardSection';
 import { HeaderSection } from '@components/Accommodations/HeaderSection';
+
 import { fetchAccommodations } from '@helpers/callStrapi';
-import { useLocalStorage } from '@mantine/hooks';
 
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { DataProps } from 'pages';
-import { useContext, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
