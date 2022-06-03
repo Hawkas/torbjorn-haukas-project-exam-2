@@ -20,7 +20,6 @@ interface Props {
 export default function Accommodation({ data, googleData }: Props) {
   const router = useRouter();
   if (data) {
-    console.log(data);
     const title = `${data.name} | Holidaze`;
     return (
       <>

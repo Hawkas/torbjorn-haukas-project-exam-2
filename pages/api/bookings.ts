@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import type { BookingAttributes } from 'types/bookings';
-import { getSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+
+import axios from 'axios';
 
 //! Taken from https://dev.to/ecyrbe/comment/1ei8n and adjusted slightly
 
@@ -38,7 +37,7 @@ const axiosFetch = async ({ ...data }: BookingAttributes) => {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}`,
   };
-  const url = process.env.NEXT_PUBLIC_API_URL + `/bookings`;
+  const url = `/bookings`;
   try {
     const result = await axios.post(url, {
       data,

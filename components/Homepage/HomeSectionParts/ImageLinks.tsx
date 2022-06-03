@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, createStyles, SimpleGrid } from '@mantine/core';
+import { Anchor, Box, createStyles, SimpleGrid } from '@mantine/core';
 import { bnb, guesthouse, hotel } from 'lib/images';
 import ImageLink from './ImageLink';
 import Link from 'next/link';
@@ -23,19 +23,19 @@ export function ImageLinks() {
       breakpoints={[{ maxWidth: 808, cols: 1 }]}
     >
       <Link passHref href="/accommodations?type=hotels">
-        <a>
+        <Anchor>
           <ImageLink text="Hotels" image={hotel} />
-        </a>
+        </Anchor>
       </Link>
       <Link passHref href="/accommodations?type=guesthouses">
-        <a>
+        <Anchor>
           <ImageLink text="Guesthouses" image={guesthouse} />
-        </a>
+        </Anchor>
       </Link>
       <Link passHref href="/accommodations?type=bnb">
-        <a>
+        <Anchor>
           <ImageLink text="Bed & Breakfast" image={bnb} />
-        </a>
+        </Anchor>
       </Link>
     </SimpleGrid>
   );
