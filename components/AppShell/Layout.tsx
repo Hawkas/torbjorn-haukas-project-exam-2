@@ -37,13 +37,15 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     ref: getRef('filled'),
   },
   main: {
+    backgroundColor: theme.other.backgroundColor,
     width: '100%',
     paddingTop: 0,
     minHeight: `calc(100vh + ${headerHeight}px)`,
     paddingBottom: 0,
   },
   footer: {
-    background: theme.fn.linearGradient(92, theme.colors.blue[8], '#051524'),
+    backgroundColor: theme.other.backgroundColor,
+    backgroundImage: theme.fn.linearGradient(92, theme.colors.blue[8], '#051524'),
   },
 }));
 

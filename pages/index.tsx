@@ -18,7 +18,7 @@ export interface DataProps {
 }
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
-  return { props: { data } };
+  return { props: { data }, revalidate: 300 };
 };
 
 export default function Page(props: DataProps) {

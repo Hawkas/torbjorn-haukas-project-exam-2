@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();
-  return { props: { data } };
+  return { props: { data }, revalidate: 300 };
 };
 
 export default function Accommodations(props: DataProps) {

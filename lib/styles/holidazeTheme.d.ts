@@ -78,6 +78,7 @@ declare module '@mantine/core' {
      * * **`heading`**: 1.3
      * * **`body`**: 1.625
      * * **`display`**: 1.1
+     *
      */
     lineHeights: {
       heading: CSSProperties['lineHeight'];

@@ -2,7 +2,7 @@ import { Anchor, Burger, MantineNumberSize, MediaQuery, useMantineTheme } from '
 import Logo from '@public/logobig.svg';
 import { useContainerStyles } from 'lib/styles/containerStyles';
 import Link from 'next/link';
-import React, { MouseEventHandler } from 'react';
+import type { MouseEventHandler } from 'react';
 import { useHeaderStyles } from './HeaderTop.styles';
 import { NavMenu } from './Navigation/NavMenu';
 
@@ -23,9 +23,9 @@ export function HeaderTop({ opened, menuBreak, clickEvent }: HeaderProps) {
     <>
       <div className={cx(container, classes.headerInner)}>
         <Link href="/" passHref>
-          <Anchor component="a" className={classes.logo}>
+          <a aria-label="To home" className={classes.logo}>
             <Logo />
-          </Anchor>
+          </a>
         </Link>
         <MediaQuery largerThan={menuBreak} styles={{ display: 'none' }}>
           <Burger opened={opened} onClick={setOpened} size="md" color={theme.white} />

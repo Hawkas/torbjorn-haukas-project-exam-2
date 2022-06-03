@@ -70,12 +70,13 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       location,
       type,
       images,
-      amenities,
+      amenities: { id: uselessId, ...amenities },
       description,
       contactInfo,
       rooms,
       slug,
     } = item.attributes;
+
     const { attributes: coverImg } = images.cover.data;
 
     // My cards need these values, so I'll just calculate them all here.

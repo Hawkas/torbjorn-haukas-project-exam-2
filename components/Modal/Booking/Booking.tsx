@@ -3,37 +3,46 @@ import { faCheckCircle, faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { submitMessage } from '@helpers/handleMessage';
 import { ActionIcon, Alert, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
+import { DateRangePicker } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from 'lib/styles/typography';
 import { useState } from 'react';
+import { AccommodationClean } from 'types/accommodationClean';
 import { z } from 'zod';
-import { useStyles } from './Contact.styles';
-import { ContactIconsList } from './ContactIconsList';
+import { useStyles } from '../Contact/Contact.styles';
+import { ContactIconsList } from '../Contact/ContactIconsList';
 
 const contactSchema = z.object({
-  name: z.string().min(1, { message: 'Please enter your name' }),
+  firstName: z.string().min(1, { message: 'Please enter your first name' }),
+  lastName: z.string().min(1, { message: 'Please enter your last name' }),
   email: z.string().email({ message: 'Invalid email' }),
-  subject: z
+  phoneNumber: z
     .string()
-    .min(1, { message: 'Your message needs a subject' })
-    .max(40, { message: 'Must be fewer than 40 characters' }),
-  message: z
+    .min(7, { message: 'Must be a valid phone number' })
+    .max(15, { message: 'This 👏 is 👏 too 👏 long' }),
+  additionalDetails: z
     .string()
-    .min(25, { message: 'Must be 25 or more characters long' })
     .max(1000, { message: 'Please limit your message to 1000 characters' }),
 });
 
-export function Contact() {
+export function Booking({ rooms, name }: AccommodationClean) {
   const modals = useModals();
   const form = useForm({
     schema: zodResolver(contactSchema),
-    initialValues: { name: '', email: '', subject: '', message: '' },
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      checkIn: '',
+      phoneNumber: '',
+      additionalDetails: '',
+    },
   });
-
-  // Since the messages use the NextJS api, they should only fail to submit if, well,
-  // the whole site is down. I'll save the effort and just let it be empty if it doesnt connect.
-  //* Validation errors are of course displayed.
+  const [value, setValue] = useState<[Date | null, Date | null]>([
+    new Date(Date.now()),
+    new Date(2021, 11, 5),
+  ]);
   const [success, setSuccess] = useState('waiting');
   const { classes, cx } = useStyles();
   const { classes: textClass } = useTextStyles();
@@ -55,8 +64,8 @@ export function Contact() {
         <form
           className={classes.form}
           onSubmit={form.onSubmit(async (values) => {
-            const response = await submitMessage(values);
-            if (response) setSuccess('success');
+            // const response = await submitMessage(values);
+            // if (response) setSuccess('success');
           })}
         >
           <ActionIcon
@@ -66,7 +75,7 @@ export function Contact() {
             <FontAwesomeIcon icon={faClose} />
           </ActionIcon>
           <Text mb={52} component="h2" className={cx(classes.title, textClass.primaryH3)}>
-            Send us a message
+            Book your stay
           </Text>
 
           <div>
@@ -77,11 +86,21 @@ export function Contact() {
                 input: classes.textInput,
               }}
               mt="xl"
-              label="Name"
-              placeholder="Enter your name"
-              {...form.getInputProps('name', { type: 'input' })}
+              label="First name"
+              placeholder="Enter your first name"
+              {...form.getInputProps('firstName', { type: 'input' })}
             />
-
+            <TextInput
+              classNames={{
+                label: cx(classes.label, textClass.label),
+                root: classes.root,
+                input: classes.textInput,
+              }}
+              mt="xl"
+              label="Last name"
+              placeholder="Enter your last name"
+              {...form.getInputProps('lastName', { type: 'input' })}
+            />
             <TextInput
               classNames={{
                 label: cx(classes.label, textClass.label),
@@ -101,11 +120,21 @@ export function Contact() {
                 input: classes.textInput,
               }}
               mt="xl"
-              label="Subject"
-              placeholder="Enter a subject"
-              {...form.getInputProps('subject')}
+              label="Phone number"
+              placeholder="Enter your phone number"
+              {...form.getInputProps('phoneNumber')}
             />
-
+            <DateRangePicker
+              classNames={{
+                label: cx(classes.label, textClass.label),
+                root: classes.root,
+                input: classes.textInput,
+              }}
+              label="Book hotel"
+              placeholder="Pick dates range"
+              value={value}
+              onChange={setValue}
+            />
             <Textarea
               classNames={{
                 label: cx(classes.label, textClass.label),
@@ -113,10 +142,10 @@ export function Contact() {
                 input: classes.textInput,
               }}
               mt="xl"
-              label="Message"
-              placeholder="Enter your message"
+              label="Additional details"
+              placeholder="Anything else to add?"
               minRows={5}
-              {...form.getInputProps('message')}
+              {...form.getInputProps('additionalDetails')}
             />
 
             <Group position={success === 'success' ? 'apart' : 'right'}>
@@ -124,7 +153,7 @@ export function Contact() {
                 <Alert
                   withCloseButton
                   closeButtonLabel="Close alert"
-                  title="Message sent"
+                  title="Success"
                   icon={<FontAwesomeIcon icon={faCheckCircle} />}
                   color="green"
                   onClose={() => {
@@ -132,13 +161,13 @@ export function Contact() {
                   }}
                   mt={40}
                 >
-                  We'll get back to you as soon as we're able
+                  Your booking request has been submitted.
                 </Alert>
               ) : (
                 <></>
               )}
               <PrimaryButton type="submit" primary className={classes.control}>
-                Send message
+                Submit
               </PrimaryButton>
             </Group>
           </div>

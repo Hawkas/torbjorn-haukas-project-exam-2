@@ -104,7 +104,6 @@ export function CardSection({ data }: DataProps) {
   const content = CardGrid(dataArray, wrapBp, classes);
 
   useEffect(() => {
-    if (!data) return;
     const newData = filterArray(data, router);
     setDataArray((o) => {
       return newData;
@@ -115,7 +114,6 @@ export function CardSection({ data }: DataProps) {
     setTransitionStage(false);
 
     setTimeout(() => {
-      if (!data) return;
       const newData = router.query ? filterArray(data, router) : data;
       setDataArray((o) => {
         return newData;

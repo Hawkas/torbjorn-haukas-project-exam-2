@@ -7,9 +7,9 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from 'lib/styles/holidazeTheme';
 import Head from 'next/head';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
-import { getSession, SessionProvider, useSession } from 'next-auth/react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import App, { AppProps } from 'next/app';
+import { AppProps } from 'next/app';
 
 config.autoAddCss = false;
 type AppPropsWithAuth = AppProps & {
@@ -29,7 +29,7 @@ export default function MyApp(props: AppPropsWithAuth) {
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
         <ModalsProvider
-          modals={{ contact: FormModal, signIn: FormModal }}
+          modals={{ contact: FormModal, signIn: FormModal, booking: FormModal }}
           modalProps={formModalSettings}
         >
           <NotificationsProvider>

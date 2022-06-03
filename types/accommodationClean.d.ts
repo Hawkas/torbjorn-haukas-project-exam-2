@@ -12,7 +12,7 @@ export interface AccommodationClean {
   description: string;
   type: string;
   contactInfo: ContactInfo;
-  amenities: Amenities;
+  amenities: Omit<Amenities, 'id'>;
   minPrice: number;
   maxGuests: number;
   baths: string;

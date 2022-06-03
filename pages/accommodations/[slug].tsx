@@ -1,101 +1,26 @@
-import { classExpression } from '@babel/types';
 import { AccommodationHeader } from '@components/Accommodation/AccommodationHeader';
 import { DescriptionDetails } from '@components/Accommodation/DescriptionDetails';
-import {
-  faAirConditioner,
-  faElevator,
-  faOven,
-  faParking,
-  faPaw,
-  faRefrigerator,
-  faTvRetro,
-  faUtensils,
-  faWifi,
-} from '@fortawesome/pro-solid-svg-icons';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fetchAccommodations } from '@helpers/callStrapi';
-
-import {
-  Anchor,
-  Button,
-  createStyles,
-  Divider,
-  Image,
-  LoadingOverlay,
-  Title,
-  Box,
-} from '@mantine/core';
-import { useContainerStyles } from '@styles/containerStyles';
-import { useTextStyles } from '@styles/typography';
+import { LoadingOverlay } from '@mantine/core';
 import axios, { AxiosResponse } from 'axios';
-
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
-
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-
+import React, { useCallback, useRef } from 'react';
 import type { AccommodationClean } from 'types/accommodationClean';
-
-export const useStyles = createStyles((theme) => ({
-  fluidContainer: {
-    backgroundColor: theme.colors.blue[0],
-  },
-  amenityWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: theme.other.largeSpacing.xxl,
-    paddingBottom: theme.other.sectionSpacing.lg,
-  },
-}));
+import { Amenity } from '@components/Accommodation/Amenity';
+import { RoomList } from '../../components/Accommodation/RoomList';
+import { PleaseBook } from '../../components/Accommodation/PleaseBook';
 
 interface Props {
   data: AccommodationClean;
   googleData: any;
 }
+
 export default function Accommodation({ data, googleData }: Props) {
   const router = useRouter();
-  const { classes } = useStyles();
-  const { classes: containerClass } = useContainerStyles();
-  const { classes: textClass } = useTextStyles();
-
   if (data) {
-    console.log(data);
     const title = `${data.name} | Holidaze`;
-    const {
-      images: { cover, rooms: roomImages },
-      name,
-      amenities,
-      description,
-      rooms,
-      contactInfo,
-      maxGuests,
-      minPrice,
-      baths,
-      beds,
-    } = data;
-    // airCondition: true
-    // elevator: true
-    // freeParking: true
-    // id: 1
-    // kitchen: false
-    // petsAllowed: false
-    // refrigerator: true
-    // television: true
-    // wifi: true
-    const iconMatch = {
-      airCondition: { icon: faAirConditioner, label: 'Air condition' },
-      elevator: { icon: faElevator, label: 'Elevator' },
-      wifi: { icon: faWifi, label: 'WiFi' },
-      freeParking: { icon: faParking, label: 'Free parking' },
-      television: { icon: faTvRetro, label: 'Television' },
-      refrigerator: { icon: faRefrigerator, label: 'Refrigerator' },
-      foodService: { icon: faUtensils, label: 'Food service' },
-      petsAllowed: { icon: faPaw, label: 'Pets allowed' },
-      kitchen: { icon: faOven, label: 'Kitchen' },
-    };
     return (
       <>
         <Head>
@@ -105,19 +30,9 @@ export default function Accommodation({ data, googleData }: Props) {
         </Head>
         <AccommodationHeader {...data} />
         <DescriptionDetails googleData={googleData} {...data} />
-        <Box component="aside" className={classes.fluidContainer}>
-          <Box className={containerClass.container}>
-            <Box className={classes.amenityWrapper}>
-              <Title
-                order={2}
-                sx={(theme) => ({ color: theme.other.brandColor })}
-                className={textClass.primaryH2}
-              >
-                Amenities
-              </Title>
-            </Box>
-          </Box>
-        </Box>
+        <Amenity {...data} />
+        <RoomList {...data} />
+        <PleaseBook />
       </>
     );
   }
@@ -174,12 +89,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   // In case the google call fails
   try {
-    // const response = await axios.get(
-    //   `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
-    // );
-    throw 'error';
-    // const { data: googleData } = await response;
-    // newData = googleData;
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+    );
+    const { data: googleData } = await response;
+    newData = googleData;
   } catch (error) {
     console.log(error);
     newData = null;

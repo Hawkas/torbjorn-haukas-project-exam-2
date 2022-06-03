@@ -25,15 +25,8 @@ export interface AccommodationAttributes {
 }
 
 export interface Amenities {
+  [key: string]: boolean | null;
   id: number;
-  wifi: boolean;
-  airCondition: boolean;
-  elevator: boolean;
-  freeParking: boolean;
-  petsAllowed: boolean;
-  kitchen: boolean;
-  television: boolean;
-  refrigerator: boolean;
 }
 
 export interface Bookings {

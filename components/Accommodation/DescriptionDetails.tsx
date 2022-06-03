@@ -1,5 +1,5 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { render, MyMapComponent, Marker } from '@components/Accommodation/Map';
+import { render, MyMapComponent, Marker } from '@components/Accommodation/SmallParts/Map';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import { Box, createStyles, Group, Text } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
@@ -27,23 +27,32 @@ export function DescriptionDetails({
       sx={(theme) => ({
         borderTop: `1px solid ${theme.colors.gray[1]}`,
         padding: `${theme.other.largeSpacing.sm} 0 ${theme.other.sectionSpacing.lg}`,
+        backgroundColor: theme.white,
       })}
     >
       <Box className={containerClass.container}>
         <Group className={classes.hotelDetails} align="stretch">
           <Box ref={sizeRef} className={classes.hotelDescription} sx={{ flexShrink: 1 }}>
-            <Text
-              pb={32}
+            <Box
               sx={(theme) => ({
-                maxWidth: '560px',
                 borderBottom: `2px solid ${theme.colors.gray[1]}`,
+                width: '100%',
               })}
             >
-              {description}
-            </Text>
+              <Text
+                component="p"
+                pb={32}
+                sx={{
+                  maxWidth: '560px',
+                  margin: 0,
+                }}
+              >
+                {description}
+              </Text>
+            </Box>
             <PrimaryButton primary>{`Book rooms from ${minPrice} NOK`}</PrimaryButton>
           </Box>
-          <Box className={classes.mapWrap}>
+          <Box component="aside" className={classes.mapWrap}>
             <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!} render={render}>
               <MyMapComponent center={center} zoom={zoom}>
                 <Marker position={center} />
@@ -58,10 +67,13 @@ export function DescriptionDetails({
 const useDescriptionDetailStyles = createStyles((theme, textHeight: number) => ({
   hotelDetails: {
     gap: theme.other.largeSpacing.xxl,
+    justifyContent: 'space-between',
     flexWrap: 'nowrap',
 
     [theme.fn.smallerThan('sm')]: {
       flexWrap: 'wrap',
+      gap: 0,
+      justifyContent: 'flex-start',
     },
     [theme.fn.smallerThan('xs')]: {
       alignItems: 'center',
@@ -75,6 +87,7 @@ const useDescriptionDetailStyles = createStyles((theme, textHeight: number) => (
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     [theme.fn.smallerThan('sm')]: {
+      minWidth: '100%',
       marginBottom: theme.other.largeSpacing.xxl,
     },
   },

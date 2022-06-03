@@ -1,7 +1,7 @@
 import { createStyles, Text, Box, Anchor } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import Logo from '@public/logobig.svg';
+import Logo from '@public/logobig-footer.svg';
 import { useTextStyles } from '@styles/typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -64,9 +64,9 @@ export function FooterContent() {
     <Box component="div" className={cx(container, classes.wrapper)}>
       <Box component="div" className={classes.upperSection}>
         <Link href="/" passHref>
-          <Anchor component="a">
+          <a aria-label="To home">
             <Logo className={classes.logo} viewBox="0 0 152 31" />
-          </Anchor>
+          </a>
         </Link>
         {session ? (
           <PrimaryButton

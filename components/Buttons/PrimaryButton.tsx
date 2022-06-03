@@ -10,9 +10,6 @@ const useButtonStyles = createStyles((theme) => ({
     textDecoration: 'none',
     letterSpacing: theme.other.letterSpacing.xs,
   },
-  buttonDefault: {
-    boxShadow: theme.shadows.xs,
-  },
 }));
 
 interface MyButton {
@@ -41,7 +38,6 @@ export function PrimaryButton({
       variant={variant || 'gradient'}
       classNames={{
         label: textClass.buttonPrimary,
-        default: classes.buttonDefault,
         ...others.classNames,
       }}
       className={cx(classes.button, others.className)}
