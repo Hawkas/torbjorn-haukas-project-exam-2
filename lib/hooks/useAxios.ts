@@ -4,7 +4,7 @@ import { removeFluff } from '@helpers/callStrapi';
 import { Accommodations } from 'types/accommodationRaw';
 import { AccommodationsArray } from 'types/accommodationClean';
 
-//! 'borrowed' from https://dev.to/ecyrbe/comment/1ei8n
+//! Taken from https://dev.to/ecyrbe/comment/1ei8n and adjusted slightly
 
 //? This hook should only be used to do direct API calls, specifically for POST/PUT/DELETE calls to the external API post build.
 const qs = require('qs');

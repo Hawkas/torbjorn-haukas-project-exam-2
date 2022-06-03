@@ -29,11 +29,11 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
         ? null
         : room.features.map((item, index) => {
             const { feature } = item;
-            return <List.Item key={index}>{feature}</List.Item>;
+            return <List.Item key={index + 2}>{feature}</List.Item>;
           });
     return (
-      <article>
-        <Group grow={grow} key={index} className={classes.cardOuter}>
+      <article key={index}>
+        <Group grow={grow} className={classes.cardOuter}>
           <Image
             radius="xs"
             className={classes.image}
@@ -47,10 +47,10 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
                 {room.roomName}
               </Title>
               <List withPadding className={classes.roomList} listStyleType="circle">
-                <List.Item>
+                <List.Item key={0}>
                   {`Houses up to ${toEnglish(room.doubleBeds * 2 + room.singleBeds)} guests`}
                 </List.Item>
-                <List.Item>
+                <List.Item key={1}>
                   {`${toEnglish(room.doubleBeds, capitalize)} double ${pluralCheck(
                     'bed',
                     room.doubleBeds

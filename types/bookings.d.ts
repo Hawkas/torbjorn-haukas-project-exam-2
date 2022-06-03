@@ -15,12 +15,12 @@ export interface BookingAttributes {
   phoneNumber: string;
   checkIn: Date;
   checkOut: Date;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  publishedAt?: Date;
   room: string;
-  additionalDetails: string;
-  accommodation: RelatedAccommodation;
+  additionalDetails?: string;
+  accommodation: number | string;
 }
 
 export interface RelatedAccommodation {

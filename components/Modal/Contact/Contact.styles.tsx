@@ -86,6 +86,8 @@ export const useStyles = createStyles((theme) => {
     textInput: {
       padding: theme.other.smallSpacing.lg,
       minHeight: theme.other.largeSpacing.xl,
+      // This is to unstyle webkit's autofill bullshit
+      boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px rgba(255, 255, 255,1)',
     },
     label: {
       position: 'absolute',
@@ -95,6 +97,7 @@ export const useStyles = createStyles((theme) => {
       backgroundColor: theme.white,
       padding: `0 ${theme.other.smallSpacing.sm}`,
       marginLeft: theme.other.smallSpacing.lg,
+      textTransform: 'uppercase',
     },
     control: {
       marginTop: theme.other.largeSpacing.md,

@@ -1,8 +1,10 @@
 import { faAt, faClock, faLocationDot, faPhone } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { capsFirstLetter } from '@helpers/stringConversions';
 import { Box, createStyles, Group, Text } from '@mantine/core';
 import { useTextStyles } from 'lib/styles/typography';
 import React from 'react';
+import { AccommodationClean, ContactClean } from 'types/accommodationClean';
 
 const iconStyles = createStyles((theme) => ({
   wrapper: {
@@ -55,6 +57,7 @@ function ContactIcon({ icon, title, description, className, ...others }: Contact
 interface ContactIconsListProps {
   data?: ContactIconProps[];
   className?: string;
+  contactInfo?: ContactClean;
 }
 
 const contactData = [
@@ -72,8 +75,25 @@ const contactData = [
   },
 ];
 
-export function ContactIconsList({ data = contactData, className }: ContactIconsListProps) {
-  const items = data.map((item, index) => <ContactIcon key={index} {...item} />);
+const mapContact = ({ ...contactInfo }: ContactClean) => {
+  if (!contactInfo) return;
+  const contactIcons: ContactIconProps[] = [];
+  for (let key in contactInfo) {
+    contactIcons.push({
+      title: capsFirstLetter(key),
+      description: contactInfo[key],
+      icon: key === 'address' ? faLocationDot : key === 'email' ? faAt : faPhone,
+    });
+  }
+  return contactIcons;
+};
+export function ContactIconsList({
+  data = contactData,
+  className,
+  contactInfo,
+}: ContactIconsListProps) {
+  let contactArray = contactInfo ? mapContact(contactInfo) : data;
+  const items = contactArray!.map((item, index) => <ContactIcon key={index} {...item} />);
   return (
     <Group
       direction="column"

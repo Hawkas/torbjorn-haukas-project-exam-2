@@ -72,7 +72,7 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       images,
       amenities: { id: uselessId, ...amenities },
       description,
-      contactInfo,
+      contactInfo: { id: alsoUseless, ...contactInfo },
       rooms,
       slug,
     } = item.attributes;

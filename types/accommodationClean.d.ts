@@ -11,7 +11,7 @@ export interface AccommodationClean {
   location: string;
   description: string;
   type: string;
-  contactInfo: ContactInfo;
+  contactInfo: ContactClean;
   amenities: Omit<Amenities, 'id'>;
   minPrice: number;
   maxGuests: number;
@@ -20,7 +20,12 @@ export interface AccommodationClean {
   rooms: AttributesRoom[];
   images: CleanImages;
 }
-
+export interface ContactClean {
+  [key: string];
+  [key: 'address']: string;
+  [key: 'email']: string;
+  [key: 'phone']: string;
+}
 export interface CleanImages {
   cover: Cover;
   rooms: ImagesRoom[];

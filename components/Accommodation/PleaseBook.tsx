@@ -5,8 +5,10 @@ import React from 'react';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { ReturnLink } from '@components/Accommodation/SmallParts/ReturnLink';
 import { useModals } from '@mantine/modals';
+import { Booking } from '@components/Modal/Booking/Booking';
+import type { AccommodationClean } from 'types/accommodationClean';
 
-export function PleaseBook() {
+export function PleaseBook({ ...data }: AccommodationClean) {
   const { classes } = useStyles();
   const modals = useModals();
   const { classes: containerClass } = useContainerStyles();
@@ -15,7 +17,7 @@ export function PleaseBook() {
     modals.openContextModal('booking', {
       innerProps: {
         id: 'formModal',
-        modalBody: null,
+        modalBody: <Booking {...data} />,
       },
     });
   };
@@ -50,6 +52,7 @@ export function PleaseBook() {
             primary
             className={classes.button}
             classNames={{ label: classes.buttonLabel }}
+            onClick={openBookingModal}
           >
             Book now
           </PrimaryButton>

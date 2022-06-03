@@ -1,48 +1,73 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { faCheckCircle, faClose } from '@fortawesome/pro-regular-svg-icons';
+import {
+  faCalendar,
+  faCheckCircle,
+  faChevronDown,
+  faClose,
+} from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { submitMessage } from '@helpers/handleMessage';
-import { ActionIcon, Alert, Group, Paper, Text, Textarea, TextInput } from '@mantine/core';
-import { DateRangePicker } from '@mantine/dates';
+import { submitBooking } from '@helpers/submitBooking';
+import {
+  ActionIcon,
+  Alert,
+  Group,
+  NativeSelect,
+  Paper,
+  Select,
+  SimpleGrid,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
+import { DatePicker, DateRangePicker } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from 'lib/styles/typography';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccommodationClean } from 'types/accommodationClean';
+import { BookingAttributes } from 'types/bookings';
 import { z } from 'zod';
 import { useStyles } from '../Contact/Contact.styles';
 import { ContactIconsList } from '../Contact/ContactIconsList';
 
-const contactSchema = z.object({
+const bookingSchema = z.object({
   firstName: z.string().min(1, { message: 'Please enter your first name' }),
   lastName: z.string().min(1, { message: 'Please enter your last name' }),
   email: z.string().email({ message: 'Invalid email' }),
+  checkIn: z.instanceof(Date, { message: 'Check-in date is required' }),
+  checkOut: z.instanceof(Date, { message: 'Check-out date is required' }),
+  room: z.string().min(1, { message: 'You must select a room' }),
   phoneNumber: z
     .string()
     .min(7, { message: 'Must be a valid phone number' })
-    .max(15, { message: 'This 👏 is 👏 too 👏 long' }),
+    .max(15, { message: 'This 👏 is 👏 too 👏 long' })
+    .refine((val) => !isNaN(parseInt(val)), { message: 'Must be a number' }),
   additionalDetails: z
     .string()
     .max(1000, { message: 'Please limit your message to 1000 characters' }),
+  accommodation: z.number(),
 });
 
-export function Booking({ rooms, name }: AccommodationClean) {
+export function Booking({ rooms, id, contactInfo }: AccommodationClean) {
   const modals = useModals();
-  const form = useForm({
-    schema: zodResolver(contactSchema),
+  const [currentDate, setCurrentDate] = useState(new Date());
+  useEffect(() => {
+    setCurrentDate(new Date());
+  }, []);
+  const form = useForm<BookingAttributes>({
+    schema: zodResolver(bookingSchema),
     initialValues: {
       firstName: '',
       lastName: '',
       email: '',
-      checkIn: '',
+      checkIn: currentDate,
+      checkOut: currentDate,
       phoneNumber: '',
       additionalDetails: '',
+      room: '',
+      accommodation: id,
     },
   });
-  const [value, setValue] = useState<[Date | null, Date | null]>([
-    new Date(Date.now()),
-    new Date(2021, 11, 5),
-  ]);
   const [success, setSuccess] = useState('waiting');
   const { classes, cx } = useStyles();
   const { classes: textClass } = useTextStyles();
@@ -58,14 +83,14 @@ export function Booking({ rooms, name }: AccommodationClean) {
             Contact details
           </Text>
 
-          <ContactIconsList className={classes.iconList} />
+          <ContactIconsList contactInfo={contactInfo} className={classes.iconList} />
         </div>
 
         <form
           className={classes.form}
           onSubmit={form.onSubmit(async (values) => {
-            // const response = await submitMessage(values);
-            // if (response) setSuccess('success');
+            const response = await submitBooking(values);
+            if (response) setSuccess('success');
           })}
         >
           <ActionIcon
@@ -79,62 +104,100 @@ export function Booking({ rooms, name }: AccommodationClean) {
           </Text>
 
           <div>
-            <TextInput
-              classNames={{
-                label: cx(classes.label, textClass.label),
-                root: classes.root,
-                input: classes.textInput,
-              }}
-              mt="xl"
-              label="First name"
-              placeholder="Enter your first name"
-              {...form.getInputProps('firstName', { type: 'input' })}
-            />
-            <TextInput
-              classNames={{
-                label: cx(classes.label, textClass.label),
-                root: classes.root,
-                input: classes.textInput,
-              }}
-              mt="xl"
-              label="Last name"
-              placeholder="Enter your last name"
-              {...form.getInputProps('lastName', { type: 'input' })}
-            />
-            <TextInput
-              classNames={{
-                label: cx(classes.label, textClass.label),
-                root: classes.root,
-                input: classes.textInput,
-              }}
-              mt="xl"
-              label="Email"
-              placeholder="Enter your email"
-              {...form.getInputProps('email')}
-            />
+            {' '}
+            <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
+              <TextInput
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                mt="xl"
+                label="First name"
+                placeholder="Enter your first name"
+                {...form.getInputProps('firstName', { type: 'input' })}
+              />
+              <TextInput
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                mt="xl"
+                label="Last name"
+                placeholder="Enter your last name"
+                {...form.getInputProps('lastName', { type: 'input' })}
+              />
+            </SimpleGrid>
+            <SimpleGrid mb={64} cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
+              <TextInput
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                mt="xl"
+                label="Email"
+                placeholder="Enter your email"
+                {...form.getInputProps('email')}
+              />
 
-            <TextInput
+              <TextInput
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                mt="xl"
+                type="tel"
+                label="Phone number"
+                placeholder="Enter your phone number"
+                {...form.getInputProps('phoneNumber')}
+              />
+            </SimpleGrid>
+            <Select
               classNames={{
                 label: cx(classes.label, textClass.label),
                 root: classes.root,
                 input: classes.textInput,
               }}
               mt="xl"
-              label="Phone number"
-              placeholder="Enter your phone number"
-              {...form.getInputProps('phoneNumber')}
+              label="Room"
+              placeholder="Select a room"
+              data={rooms.map((item) => item.roomName)}
+              rightSection={<FontAwesomeIcon fontSize="14" icon={faChevronDown} />}
+              styles={{ rightSection: { pointerEvents: 'none' } }}
+              rightSectionWidth={40}
+              {...form.getInputProps('room')}
             />
-            <DateRangePicker
-              classNames={{
-                label: cx(classes.label, textClass.label),
-                root: classes.root,
-                input: classes.textInput,
-              }}
-              label="Book hotel"
-              placeholder="Pick dates range"
-              value={value}
-              onChange={setValue}
-            />
+            <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
+              <DatePicker
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                icon={<FontAwesomeIcon icon={faCalendar} />}
+                minDate={currentDate}
+                mt="xl"
+                label="Check-in"
+                placeholder="Pick check-in date"
+                {...form.getInputProps('checkIn')}
+              />
+              <DatePicker
+                classNames={{
+                  label: cx(classes.label, textClass.label),
+                  root: classes.root,
+                  input: classes.textInput,
+                }}
+                icon={<FontAwesomeIcon icon={faCalendar} />}
+                minDate={currentDate}
+                mt="xl"
+                label="Check-out"
+                placeholder="Pick check-out date"
+                {...form.getInputProps('checkOut')}
+              />
+            </SimpleGrid>
             <Textarea
               classNames={{
                 label: cx(classes.label, textClass.label),
@@ -147,7 +210,6 @@ export function Booking({ rooms, name }: AccommodationClean) {
               minRows={5}
               {...form.getInputProps('additionalDetails')}
             />
-
             <Group position={success === 'success' ? 'apart' : 'right'}>
               {success === 'success' ? (
                 <Alert
