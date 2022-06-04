@@ -1,6 +1,17 @@
+import { faPen, faTrash } from '@fortawesome/pro-regular-svg-icons';
 import { faBed, faLocationDot, faToilet } from '@fortawesome/pro-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageLink, { ImageProps } from '@Homepage/HomeSectionParts/ImageLink';
-import { Anchor, Box, createStyles, Group, Stack, useMantineTheme } from '@mantine/core';
+import {
+  ActionIcon,
+  Anchor,
+  Box,
+  createStyles,
+  Group,
+  SimpleGrid,
+  Stack,
+  useMantineTheme,
+} from '@mantine/core';
 import Link from 'next/link';
 import { IconText } from './SmallParts/IconText';
 import { TypePrice } from './SmallParts/TypePrice';
@@ -48,34 +59,91 @@ export interface CardProps {
   baths: string;
   type: string;
   price: string | number;
-  href: string;
 }
 
-export function Card(props: CardProps) {
+export function CardBase(props: CardProps) {
   const { classes } = useCardStyles();
   const theme = useMantineTheme();
+  return (
+    <>
+      <ImageLink cards text={props.name} image={props.image} />
+      <Stack spacing={0} mx={theme.other.smallSpacing.lg}>
+        <Group
+          noWrap
+          py={theme.other.smallSpacing.lg}
+          className={classes.cardDetails}
+          position="apart"
+        >
+          <IconText icon={faLocationDot} text={props.location} />
+          <Group noWrap position="right" spacing="lg">
+            <IconText light icon={faBed} text={props.beds} />
+            <IconText light icon={faToilet} text={props.baths} />
+          </Group>
+        </Group>
+        <TypePrice type={props.type} price={props.price} />
+      </Stack>
+    </>
+  );
+}
+
+export function Card(props: CardProps & { href: string }) {
+  const { classes } = useCardStyles();
   return (
     <Box className={classes.cardOuter} component="article">
       <Link href={`/accommodations/${props.href}`} passHref>
         <Anchor>
-          <ImageLink cards text={props.name} image={props.image} />
-          <Stack spacing={0} mx={theme.other.smallSpacing.lg}>
-            <Group
-              noWrap
-              py={theme.other.smallSpacing.lg}
-              className={classes.cardDetails}
-              position="apart"
-            >
-              <IconText icon={faLocationDot} text={props.location} />
-              <Group noWrap position="right" spacing="lg">
-                <IconText light icon={faBed} text={props.beds} />
-                <IconText light icon={faToilet} text={props.baths} />
-              </Group>
-            </Group>
-            <TypePrice type={props.type} price={props.price} />
-          </Stack>
+          <CardBase {...props} />
         </Anchor>
       </Link>
+    </Box>
+  );
+}
+const useStyles = createStyles((theme) => ({
+  buttonWrapper: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+  button: {
+    backgroundColor: theme.white,
+    boxShadow: theme.shadows.sm,
+    fontSize: theme.other.fontSizes.xl,
+    '&:hover': {
+      backgroundColor: theme.colors.blue[0],
+    },
+  },
+  deleteButton: { color: theme.colors.red[6] },
+  editButton: { color: theme.colors.blue[6] },
+}));
+export function AdminCard(props: CardProps) {
+  const { classes, cx } = useStyles();
+  const theme = useMantineTheme();
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <CardBase {...props} />
+      <SimpleGrid
+        className={classes.buttonWrapper}
+        cols={1}
+        breakpoints={[{ maxWidth: 'md', cols: 2 }]}
+        spacing="lg"
+      >
+        <ActionIcon
+          radius="lg"
+          className={cx(classes.button, classes.editButton)}
+          variant="filled"
+          size="xl"
+        >
+          <FontAwesomeIcon icon={faPen} />
+        </ActionIcon>
+        <ActionIcon
+          radius="lg"
+          className={cx(classes.button, classes.deleteButton)}
+          variant="filled"
+          size="xl"
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </ActionIcon>
+      </SimpleGrid>
     </Box>
   );
 }

@@ -5,7 +5,8 @@ export const getMessage = async () => {
     method: 'GET',
   });
   const data = await response.json();
-  console.log(data);
+  if (data) return data;
+  return null;
 };
 
 export const submitMessage = async (message: Message) => {
@@ -26,5 +27,6 @@ export const deleteMessage = async (messageId: Pick<Message, 'id'>) => {
     method: 'DELETE',
   });
   const data = await response.json();
-  console.log(data);
+  if (data) return true;
+  return false;
 };

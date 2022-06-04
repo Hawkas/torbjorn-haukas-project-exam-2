@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { removeFluff } from '@helpers/callStrapi';
+import { removeFluff } from '@helpers/fetchAccommodations';
 import { Accommodations } from 'types/accommodationRaw';
 import { AccommodationsArray } from 'types/accommodationClean';
 

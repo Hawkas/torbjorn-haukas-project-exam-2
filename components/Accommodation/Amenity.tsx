@@ -110,7 +110,7 @@ export function Amenity({ amenities }: AccommodationClean) {
           >
             Amenities
           </Title>
-          <Grid gutter={32} className={classes.grid}>
+          <Grid justify="center" gutter={32} className={classes.grid}>
             {amenityArray}
           </Grid>
         </Box>

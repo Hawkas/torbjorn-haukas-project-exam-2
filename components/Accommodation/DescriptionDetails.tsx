@@ -1,19 +1,22 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { render, MyMapComponent, Marker } from '@components/Accommodation/SmallParts/Map';
+import { Booking } from '@components/Modal/Booking/Booking';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import { Box, createStyles, Group, Text } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
+import { useModals } from '@mantine/modals';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { AccommodationClean } from 'types/accommodationClean';
 
 export function DescriptionDetails({
-  description,
-  minPrice,
   googleData,
+  ...data
 }: AccommodationClean & { googleData: any }) {
+  const { description, minPrice } = data;
   const { ref: sizeRef, height } = useElementSize();
   const { classes: containerClass } = useContainerStyles();
   const { classes } = useDescriptionDetailStyles(height);
+  const modals = useModals();
   const center = googleData
     ? googleData.results[0].geometry.location
     : {
@@ -21,6 +24,14 @@ export function DescriptionDetails({
         lng: 5.328571699999999,
       };
   const zoom = 20;
+  const openBookingModal = () => {
+    modals.openContextModal('booking', {
+      innerProps: {
+        id: 'formModal',
+        modalBody: <Booking {...data} />,
+      },
+    });
+  };
   return (
     <Box
       component="section"
@@ -50,9 +61,12 @@ export function DescriptionDetails({
                 {description}
               </Text>
             </Box>
-            <PrimaryButton primary>{`Book rooms from ${minPrice} NOK`}</PrimaryButton>
+            <PrimaryButton
+              onClick={openBookingModal}
+              primary
+            >{`Book rooms from ${minPrice} NOK`}</PrimaryButton>
           </Box>
-          <Box component="aside" className={classes.mapWrap}>
+          <Box aria-label="Location" component="aside" className={classes.mapWrap}>
             <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!} render={render}>
               <MyMapComponent center={center} zoom={zoom}>
                 <Marker position={center} />

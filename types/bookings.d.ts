@@ -13,8 +13,8 @@ export interface BookingAttributes {
   lastName: string;
   email: string;
   phoneNumber: string;
-  checkIn: Date;
-  checkOut: Date;
+  checkIn?: Date;
+  checkOut?: Date;
   createdAt?: Date;
   updatedAt?: Date;
   publishedAt?: Date;

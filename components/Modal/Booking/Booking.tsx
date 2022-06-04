@@ -6,12 +6,11 @@ import {
   faClose,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { submitBooking } from '@helpers/submitBooking';
+import { submitBooking } from '@helpers/handleBookings';
 import {
   ActionIcon,
   Alert,
   Group,
-  NativeSelect,
   Paper,
   Select,
   SimpleGrid,
@@ -31,17 +30,18 @@ import { useStyles } from '../Contact/Contact.styles';
 import { ContactIconsList } from '../Contact/ContactIconsList';
 
 const bookingSchema = z.object({
-  firstName: z.string().min(1, { message: 'Please enter your first name' }),
-  lastName: z.string().min(1, { message: 'Please enter your last name' }),
-  email: z.string().email({ message: 'Invalid email' }),
+  firstName: z.string().trim().min(1, { message: 'Please enter your first name' }),
+  lastName: z.string().trim().min(1, { message: 'Please enter your last name' }),
+  email: z.string().trim().email({ message: 'Invalid email' }),
   checkIn: z.instanceof(Date, { message: 'Check-in date is required' }),
   checkOut: z.instanceof(Date, { message: 'Check-out date is required' }),
-  room: z.string().min(1, { message: 'You must select a room' }),
+  room: z.string().trim().min(1, { message: 'You must select a room' }),
   phoneNumber: z
     .string()
+    .trim()
     .min(7, { message: 'Must be a valid phone number' })
     .max(15, { message: 'This 👏 is 👏 too 👏 long' })
-    .refine((val) => !isNaN(parseInt(val)), { message: 'Must be a number' }),
+    .refine((val) => !isNaN(Number(val)), { message: 'Must be a number' }),
   additionalDetails: z
     .string()
     .max(1000, { message: 'Please limit your message to 1000 characters' }),
@@ -60,8 +60,8 @@ export function Booking({ rooms, id, contactInfo }: AccommodationClean) {
       firstName: '',
       lastName: '',
       email: '',
-      checkIn: currentDate,
-      checkOut: currentDate,
+      checkIn: undefined,
+      checkOut: undefined,
       phoneNumber: '',
       additionalDetails: '',
       room: '',
@@ -77,6 +77,7 @@ export function Booking({ rooms, id, contactInfo }: AccommodationClean) {
         <div className={classes.contacts}>
           <Text
             component="h2"
+            mb={76}
             className={cx(classes.title, textClass.primaryH3)}
             sx={{ color: '#fff' }}
           >

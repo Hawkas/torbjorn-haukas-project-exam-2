@@ -1,3 +1,5 @@
+import type { BookingAttributes } from './bookings';
+
 export interface Accommodations {
   data: AccommodationObject[];
   meta: Meta;
@@ -36,20 +38,6 @@ export interface Bookings {
 export interface BookingsData {
   id: number;
   attributes: BookingAttributes;
-}
-
-export interface BookingAttributes {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  checkIn: Date;
-  checkOut: Date;
-  additionalDetails: string;
-  room: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
 }
 
 export interface ContactInfo {

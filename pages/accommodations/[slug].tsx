@@ -1,16 +1,17 @@
-import { AccommodationHeader } from '@components/Accommodation/AccommodationHeader';
-import { DescriptionDetails } from '@components/Accommodation/DescriptionDetails';
-import { fetchAccommodations } from '@helpers/callStrapi';
+import {
+  AccommodationHeader,
+  Amenity,
+  DescriptionDetails,
+  PleaseBook,
+  RoomList,
+} from '@components/Accommodation';
+import { fetchAccommodations } from '@helpers/fetchAccommodations';
 import { LoadingOverlay } from '@mantine/core';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef } from 'react';
 import type { AccommodationClean } from 'types/accommodationClean';
-import { Amenity } from '@components/Accommodation/Amenity';
-import { RoomList } from '../../components/Accommodation/RoomList';
-import { PleaseBook } from '../../components/Accommodation/PleaseBook';
 
 interface Props {
   data: AccommodationClean;

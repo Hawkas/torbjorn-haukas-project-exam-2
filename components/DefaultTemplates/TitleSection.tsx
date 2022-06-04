@@ -12,12 +12,14 @@ const useStyles = createStyles((theme, { darkBg }: StyleProps) => ({
     position: 'relative',
     paddingTop: 'var(--mantine-header-height)',
     '&:after': {
+      display: darkBg ? 'none' : 'block',
       position: 'absolute',
       content: `" "`,
       bottom: 0,
       left: 0,
       right: 0,
       height: '4px',
+      zIndex: 0,
       backgroundColor: theme.colors.gray[1],
     },
   },
@@ -42,7 +44,7 @@ export function TitleSection({ children, title, darkBg, order }: Props) {
   } = useContainerStyles();
   return (
     <Box className={classes.fluidContainer} component="header" px="0">
-      <Box className={cx(container, firstContainer)}>
+      <Box className={darkBg ? firstContainer : cx(container, firstContainer)}>
         <Title className={classes.title} order={order || 1}>
           {title}
         </Title>

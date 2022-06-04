@@ -1,8 +1,8 @@
 import { CardSection } from '@components/Accommodations/CardSection';
-import { HeaderSection } from '@components/Accommodations/HeaderSection';
+import { FiltersHeader } from '@components/Accommodations/FiltersHeader';
 import { SearchBar } from '@components/SearchBar/SearchBar';
 
-import { fetchAccommodations } from '@helpers/callStrapi';
+import { fetchAccommodations } from '@helpers/fetchAccommodations';
 
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
@@ -27,7 +27,7 @@ export default function Accommodations(props: DataProps) {
           key="description"
         />
       </Head>
-      <HeaderSection />
+      <FiltersHeader />
       {/* <SearchBar noLabel data={props.data} /> */}
       <CardSection data={props.data} />
     </>

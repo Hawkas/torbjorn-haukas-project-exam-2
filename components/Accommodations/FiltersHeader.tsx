@@ -11,12 +11,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderSection() {
+export function FiltersHeader({ order }: { order?: 1 | 2 }) {
   const router = useRouter();
   const { classes } = useStyles();
   return (
     <>
-      <TitleSection title="Accommodations">
+      <TitleSection order={order} title="Accommodations">
         <Box component="section">
           <Center className={classes.filtersWrap}>
             <LocationChips router={router} />

@@ -170,6 +170,7 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
           </Box>
         </Box>
         <Button
+          aria-label="Previous image"
           disabled={!prevBtnEnabled}
           variant="default"
           className={classes.emblaButton}
@@ -178,6 +179,7 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
           <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
         <Button
+          aria-label="Next image"
           disabled={!nextBtnEnabled}
           variant="default"
           className={classes.emblaButton}
@@ -189,6 +191,7 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
       <Box className={classes.emblaDots}>
         {scrollSnaps.map((_, index) => (
           <button
+            aria-label={`Jump to image ${index}`}
             key={index}
             className={cx(classes.emblaDot, { ['is-selected']: index === selectedIndex })}
             onClick={() => scrollTo(index)}

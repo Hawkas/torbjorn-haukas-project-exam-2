@@ -1,5 +1,5 @@
 import type { SessionType } from '@AppShell/Header/Navigation/NavMenu';
-import { fetchAccommodations } from '@helpers/callStrapi';
+import { fetchAccommodations } from '@helpers/fetchAccommodations';
 import { getMessage } from '@helpers/handleMessage';
 import { HeroSection } from '@Homepage/HeroSection';
 import { RestOfThePage } from '@Homepage/RestOfThePage';

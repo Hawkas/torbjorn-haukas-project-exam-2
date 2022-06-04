@@ -1,7 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
-import { AccommodationClean, AccommodationsArray } from 'types/accommodationClean';
+import { AccommodationClean } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
+import { axiosFetch } from './axiosFetch';
 
 const qs = require('qs');
 const productsQuery = qs.stringify(
@@ -26,25 +27,13 @@ const wildcardQuery = qs.stringify(
   },
   { encodeValuesOnly: true }
 );
-//? This function only fetches files using an internal address to my API, which is hosted on the same cloud application as the site.
-//* As such, it will never work if run client-side. But it shouldn't rerun unless the page is rebuilt anyway.
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
+
 export const rawAccommodations = async () => {
   const headers = { Authorization: `Bearer ${process.env.API_PUBLIC_TOKEN}` };
   const url = `/accommodations?${productsQuery}`;
   const method = 'GET';
   const params = { method, url, headers };
-
-  try {
-    const results: AxiosResponse = await axios.request(params);
-    console.log('PERFORMED API CALL CALLSTRAPI!!');
-    return results.data;
-
-    // Stringify and push to array.
-  } catch (error: any) {
-    console.log(error);
-    return;
-  }
+  return await axiosFetch(params);
 };
 
 // I preserve the raw data above for later use.

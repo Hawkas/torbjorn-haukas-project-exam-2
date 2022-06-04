@@ -16,6 +16,7 @@ const { menuBreak, headerHeight } = settings;
 const useStyles = createStyles((theme, _params, getRef) => ({
   content: {
     transition: 'opacity 0.5s ease-in-out',
+    height: '100%',
   },
   fadeIn: {
     opacity: 1,
@@ -24,6 +25,10 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     opacity: 0,
   },
   header: {
+    pointerEvents: 'none',
+    '& a': {
+      pointerEvents: 'all',
+    },
     paddingRight: 'var(--removed-scroll-width)',
     transition: 'background-color 0.25s linear 0s',
     borderBottom: '1px solid transparent',
@@ -41,6 +46,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     width: '100%',
     paddingTop: 0,
     minHeight: `calc(100vh + ${headerHeight}px)`,
+    height: '100%',
     paddingBottom: 0,
   },
   footer: {
