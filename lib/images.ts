@@ -3,6 +3,7 @@ export interface ImageObject {
   height: number;
   width: number;
   alt: string;
+  id?: number;
 }
 
 export const hotel = {

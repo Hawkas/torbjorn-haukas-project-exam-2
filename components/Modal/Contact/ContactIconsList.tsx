@@ -28,13 +28,14 @@ const iconStyles = createStyles((theme) => ({
   },
 }));
 
-interface ContactIconProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> {
+interface ContactIconProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'title' | 'id'> {
   icon: typeof faAt;
   title: React.ReactNode;
   description: React.ReactNode;
+  id?: number;
 }
 
-function ContactIcon({ icon, title, description, className, ...others }: ContactIconProps) {
+function ContactIcon({ icon, title, description, className, id, ...others }: ContactIconProps) {
   const { classes, cx } = iconStyles();
   const { classes: textClass } = useTextStyles();
   return (
@@ -75,6 +76,7 @@ const contactData = [
   },
 ];
 
+//? Make data from API fit to the the defined object structure
 const mapContact = ({ ...contactInfo }: ContactClean) => {
   if (!contactInfo) return;
   const contactIcons: ContactIconProps[] = [];
@@ -87,6 +89,7 @@ const mapContact = ({ ...contactInfo }: ContactClean) => {
   }
   return contactIcons;
 };
+
 export function ContactIconsList({
   data = contactData,
   className,

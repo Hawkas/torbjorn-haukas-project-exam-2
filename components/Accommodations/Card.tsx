@@ -1,9 +1,6 @@
-import { faPen, faTrash } from '@fortawesome/pro-regular-svg-icons';
 import { faBed, faLocationDot, faToilet } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageLink, { ImageProps } from '@Homepage/HomeSectionParts/ImageLink';
 import {
-  ActionIcon,
   Anchor,
   Box,
   createStyles,
@@ -13,6 +10,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import Link from 'next/link';
+import { CardActionFab } from './SmallParts/CardActionFab';
 import { IconText } from './SmallParts/IconText';
 import { TypePrice } from './SmallParts/TypePrice';
 
@@ -28,7 +26,7 @@ const useCardStyles = createStyles((theme, _params, getRef) => ({
       width: '100%',
       height: '2px',
       opacity: 0.25,
-      backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23003355BF' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`,
+      backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23003355BF' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='14' stroke-linecap='square'/%3e%3c/svg%3e")`,
       backgroundSize: '200px 200px',
     },
   },
@@ -104,16 +102,6 @@ const useStyles = createStyles((theme) => ({
     top: 16,
     right: 16,
   },
-  button: {
-    backgroundColor: theme.white,
-    boxShadow: theme.shadows.sm,
-    fontSize: theme.other.fontSizes.xl,
-    '&:hover': {
-      backgroundColor: theme.colors.blue[0],
-    },
-  },
-  deleteButton: { color: theme.colors.red[6] },
-  editButton: { color: theme.colors.blue[6] },
 }));
 export function AdminCard(props: CardProps) {
   const { classes, cx } = useStyles();
@@ -127,22 +115,8 @@ export function AdminCard(props: CardProps) {
         breakpoints={[{ maxWidth: 'md', cols: 2 }]}
         spacing="lg"
       >
-        <ActionIcon
-          radius="lg"
-          className={cx(classes.button, classes.editButton)}
-          variant="filled"
-          size="xl"
-        >
-          <FontAwesomeIcon icon={faPen} />
-        </ActionIcon>
-        <ActionIcon
-          radius="lg"
-          className={cx(classes.button, classes.deleteButton)}
-          variant="filled"
-          size="xl"
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </ActionIcon>
+        <CardActionFab />
+        <CardActionFab deleteBtn />
       </SimpleGrid>
     </Box>
   );

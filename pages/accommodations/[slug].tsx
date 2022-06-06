@@ -96,7 +96,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { data: googleData } = await response;
     newData = googleData;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     newData = null;
   }
   const notFound = !data;

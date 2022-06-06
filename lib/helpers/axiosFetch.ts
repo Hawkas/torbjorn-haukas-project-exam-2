@@ -5,7 +5,6 @@ axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 //* But since my fetches will always run server-side UNLESS it's from the admin dashboard with authorization, that's aight.
 
 export const axiosFetch = async (axiosParams: AxiosRequestConfig) => {
-  console.log(axiosParams.data);
   try {
     const result = await axios.request(axiosParams);
     return result.data;

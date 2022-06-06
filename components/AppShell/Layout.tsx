@@ -26,7 +26,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
   header: {
     pointerEvents: 'none',
-    '& a': {
+    '& a, & button': {
       pointerEvents: 'all',
     },
     paddingRight: 'var(--removed-scroll-width)',

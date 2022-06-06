@@ -58,10 +58,10 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       name: hotelName,
       location,
       type,
-      images,
-      amenities: { id: uselessId, ...amenities },
+      images: { id: imagesId, ...images },
+      amenities,
       description,
-      contactInfo: { id: alsoUseless, ...contactInfo },
+      contactInfo,
       rooms,
       slug,
     } = item.attributes;
@@ -75,10 +75,13 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
     const maxBeds = Math.max(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
     const minBeds = Math.min(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
 
-    // Since this part is an array with arbitrary length, and everything is nested to Narnia
-    // it gets its own little cleanup
+    // Since this part is an array with arbitrary length, and everything is also nested to Narnia
+    // it gets some extra cleanup
     const { rooms: dirtyImgArray } = images;
     const roomsImgArray = dirtyImgArray.map((room) => ({
+      // Keep the id to allow changing the images for each room selectively from the dashboard.
+      // This is NOT the id for the image data, just the component they are nested in.
+      // Omitting this ID in a 'PUT' request will end up recreating the component, only including the changed value.
       id: room.id,
       image: {
         alt: `${hotelName} - ${room.roomName}`,
@@ -111,6 +114,7 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       beds: `${minBeds}-${maxBeds}`,
       rooms,
       images: {
+        id: imagesId,
         cover: {
           alt: hotelName,
           large: {

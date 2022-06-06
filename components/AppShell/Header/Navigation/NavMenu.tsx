@@ -43,6 +43,7 @@ export function NavMenu({ menuBreak, onClick }: Pick<NavLinkProps, 'menuBreak' |
       </NavLink>
     );
   });
+  // To avoid the nav menu flickering between logged-in/logged-out state.
   if (status === 'loading') {
     return (
       <div

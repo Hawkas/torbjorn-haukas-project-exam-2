@@ -60,6 +60,7 @@ export function Contact() {
           })}
         >
           <ActionIcon
+            aria-label="Close"
             sx={{ position: 'absolute', top: 0, right: 0 }}
             onClick={() => modals.closeModal('contact')}
           >

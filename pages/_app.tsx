@@ -58,6 +58,7 @@ interface AuthProps {
 function Auth({ children }: AuthProps) {
   const router = useRouter();
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  // Overriding the default redirect to log-in as well.
   const { status } = useSession({
     required: true,
     onUnauthenticated() {

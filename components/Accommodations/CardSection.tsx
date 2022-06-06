@@ -33,6 +33,8 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
     classes: { container },
   } = useContainerStyles();
   const theme = useMantineTheme();
+
+  // Media query hooks to control Mantine prop values
   const gutterBp = useMediaQuery('(min-width: 1200px)');
   const wrapBp = useMediaQuery('(min-width: 680px)');
 
@@ -40,21 +42,30 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
   const [dataArray, setDataArray] = useState(data);
   const content = CardGrid(dataArray, wrapBp, classes, admin);
 
+  // This will run only once when the component mounts. Sort the data using query parameters if any,
+  // and reveal it by changing transition stage.
   useEffect(() => {
     const newData = filterArray({ array: data, router });
-    setDataArray((o) => {
-      return newData;
-    });
+    setDataArray((o) => newData);
     setTransitionStage(true);
   }, []);
+
+  // This is mantine's custom hook that will ONLY run when the state of its dependencies change from their initial value.
+  // I.e it doesn't run at all when component mounts.
   useDidUpdate(() => {
+    //? If the query parameters change, it will fade out the cards.
     setTransitionStage(false);
 
+    //? Then, in a timeout function delayed to the transition's timing duration:
     setTimeout(() => {
-      const newData = router.query ? filterArray({ array: data, router }) : data;
-      setDataArray((o) => {
-        return newData;
-      });
+      //? If router has either of these query parameters, re-sort the data array, else revert to the default array
+      const newData =
+        router.query.location || router.query.type ? filterArray({ array: data, router }) : data;
+
+      //? Set the new data as the rendered output state, while it's still invisible.
+      setDataArray((o) => newData);
+
+      //? Then reveal it
       setTransitionStage(true);
     }, duration);
   }, [router.query]);

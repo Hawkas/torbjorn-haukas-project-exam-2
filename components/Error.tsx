@@ -55,8 +55,7 @@ export default function Error({ statusCode }: ErrorProps) {
   const router = useRouter();
   let pageTitle = `Page ${statusCode} | Holidaze`;
   let contentTitle = statusCode === 404 ? "There's nothing here" : 'Internal server error';
-  let errorText =
-    'Unfortunately, this is only a 404 page. You may have mistyped the address, or the page has been moved to another URL.';
+  let errorText = 'You may have mistyped the address, or the page has been moved to another URL.';
   if (statusCode === 500)
     errorText = 'Well this is awkward. Seems something went wrong on our end. Whoops';
   return (
