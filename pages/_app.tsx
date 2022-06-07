@@ -29,7 +29,7 @@ export default function MyApp(props: AppPropsWithAuth) {
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
         <ModalsProvider
-          modals={{ contact: FormModal, signIn: FormModal, booking: FormModal }}
+          modals={{ contact: FormModal, signIn: FormModal, booking: FormModal, create: FormModal }}
           modalProps={formModalSettings}
         >
           <NotificationsProvider>
