@@ -1422,10 +1422,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-4.2.2.tgz#ea551693d4a86f923614dfda8c42a20279c715d2"
   integrity sha512-Zzlok/BUkTuVmja5O9tggYh3KDXxfM3DlT7K7H1qYkT9aOybPz+nTrOI1uOhKhlPRy3jjwyRCDZ2oWJHPjNKEA==
 
-"@mantine/dropzone@^4.2.8":
-  version "4.2.8"
-  resolved "https://registry.yarnpkg.com/@mantine/dropzone/-/dropzone-4.2.8.tgz#b8783d34dfe15ac4cb159a2e24a43ce88f7d7945"
-  integrity sha512-valgayTMesZE0VkQBTr3w6UVNKmWL48g3R3onivx37AGLN+Z2cPpn8C77wOH3T94+cdRhBJGv3l450sxgN4aog==
+"@mantine/dropzone@4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@mantine/dropzone/-/dropzone-4.2.2.tgz#89280cce353ba19b75f99bbf49f25c75d4ea094c"
+  integrity sha512-3pGX9W2zl4t0YbKQKTtjO17Nq0FUNLn6fppC5sahIbEDAIrN/rlxaEIid2VRP5SIsR++cHBss5Zk2Pf8ljf1ZA==
   dependencies:
     react-dropzone "^11.4.2"
 

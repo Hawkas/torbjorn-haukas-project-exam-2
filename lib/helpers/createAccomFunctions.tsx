@@ -1,4 +1,4 @@
-import { RoomFields, DetailsFields } from '../../types/createAccom';
+import { RoomFields, DetailsFields, ImagesFields } from '../../types/createAccom';
 
 export function addNewFeature({
   rooms,
@@ -88,4 +88,13 @@ export function validateSecond({
   });
   console.log(typeof form.validate().errors['rooms.0.price'] === 'string');
   return hasErrors;
+}
+
+export function validateThird({ form, imagesForm }: ImagesFields) {
+  const roomNamesOnly = imagesForm.values.rooms.map((item) => ({
+    roomName: item.roomName,
+  }));
+  form.setFieldValue('images', { rooms: roomNamesOnly });
+  console.log(imagesForm.values);
+  return imagesForm.validate().hasErrors;
 }

@@ -14,15 +14,21 @@ export const contactInfoSchema = z.object({
 export const featuresSchema = z.array(
   z.object({
     id: z.number().optional(),
-    feature: z.string().min(1, { message: "You can't create an empty feature" }),
+    feature: z.string().min(5, { message: 'Must be at least 5 characters long' }),
   })
 );
 export const roomsObject = z.object({
   id: z.number().optional(),
-  price: z.number().gt(100, { message: 'Nice joke' }),
-  doubleBeds: z.number(),
-  singleBeds: z.number(),
-  bathRooms: z.number().min(1, { message: 'Buckets count as toilets too, just add one' }),
+  price: z
+    .number()
+    .gt(100, { message: 'Nice joke' })
+    .max(9999, { message: "Okay now that's too much" }),
+  doubleBeds: z.number().max(10, { message: "No, you can't have 10 double beds." }),
+  singleBeds: z.number().max(20, { message: 'More than 20 beds? Why?' }),
+  bathRooms: z
+    .number()
+    .min(1, { message: 'Buckets count as toilets too, just add one' })
+    .max(5, { message: 'No man can have more than 5 bathrooms' }),
   roomName: z.string().min(3, { message: 'Must include room name with at least 3 letters' }),
   features: featuresSchema.optional(),
 });
@@ -31,15 +37,17 @@ export const imagesSchema = z.object({
   // id will only be included when updating
   id: z.number().optional(),
   cover: z.any().refine((val) => val instanceof File, { message: 'Must include cover image' }),
-  rooms: z
-    .array(
-      z.object({
-        id: z.number().optional(),
-        roomName: z.string().min(1, { message: 'Must include room name' }),
-        image: z.any().refine((val) => val instanceof File, { message: 'Must include room image' }),
-      })
-    )
-    .nonempty({ message: 'Must include at least one room' }),
+  rooms: z.array(
+    z.object({
+      id: z.number().optional(),
+      roomName: z.string(),
+      image: z.any().refine((val) => val instanceof File, { message: 'Must include room image' }),
+    })
+  ),
+});
+export const noImagesSchema = z.object({
+  id: z.number().optional(),
+  rooms: z.array(z.object({ id: z.number().optional(), roomName: z.string() })),
 });
 export const amenitySchemaRaw = z.object({
   wifi: z.boolean(),
@@ -76,23 +84,36 @@ export const createEntrySchema = z.object({
     .string()
     .trim()
     .min(30, { message: 'Must be at least 30 characters' })
-    .max(1000, { message: 'Must be less than 1000 characters' }),
+    .max(600, { message: 'Must be less than 600 characters' }),
   contactInfo: contactInfoSchema,
-  images: imagesSchema,
+  images: noImagesSchema,
   amenities: amenitySchema,
   rooms: roomsSchema,
 });
 // Extracting types from schemas
 type EntrySchemaPure = z.infer<typeof createEntrySchema>;
 type RoomsObjectPure = z.infer<typeof roomsObject>;
-export type ImagesSchema = z.infer<typeof imagesSchema>;
+type NoImagesSchemaPure = z.infer<typeof noImagesSchema>;
+export type ImagesSchemaPure = z.infer<typeof imagesSchema>;
 export type AmenitySchema = z.infer<typeof amenitySchemaRaw>;
 
 export type ContactInfoSchema = z.infer<typeof contactInfoSchema>;
 // Adding Mantine's FormList type for compatibility
+export type ImagesSchema = Omit<ImagesSchemaPure, 'rooms'> & {
+  rooms:
+    | FormList<{ image?: any; roomName: string; id?: number }>
+    | { image?: any; roomName: string; id?: number }[];
+};
+// Appending images to FormData seperately, only keeping primitive data types in this object.
+export type NoImagesSchema = NoImagesSchemaPure & {
+  rooms: FormList<{ roomName: string; id?: number }> | { roomName: string; id?: number }[];
+};
 export type FeaturesSchema =
   | FormList<{ feature: string; id?: number }>
   | { feature: string; id?: number }[];
 export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema };
 
-export type EntrySchema = EntrySchemaPure & { rooms: FormList<RoomsObject> | RoomsObject[] };
+export type EntrySchema = EntrySchemaPure & {
+  rooms: FormList<RoomsObject> | RoomsObject[];
+  images: NoImagesSchema;
+};

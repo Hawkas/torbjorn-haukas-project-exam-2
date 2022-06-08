@@ -6,6 +6,7 @@ import {
   ContactInfoSchema,
   EntrySchema,
   FeaturesSchema,
+  ImagesSchema,
 } from '../components/Modal/CreateAccom/CreateAccomValidation';
 
 export type EntryFormClassType = Record<'root' | 'input' | 'label' | 'numberInput', string>;
@@ -23,4 +24,9 @@ export interface DetailsFields {
   form: EntryForm;
   amenitiesForm: UseFormReturnType<AmenitySchema>;
   contactInfoForm: UseFormReturnType<ContactInfoSchema>;
+}
+
+export interface ImagesFields {
+  form: EntryForm;
+  imagesForm: UseFormReturnType<ImagesSchema>;
 }

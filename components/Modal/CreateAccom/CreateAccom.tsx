@@ -7,7 +7,11 @@ import { useDidUpdate, useListState } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { useEffect, useState } from 'react';
 import { useCreateAccomStyles } from './CreateAccom.styles';
-import { validateFirst, validateSecond } from '../../../lib/helpers/createAccomFunctions';
+import {
+  validateFirst,
+  validateSecond,
+  validateThird,
+} from '../../../lib/helpers/createAccomFunctions';
 import {
   AmenitySchema,
   amenitySchema,
@@ -33,6 +37,8 @@ export function CreateAccom() {
   const [stepThree, setStepThree] = useState(false);
   // Index each room added to the entry
   const [rooms, setRooms] = useListState([0]);
+  // Preview images
+  const [previewImages, setPreviewImages] = useListState<string>([]);
 
   // As this is an obscenely long form, prepare for boilerplate.
   // Also, Mantine's form hook doesn't do singular validation for formList arrays, e.g (images: [{image: file}, ...])
@@ -61,7 +67,7 @@ export function CreateAccom() {
     schema: zodResolver(imagesSchema),
     initialValues: {
       cover: undefined,
-      rooms: formList([{ roomName: '', image: undefined }]) as any,
+      rooms: formList([{ roomName: '', image: undefined }]),
     },
   });
 
@@ -119,8 +125,7 @@ export function CreateAccom() {
     console.log(fullForm.values);
     return null;
   };
-
-  const validateLastStep = (step: number) => {
+  const validatePreviousStep = (step: number) => {
     console.log(form.values);
     let validate = false;
     switch (step) {
@@ -132,29 +137,24 @@ export function CreateAccom() {
         validate = validateSecond({ rooms, form, featuresForm });
         setStepTwo(validate);
         return validate;
+      case 2:
+        validate = validateThird({ form, imagesForm });
+        setStepThree(validate);
+        return validate;
       default:
-        return null;
         break;
     }
+    return null;
   };
 
-  const imageFields = rooms.map((_item, index) => {
-    <InputWrapper
-      label={form.values.rooms[index].roomName}
-      classNames={{ label: classes.amenitiesLabel }}
-      mt="xl"
-    >
-      <ImageUpload onDrop={(files) => console.log(files)} />
-    </InputWrapper>;
-  });
-
+  const [imageFields, setImageFields] = useState<JSX.Element[]>([]);
   const nextStep = () => {
-    if (validateLastStep(active)) return;
+    if (validatePreviousStep(active)) return;
     setActive((current) => (current < 3 ? current + 1 : current));
   };
   const prevStep = () => {
     setActive((current) => (current > 0 ? current - 1 : current));
-    validateLastStep(active - 1);
+    validatePreviousStep(active - 1);
   };
   useEffect(() => {
     // Clearing out the initial empty features item, so user has to specifically add if they want any.
@@ -164,9 +164,48 @@ export function CreateAccom() {
   useDidUpdate(() => {
     form.setFieldValue('amenities', amenitiesForm.values);
   }, [amenitiesForm.values]);
+  useDidUpdate(() => {
+    if (previewImages.length < rooms.length + 1)
+      rooms.forEach(() => {
+        if (previewImages.length < rooms.length + 1) setPreviewImages.append('');
+      });
+    const newImageFields = rooms.map((_item, index) => (
+      <InputWrapper
+        key={index}
+        label={form.values.rooms[index].roomName}
+        classNames={{ label: classes.amenitiesLabel }}
+        mt="xl"
+        {...imagesForm.getListInputProps('rooms', index, 'image')}
+      >
+        <ImageUpload
+          name={`rooms-${index}`}
+          onDrop={(files: File[]) => {
+            const previewUrl = URL.createObjectURL(files[0]);
+            setPreviewImages.setItem(index + 1, previewUrl);
+            imagesForm.setListItem('rooms', index, {
+              roomName: form.values.rooms[index].roomName,
+              image: files[0],
+            });
+          }}
+          preview={previewImages[index + 1]}
+        />
+      </InputWrapper>
+    ));
+    setImageFields(newImageFields);
+    return () =>
+      setPreviewImages.apply((item) => {
+        URL.revokeObjectURL(item);
+        return '';
+      });
+  }, [active, rooms, previewImages]);
+
   return (
     <Box className={classes.formWrapper}>
-      <form className={classes.form} onSubmit={(e) => handleSubmit(e, allForms)}>
+      <form
+        name="create-accommodation"
+        className={classes.form}
+        onSubmit={(e) => handleSubmit(e, allForms)}
+      >
         <ActionIcon
           aria-label="Close"
           sx={{ position: 'absolute', top: 10, right: 10, zIndex: 9999 }}
@@ -179,9 +218,17 @@ export function CreateAccom() {
           active={active}
           onStepClick={(page) => {
             setActive(page);
-            validateLastStep(page);
+            validatePreviousStep(page);
           }}
-          breakpoint="sm"
+          breakpoint="xs"
+          styles={(theme) => ({
+            steps: {
+              [theme.fn.smallerThan('xs')]: {
+                alignItems: 'center',
+                '& > button': { minWidth: '145px' },
+              },
+            },
+          })}
         >
           <Stepper.Step
             allowStepSelect={active > 0}
@@ -208,10 +255,23 @@ export function CreateAccom() {
             label="Final step"
             description="Images"
           >
-            <InputWrapper label="Cover" classNames={{ label: classes.amenitiesLabel }} mt="xl">
-              <ImageUpload onDrop={(files) => console.log(files)} />
+            <InputWrapper
+              label="Cover"
+              classNames={{ label: classes.amenitiesLabel }}
+              mt="xl"
+              {...imagesForm.getInputProps('cover')}
+            >
+              <ImageUpload
+                name="cover"
+                onDrop={(files: File[]) => {
+                  const previewUrl = URL.createObjectURL(files[0]);
+                  setPreviewImages.setItem(0, previewUrl);
+                  imagesForm.setFieldValue('cover', files[0]);
+                }}
+                preview={previewImages[0]}
+              />
             </InputWrapper>
-            {imageFields};
+            {imageFields}
           </Stepper.Step>
           <Stepper.Completed>
             Completed, click back button to get to previous step
