@@ -5,7 +5,7 @@ const useFilledState = () => {
 
   useEffect(() => {
     const checkPosition = () => {
-      setFilledState(window.pageYOffset >> 0 ? true : false);
+      setFilledState(window.pageYOffset > 0 );
     };
     window.addEventListener('scroll', checkPosition);
     checkPosition();

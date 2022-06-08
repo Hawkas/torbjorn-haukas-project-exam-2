@@ -6,9 +6,7 @@ interface ErrorProps {
   statusCode: number;
 }
 
-const Error: NextPage<ErrorProps> = ({ statusCode }) => {
-  return <ErrorTemplate statusCode={statusCode} />;
-};
+const Error: NextPage<ErrorProps> = ({ statusCode }) => <ErrorTemplate statusCode={statusCode} />;
 
 Error.getInitialProps = ({ res, err }): ErrorProps => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;

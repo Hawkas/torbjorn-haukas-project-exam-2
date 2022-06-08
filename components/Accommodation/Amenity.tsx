@@ -83,7 +83,7 @@ export function Amenity({ amenities }: AccommodationClean) {
   const { classes: containerClass } = useContainerStyles();
   const keyStrings = Object.keys(amenities);
   const amenityArray = keyStrings.map((key, index) => {
-    if (!amenities[key] || !iconMatch[key]) return;
+    if (!amenities[key] || !iconMatch[key]) return null;
     const { icon, label } = iconMatch[key];
     return (
       <Grid.Col span={6} xs={4} md={2} key={index} className={classes.column}>

@@ -1,7 +1,7 @@
-import { Text, useMantineTheme, Image, Paper, Box, createStyles } from '@mantine/core';
-import { useTextStyles } from 'lib/styles/typography';
 import type { ImageObject } from '@globals/images';
-import type { Cover, ImageSizes } from 'types/accommodationClean';
+import { Box, createStyles, Image, Paper, Text, useMantineTheme } from '@mantine/core';
+import { useTextStyles } from 'lib/styles/typography';
+import type { Cover } from 'types/accommodationClean';
 
 export type ImageProps = Partial<ImageObject> & Partial<Omit<Cover, 'alt'>>;
 interface ImageLink {

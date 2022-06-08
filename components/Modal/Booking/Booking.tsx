@@ -18,7 +18,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { DatePicker, DateRangePicker } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from 'lib/styles/typography';
@@ -41,7 +41,7 @@ const bookingSchema = z.object({
     .trim()
     .min(7, { message: 'Must be a valid phone number' })
     .max(15, { message: 'This 👏 is 👏 too 👏 long' })
-    .refine((val) => !isNaN(Number(val)), { message: 'Must be a number' }),
+    .refine((val) => !Number.isNaN(Number(val)), { message: 'Must be a number' }),
   additionalDetails: z
     .string()
     .max(1000, { message: 'Please limit your message to 1000 characters' }),

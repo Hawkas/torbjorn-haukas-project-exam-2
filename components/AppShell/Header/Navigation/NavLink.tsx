@@ -24,9 +24,10 @@ export function NavLink({ children, component, href, onClick, menuBreak }: NavLi
         { [classes.button]: buttonCheck }
       )}
       component={component || 'a'}
-      children={children}
       onClick={onClick}
-    />
+    >
+      {children}
+    </Anchor>
   );
   return buttonCheck ? (
     AnchorLink

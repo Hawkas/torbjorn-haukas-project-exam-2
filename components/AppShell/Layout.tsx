@@ -1,15 +1,10 @@
-import { useEffect, useState } from 'react';
-import { AppShell, Header, Footer, createStyles } from '@mantine/core';
-import { settings } from 'lib/settings';
+import { AppShell, createStyles, Footer, Header } from '@mantine/core';
 import useFilledState from 'lib/hooks/useFilledState';
+import { settings } from 'lib/settings';
 import { useRouter } from 'next/router';
-import { HeaderDropdown, HeaderTop } from './Header';
-import { useContainerStyles } from '@styles/containerStyles';
-import { useTextStyles } from '@styles/typography';
-import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { FooterContent } from './Footer/FooterContent';
-import type { Session } from 'next-auth';
-import { SessionType } from './Header/Navigation/NavMenu';
+import { HeaderDropdown, HeaderTop } from './Header';
 
 const { menuBreak, headerHeight } = settings;
 

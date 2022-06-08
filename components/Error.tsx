@@ -1,9 +1,8 @@
-import React from 'react';
-import { NextPage } from 'next';
-import { createStyles, Title, Text, Button, Container, Group } from '@mantine/core';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
+import { Container, createStyles, Group, Text, Title } from '@mantine/core';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -53,11 +52,12 @@ interface ErrorProps {
 export default function Error({ statusCode }: ErrorProps) {
   const { classes } = useStyles();
   const router = useRouter();
-  let pageTitle = `Page ${statusCode} | Holidaze`;
-  let contentTitle = statusCode === 404 ? "There's nothing here" : 'Internal server error';
-  let errorText = 'You may have mistyped the address, or the page has been moved to another URL.';
-  if (statusCode === 500)
-    errorText = 'Well this is awkward. Seems something went wrong on our end. Whoops';
+  const pageTitle = `Page ${statusCode} | Holidaze`;
+  const contentTitle = statusCode === 404 ? "There's nothing here" : 'Internal server error';
+  const errorText =
+    statusCode === 500
+      ? 'Well this is awkward. Seems something went wrong on our end. Whoops'
+      : 'You may have mistyped the address, or the page has been moved to another URL.';
   return (
     <>
       <Head>

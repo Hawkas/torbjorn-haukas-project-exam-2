@@ -4,6 +4,13 @@ import { Anchor, createStyles, Group } from '@mantine/core';
 import Link from 'next/link';
 import { ComponentPropsWithoutRef } from 'react';
 
+export const useStyles = createStyles((theme) => ({
+  returnLink: {
+    color: theme.colors.blue[5],
+    fontWeight: theme.other.fontWeights.medium,
+  },
+}));
+
 export function ReturnLink({
   children,
   ...others
@@ -20,9 +27,3 @@ export function ReturnLink({
     </div>
   );
 }
-export const useStyles = createStyles((theme) => ({
-  returnLink: {
-    color: theme.colors.blue[5],
-    fontWeight: theme.other.fontWeights.medium,
-  },
-}));

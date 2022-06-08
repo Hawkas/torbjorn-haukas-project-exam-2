@@ -7,11 +7,11 @@ export default async function messageHandler(
   req: NextApiRequest,
   res: NextApiResponse<Message[] | Message>
 ) {
-  const {
-    query: { id },
-    method,
-  } = req;
+  const { method } = req;
   const session = await getSession({ req });
+  const { name, email, subject, message } = req.body;
+  // Yes yes Date.now() is just me being lazy
+  const newMessage = { id: Date.now(), name, email, subject, message };
   switch (method) {
     case 'GET':
       if (session) {
@@ -22,9 +22,6 @@ export default async function messageHandler(
 
       break;
     case 'POST':
-      const { name, email, subject, message } = req.body;
-      // Yes yes Date.now() is just me being lazy
-      const newMessage = { id: Date.now(), name, email, subject, message };
       messages.push(newMessage);
       res.status(201).json(newMessage);
       break;

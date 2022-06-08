@@ -8,6 +8,32 @@ import { useModals } from '@mantine/modals';
 import { Booking } from '@components/Modal/Booking/Booking';
 import type { AccommodationClean } from 'types/accommodationClean';
 
+export const useStyles = createStyles((theme) => ({
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  button: {
+    marginBottom: theme.other.largeSpacing.sm,
+    padding: `${theme.other.smallSpacing.lg} ${theme.other.largeSpacing.lg}`,
+  },
+  buttonLabel: {
+    fontSize: theme.other.fontSizes.xxl,
+    letterSpacing: theme.other.letterSpacing.xs,
+    fontWeight: theme.other.fontWeights.semiBold,
+    lineHeight: theme.other.lineHeights.heading,
+  },
+  returnLink: {
+    '& *:not(p)': {
+      padding: 0,
+      color: theme.colors.blue[6],
+    },
+  },
+}));
+
+
 export function PleaseBook({ ...data }: AccommodationClean) {
   const { classes } = useStyles();
   const modals = useModals();
@@ -62,27 +88,4 @@ export function PleaseBook({ ...data }: AccommodationClean) {
     </Box>
   );
 }
-export const useStyles = createStyles((theme) => ({
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
-  },
-  button: {
-    marginBottom: theme.other.largeSpacing.sm,
-    padding: `${theme.other.smallSpacing.lg} ${theme.other.largeSpacing.lg}`,
-  },
-  buttonLabel: {
-    fontSize: theme.other.fontSizes.xxl,
-    letterSpacing: theme.other.letterSpacing.xs,
-    fontWeight: theme.other.fontWeights.semiBold,
-    lineHeight: theme.other.lineHeights.heading,
-  },
-  returnLink: {
-    '& *:not(p)': {
-      padding: 0,
-      color: theme.colors.blue[6],
-    },
-  },
-}));
+

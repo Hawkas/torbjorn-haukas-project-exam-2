@@ -101,5 +101,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
   const notFound = !data;
   // return { props: { data }, revalidate: 300, notFound };
-  return { props: { data: data, googleData: newData }, revalidate: 300, notFound };
+  return { props: { data, googleData: newData }, revalidate: 300, notFound };
 };

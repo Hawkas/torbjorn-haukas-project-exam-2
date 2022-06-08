@@ -12,12 +12,15 @@ export default async function messageHandler(
   };
   const url = `/bookings`;
   const { method } = req;
+  const { data } = req.body;
   switch (method) {
     case 'POST':
-      const { data } = req.body;
-      const postBooking = await axiosFetch({ url, headers, data });
-      if (!postBooking) res.status(400).end('uhh idk');
-      if (postBooking) res.status(201).json(postBooking);
+      if (data) {
+        const postBooking = await axiosFetch({ url, headers, data });
+        if (!postBooking) res.status(400).end('uhh idk');
+        if (postBooking) res.status(201).json(postBooking);
+      }
+
       break;
     default:
       res.setHeader('Allow', ['POST']);

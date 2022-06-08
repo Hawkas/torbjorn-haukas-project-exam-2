@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capsFirstLetter } from '@helpers/stringConversions';
 import { Box, createStyles, Group, Text } from '@mantine/core';
 import { useTextStyles } from 'lib/styles/typography';
-import React from 'react';
-import { AccommodationClean, ContactClean } from 'types/accommodationClean';
+import { ContactClean } from 'types/accommodationClean';
 
 const iconStyles = createStyles((theme) => ({
   wrapper: {
@@ -78,15 +77,12 @@ const contactData = [
 
 //? Make data from API fit to the the defined object structure
 const mapContact = ({ ...contactInfo }: ContactClean) => {
-  if (!contactInfo) return;
-  const contactIcons: ContactIconProps[] = [];
-  for (let key in contactInfo) {
-    contactIcons.push({
-      title: capsFirstLetter(key),
-      description: contactInfo[key],
-      icon: key === 'address' ? faLocationDot : key === 'email' ? faAt : faPhone,
-    });
-  }
+  if (!contactInfo) return null;
+  const contactIcons: ContactIconProps[] = Object.keys(contactInfo).map((key) => ({
+    title: capsFirstLetter(key),
+    description: contactInfo[key],
+    icon: key === 'address' ? faLocationDot : key === 'email' ? faAt : faPhone,
+  }));
   return contactIcons;
 };
 
@@ -95,7 +91,7 @@ export function ContactIconsList({
   className,
   contactInfo,
 }: ContactIconsListProps) {
-  let contactArray = contactInfo ? mapContact(contactInfo) : data;
+  const contactArray = contactInfo ? mapContact(contactInfo) : data;
   const items = contactArray!.map((item, index) => <ContactIcon key={index} {...item} />);
   return (
     <Group

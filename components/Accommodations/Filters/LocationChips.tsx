@@ -1,5 +1,5 @@
 import { handleChange } from '@helpers/handleQueryChange';
-import { Chips, Chip, createStyles, Tooltip } from '@mantine/core';
+import { Chips, Chip, createStyles } from '@mantine/core';
 import { useTextStyles } from '@styles/typography';
 import { NextRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -64,7 +64,7 @@ export function LocationChips({ router }: { router: NextRouter }) {
       value={chipValue}
       multiple={false}
       onChange={(value) => {
-        setChipValue((o) => value);
+        setChipValue(value);
         handleChange(value, router, 'location');
       }}
     >

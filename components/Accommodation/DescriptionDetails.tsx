@@ -8,6 +8,52 @@ import { useModals } from '@mantine/modals';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { AccommodationClean } from 'types/accommodationClean';
 
+const useDescriptionDetailStyles = createStyles((theme, textHeight: number) => ({
+  hotelDetails: {
+    gap: theme.other.largeSpacing.xxl,
+    justifyContent: 'space-between',
+    flexWrap: 'nowrap',
+
+    [theme.fn.smallerThan('sm')]: {
+      flexWrap: 'wrap',
+      gap: 0,
+      justifyContent: 'flex-start',
+    },
+    [theme.fn.smallerThan('xs')]: {
+      alignItems: 'center',
+    },
+  },
+  hotelDescription: {
+    minHeight: '100%',
+    display: 'flex',
+    gap: theme.other.largeSpacing.sm,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    [theme.fn.smallerThan('sm')]: {
+      minWidth: '100%',
+      marginBottom: theme.other.largeSpacing.xxl,
+    },
+  },
+  mapWrap: {
+    backgroundColor: theme.white,
+    minHeight: `calc(${textHeight}px - 64px)`,
+    width: '100%',
+    maxWidth: '616px',
+    minWidth: '288px',
+    alignSelf: 'stretch',
+    flexGrow: 0,
+    flexShrink: 2,
+    flexBasis: 'calc(100% - 560px - 80px)',
+    [theme.fn.smallerThan('sm')]: {
+      minHeight: '296px',
+      flexShrink: 1,
+      flexGrow: 1,
+      flexBasis: 'auto',
+    },
+  },
+}));
+
 export function DescriptionDetails({
   googleData,
   ...data
@@ -78,48 +124,3 @@ export function DescriptionDetails({
     </Box>
   );
 }
-const useDescriptionDetailStyles = createStyles((theme, textHeight: number) => ({
-  hotelDetails: {
-    gap: theme.other.largeSpacing.xxl,
-    justifyContent: 'space-between',
-    flexWrap: 'nowrap',
-
-    [theme.fn.smallerThan('sm')]: {
-      flexWrap: 'wrap',
-      gap: 0,
-      justifyContent: 'flex-start',
-    },
-    [theme.fn.smallerThan('xs')]: {
-      alignItems: 'center',
-    },
-  },
-  hotelDescription: {
-    minHeight: '100%',
-    display: 'flex',
-    gap: theme.other.largeSpacing.sm,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    [theme.fn.smallerThan('sm')]: {
-      minWidth: '100%',
-      marginBottom: theme.other.largeSpacing.xxl,
-    },
-  },
-  mapWrap: {
-    backgroundColor: theme.white,
-    minHeight: `calc(${textHeight}px - 64px)`,
-    width: '100%',
-    maxWidth: '616px',
-    minWidth: '288px',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    flexShrink: 2,
-    flexBasis: 'calc(100% - 560px - 80px)',
-    [theme.fn.smallerThan('sm')]: {
-      minHeight: '296px',
-      flexShrink: 1,
-      flexGrow: 1,
-      flexBasis: 'auto',
-    },
-  },
-}));

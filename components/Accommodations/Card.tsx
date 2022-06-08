@@ -7,7 +7,7 @@ import {
   Group,
   SimpleGrid,
   Stack,
-  useMantineTheme,
+  useMantineTheme
 } from '@mantine/core';
 import Link from 'next/link';
 import { CardActionFab } from './SmallParts/CardActionFab';
@@ -96,7 +96,7 @@ export function Card(props: CardProps & { href: string }) {
     </Box>
   );
 }
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   buttonWrapper: {
     position: 'absolute',
     top: 16,
@@ -104,8 +104,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 export function AdminCard(props: CardProps) {
-  const { classes, cx } = useStyles();
-  const theme = useMantineTheme();
+  const { classes } = useStyles();
   return (
     <Box sx={{ position: 'relative' }}>
       <CardBase {...props} />

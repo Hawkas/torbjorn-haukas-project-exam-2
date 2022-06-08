@@ -1,8 +1,7 @@
 import { BackgroundImage, Box, Center, Grid, Title } from '@mantine/core';
 import { useTextStyles } from 'lib/styles/typography';
-import { DataProps } from 'pages';
 import React from 'react';
-import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
+import { DataProps } from 'types/commonProps';
 import { useContainerStyles } from '../../lib/styles/containerStyles';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { useHeroStyle } from './HeroSection.styles';

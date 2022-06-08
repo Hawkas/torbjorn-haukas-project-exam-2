@@ -133,7 +133,7 @@ export function Contact() {
                   }}
                   mt={40}
                 >
-                  We'll get back to you as soon as we're able
+                  We&apos;ll get back to you as soon as we&apos;re able
                 </Alert>
               ) : (
                 <></>

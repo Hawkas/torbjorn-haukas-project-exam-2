@@ -1,11 +1,12 @@
 import { faChevronLeft, faChevronRight } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Button, createStyles, Image } from '@mantine/core';
+import ClassNames from 'embla-carousel-class-names';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Cover, ImagesRoom } from 'types/accommodationClean';
-import ClassNames from 'embla-carousel-class-names';
-const useCarouselStyles = createStyles((theme, _params, getRef) => ({
+
+const useCarouselStyles = createStyles((theme) => ({
   embla: {
     overflow: 'hidden',
     position: 'relative',
@@ -191,9 +192,10 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
       <Box className={classes.emblaDots}>
         {scrollSnaps.map((_, index) => (
           <button
+          type="button"
             aria-label={`Jump to image ${index}`}
             key={index}
-            className={cx(classes.emblaDot, { ['is-selected']: index === selectedIndex })}
+            className={cx(classes.emblaDot, { 'is-selected': index === selectedIndex })}
             onClick={() => scrollTo(index)}
           />
         ))}

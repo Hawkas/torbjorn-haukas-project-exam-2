@@ -4,7 +4,6 @@ import {
   Autocomplete,
   Avatar,
   Box,
-  Divider,
   Group,
   Loader,
   MantineColor,
@@ -12,8 +11,8 @@ import {
   Text,
 } from '@mantine/core';
 import { useRouter } from 'next/router';
-import { DataProps } from 'pages';
 import { forwardRef, useState } from 'react';
+import { DataProps } from 'types/commonProps';
 import { useTextStyles } from '../../lib/styles/typography';
 import { useSearchStyles } from './SearchBar.styles';
 
@@ -35,8 +34,8 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
       // In case of API failure, or when I inevitably take down the API.
       return (
         <div ref={ref} {...others}>
-          <Text weight="600" color={'red'}>
-            The API is gone, so there's nothing
+          <Text weight="600" color="red">
+            The API is gone, so there&apos;s nothing
           </Text>
         </div>
       );

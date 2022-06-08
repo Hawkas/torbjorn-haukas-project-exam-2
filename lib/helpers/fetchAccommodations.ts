@@ -1,10 +1,9 @@
-import axios from 'axios';
-
 import { AccommodationClean } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
 import { axiosFetch } from './axiosFetch';
 
 const qs = require('qs');
+
 const productsQuery = qs.stringify(
   {
     populate: [
@@ -21,27 +20,17 @@ const productsQuery = qs.stringify(
   },
   { encodeValuesOnly: true }
 );
-const wildcardQuery = qs.stringify(
-  {
-    populate: '*',
-  },
-  { encodeValuesOnly: true }
-);
 
 export const rawAccommodations = async () => {
   const headers = { Authorization: `Bearer ${process.env.API_PUBLIC_TOKEN}` };
   const url = `/accommodations?${productsQuery}`;
   const method = 'GET';
   const params = { method, url, headers };
-  return await axiosFetch(params);
+  const res = await axiosFetch(params);
+  return res;
 };
 
 // I preserve the raw data above for later use.
-export const fetchAccommodations = async () => {
-  const rawData = await rawAccommodations();
-  if (!rawData) return null;
-  return removeFluff(await rawData);
-};
 
 // Since I decided to use Strapi's components system to make collection types where,
 // for example, the amount of room-types per hotel may vary, the data structure is deeply nested and messy.
@@ -139,3 +128,9 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
   });
   return mappedData;
 }
+
+export const fetchAccommodations = async () => {
+  const rawData = await rawAccommodations();
+  if (!rawData) return null;
+  return removeFluff(rawData);
+};

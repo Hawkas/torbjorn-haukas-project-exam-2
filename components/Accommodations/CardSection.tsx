@@ -3,7 +3,7 @@ import { Box, createStyles, Grid, Transition, useMantineTheme } from '@mantine/c
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { useContainerStyles } from '@styles/containerStyles';
 import { useRouter } from 'next/router';
-import { DataProps } from 'pages';
+import { DataProps } from 'types/commonProps';
 import { useEffect, useState } from 'react';
 import { CardGrid } from './SmallParts/CardGrid';
 
@@ -46,7 +46,7 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
   // and reveal it by changing transition stage.
   useEffect(() => {
     const newData = filterArray({ array: data, router });
-    setDataArray((o) => newData);
+    setDataArray(newData);
     setTransitionStage(true);
   }, []);
 
@@ -63,7 +63,7 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
         router.query.location || router.query.type ? filterArray({ array: data, router }) : data;
 
       //? Set the new data as the rendered output state, while it's still invisible.
-      setDataArray((o) => newData);
+      setDataArray(newData);
 
       //? Then reveal it
       setTransitionStage(true);

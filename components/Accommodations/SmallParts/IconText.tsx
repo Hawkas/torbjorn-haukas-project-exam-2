@@ -1,7 +1,8 @@
 import type { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { createStyles, Text } from '@mantine/core';
 
-import { createStyles, Group, Text } from '@mantine/core';
+
 interface IconTextProps {
   text: string;
   icon: IconDefinition;

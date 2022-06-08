@@ -1,7 +1,5 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { Text, useMantineTheme } from '@mantine/core';
-import Link from 'next/link';
-import React from 'react';
 import { ArticleText } from './ArticleText';
 
 export function ArticleSecond() {

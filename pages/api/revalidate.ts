@@ -10,13 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: 'Invalid token' });
   }
   // Check that the body is not empty
-  const body = req.body;
+  const { body } = req;
   if (!body) {
-    res.status(400).send('Bad request (no body)');
-    return;
+    return res.status(400).send('Bad request (no body)');
   }
   // Get the slug to revalidate from body
-  const itemToRevalidate = body.itemToRevalidate;
+  const { itemToRevalidate } = body;
   if (itemToRevalidate) {
     await res.unstable_revalidate(`/accommodations/${itemToRevalidate}`);
     return res.json({ revalidated: true });

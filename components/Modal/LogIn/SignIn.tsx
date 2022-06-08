@@ -1,22 +1,22 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { faClose, faCircleExclamation } from '@fortawesome/pro-regular-svg-icons';
+import { faCircleExclamation, faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   ActionIcon,
-  TextInput,
-  Group,
-  Text,
-  LoadingOverlay,
   Alert,
+  Group,
+  LoadingOverlay,
   PasswordInput,
+  Text,
+  TextInput,
 } from '@mantine/core';
-import { zodResolver, useForm } from '@mantine/form';
+import { useForm, zodResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { useTextStyles } from '@styles/typography';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { string, z } from 'zod';
+import { z } from 'zod';
 import { useStyles } from '../Contact/Contact.styles';
 
 const loginSchema = z.object({
@@ -48,9 +48,6 @@ async function modalSignIn(values: Credentials) {
 export function SignIn() {
   const modals = useModals();
   const router = useRouter();
-
-  const { data: session } = useSession();
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const form = useForm({
@@ -102,7 +99,7 @@ export function SignIn() {
               color="red"
               mb={32}
             >
-              Check if the details you've provided are correct
+              Check if the details you&apos;ve provided are correct
             </Alert>
           ) : null}
           <div>

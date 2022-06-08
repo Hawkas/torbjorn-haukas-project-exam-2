@@ -8,13 +8,14 @@ const useResizeCheck = () => {
 
   // The transition when resizing was bothering me, so..
   useEffect(() => {
-    if (typeof window === undefined) return;
-    const resizeCheck = () => {
-      setResizing(window.innerWidth !== debounced ? true : false);
-    };
-    window.addEventListener('resize', resizeCheck);
-    resizeCheck();
-    return () => window.removeEventListener('resize', resizeCheck);
+    if (typeof window !== undefined) {
+      const resizeCheck = () => {
+        setResizing(window.innerWidth !== debounced);
+      };
+      window.addEventListener('resize', resizeCheck);
+      resizeCheck();
+      return () => window.removeEventListener('resize', resizeCheck);
+    }
   }, [debounced, resizing]);
   return resizing;
 };

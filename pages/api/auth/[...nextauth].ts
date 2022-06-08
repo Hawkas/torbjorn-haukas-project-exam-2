@@ -8,11 +8,6 @@ type Credentials =
       password: string;
     }
   | undefined;
-interface Auth0Details {
-  id: string;
-  secret: string;
-  domain: string;
-}
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -39,7 +34,7 @@ export default NextAuth({
           // This is to make typescript shut up
           const user = (inputValues: Credentials) => {
             // and to confirm the NextAuth API correctly received the input values before making the request.
-            if (!inputValues?.email || !inputValues?.password) return;
+            if (!inputValues?.email || !inputValues?.password) return null;
             return { email: inputValues.email, password: inputValues.password };
           };
           // console.log(user(credentials));
@@ -54,7 +49,6 @@ export default NextAuth({
           if (!data) return null;
           return data;
         } catch (error) {
-          console.error(error);
           return null;
         }
       },
@@ -112,7 +106,7 @@ export default NextAuth({
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
+      if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
     async jwt({ token, user }) {
@@ -135,5 +129,3 @@ export default NextAuth({
   },
   debug: true,
 });
-
-type Response = { jwt: unknown; user: { id: unknown; email?: string; name?: string } };

@@ -113,7 +113,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
       transitionDuration={resizing ? 0 : transition}
       name="type-filters"
       color="blue"
-      radius={'xs'}
+      radius='xs'
       size="lg"
       classNames={{
         root: classes.segmentRoot,
@@ -125,7 +125,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
       }}
       value={typeValue}
       onChange={(value) => {
-        setTypeValue((o) => value);
+        setTypeValue(value);
         handleChange(value, router, 'type');
       }}
       data={segmentItems}

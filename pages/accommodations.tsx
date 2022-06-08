@@ -1,13 +1,9 @@
 import { CardSection } from '@components/Accommodations/CardSection';
 import { FiltersHeader } from '@components/Accommodations/FiltersHeader';
-import { SearchBar } from '@components/SearchBar/SearchBar';
-
 import { fetchAccommodations } from '@helpers/fetchAccommodations';
-
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { DataProps } from 'pages';
-import { useEffect, useRef, useState } from 'react';
+import type { DataProps } from 'types/commonProps';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const data = await fetchAccommodations();

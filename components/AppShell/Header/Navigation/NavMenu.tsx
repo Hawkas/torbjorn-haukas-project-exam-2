@@ -1,9 +1,9 @@
-import { useModals } from '@mantine/modals';
-import { NavLink, NavLinkProps } from './NavLink';
 import { Contact } from '@components/Modal/Contact/Contact';
+import { LoadingOverlay } from '@mantine/core';
+import { useModals } from '@mantine/modals';
 import type { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import { LoadingOverlay } from '@mantine/core';
+import { NavLink, NavLinkProps } from './NavLink';
 
 export type SessionType = { session: Session | null };
 interface Links {
@@ -24,13 +24,13 @@ export function NavMenu({ menuBreak, onClick }: Pick<NavLinkProps, 'menuBreak' |
     });
   };
   const links: Links[] = [
-    { href: '/', component: 'a', value: 'Home', onClick: onClick },
-    { href: '/accommodations', component: 'a', value: 'Accommodations', onClick: onClick },
+    { href: '/', component: 'a', value: 'Home', onClick },
+    { href: '/accommodations', component: 'a', value: 'Accommodations', onClick },
     { href: '', component: 'button', value: 'Contact us', onClick: openContactModal },
-    { href: '/admin', component: 'a', value: 'Admin', onClick: onClick },
+    { href: '/admin', component: 'a', value: 'Admin', onClick },
   ];
   const navMenu = links.map((item, index) => {
-    if (!session && item.value === 'Admin') return;
+    if (!session && item.value === 'Admin') return null;
     return (
       <NavLink
         href={item.href}
@@ -53,7 +53,7 @@ export function NavMenu({ menuBreak, onClick }: Pick<NavLinkProps, 'menuBreak' |
           width: '100%',
         }}
       >
-        <LoadingOverlay visible={true} />
+        <LoadingOverlay visible />
       </div>
     );
   }

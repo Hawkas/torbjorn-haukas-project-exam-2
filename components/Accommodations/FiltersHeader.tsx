@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { LocationChips } from './Filters/LocationChips';
 import { TypeButtons } from './Filters/TypeButtons';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   filtersWrap: {
     width: '100%',
     flexDirection: 'column',

@@ -1,14 +1,13 @@
-import { createStyles, Text, Box, Anchor } from '@mantine/core';
-import { useContainerStyles } from '@styles/containerStyles';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import Logo from '@public/logobig-footer.svg';
-import { useTextStyles } from '@styles/typography';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useModals } from '@mantine/modals';
 import { SignIn } from '@components/Modal/LogIn/SignIn';
+import { Box, createStyles, Text } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import Logo from '@public/logobig-footer.svg';
+import { useContainerStyles } from '@styles/containerStyles';
+import { useTextStyles } from '@styles/typography';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import type { SessionType } from '@AppShell/Header/Navigation/NavMenu';
 
 const useFooterStyles = createStyles((theme) => ({
   wrapper: {
@@ -75,7 +74,7 @@ export function FooterContent() {
             onClick={async () => {
               const data = await signOut({
                 callbackUrl: '/',
-                redirect: router.pathname === '/admin' ? true : false,
+                redirect: router.pathname === '/admin',
               });
               if (data) router.push(data.url);
             }}

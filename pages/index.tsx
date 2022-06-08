@@ -1,22 +1,11 @@
-import type { SessionType } from '@AppShell/Header/Navigation/NavMenu';
 import { fetchAccommodations } from '@helpers/fetchAccommodations';
-import { getMessage } from '@helpers/handleMessage';
 import { HeroSection } from '@Homepage/HeroSection';
 import { RestOfThePage } from '@Homepage/RestOfThePage';
-import { useLocalStorage } from '@mantine/hooks';
-
-import { GetStaticProps } from 'next';
-import { Session } from 'next-auth';
-import { getSession, useSession } from 'next-auth/react';
+import type { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { useContext, useEffect } from 'react';
-import { AccommodationClean, AccommodationsArray } from 'types/accommodationClean';
-import type { AccommodationObject, Accommodations } from 'types/accommodationRaw';
+import type { DataProps } from 'types/commonProps';
 
-export interface DataProps {
-  data: AccommodationClean[] | null;
-}
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   const data = await fetchAccommodations();
   return { props: { data }, revalidate: 300 };
 };

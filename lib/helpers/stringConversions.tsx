@@ -17,22 +17,15 @@ export function toEnglish(
   capitalize?: boolean | string,
   joinCharacter?: string
 ): string {
-  let string = n.toString(),
-    units,
-    tens,
-    scales,
-    start,
-    end,
-    chunks,
-    chunksLen,
-    chunk,
-    ints,
-    i,
-    word,
-    words,
-    finalWord;
-
-  let and = joinCharacter || '';
+  const string = n.toString();
+  const and = joinCharacter || '';
+  let start;
+  let end;
+  let chunk;
+  let ints;
+  let i;
+  let word;
+  let finalWord;
 
   /* Is number zero? */
   if (parseInt(string) === 0) {
@@ -40,7 +33,7 @@ export function toEnglish(
   }
 
   /* Array of units as words */
-  units = [
+  const units = [
     '',
     'one',
     'two',
@@ -64,10 +57,21 @@ export function toEnglish(
   ];
 
   /* Array of tens as words */
-  tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  const tens = [
+    '',
+    '',
+    'twenty',
+    'thirty',
+    'forty',
+    'fifty',
+    'sixty',
+    'seventy',
+    'eighty',
+    'ninety',
+  ];
 
   /* Array of scales as words */
-  scales = [
+  const scales = [
     '',
     'thousand',
     'million',
@@ -95,21 +99,21 @@ export function toEnglish(
 
   /* Split user arguemnt into 3 digit chunks from right to left */
   start = string.length;
-  chunks = [];
+  const chunks = [];
   while (start > 0) {
     end = start;
     chunks.push(string.slice((start = Math.max(0, start - 3)), end));
   }
 
   /* Check if function has enough scale words to be able to stringify the user argument */
-  chunksLen = chunks.length;
+  const chunksLen = chunks.length;
   if (chunksLen > scales.length) {
     return '';
   }
 
   /* Stringify each integer in each chunk */
-  words = [];
-  for (i = 0; i < chunksLen; i++) {
+  const words = [];
+  for (i = 0; i < chunksLen; i += 1) {
     chunk = parseInt(chunks[i]);
 
     if (chunk) {
@@ -122,17 +126,20 @@ export function toEnglish(
       }
 
       /* Add scale word if chunk is not zero and array item exists */
-      if ((word = scales[i])) {
+      if (scales[i]) {
+        word = scales[i];
         words.push(word);
       }
 
       /* Add unit word if array item exists */
-      if ((word = units[ints[0]])) {
+      if (units[ints[0]]) {
+        word = units[ints[0]];
         words.push(word);
       }
 
       /* Add tens word if array item exists */
-      if ((word = tens[ints[1]])) {
+      if (tens[ints[1]]) {
+        word = tens[ints[1]];
         words.push(word);
       }
 
@@ -145,12 +152,13 @@ export function toEnglish(
       }
 
       /* Add hundreds word if array item exists */
-      if ((word = units[ints[2]])) {
-        words.push(word + ' hundred');
+      if (units[ints[2]]) {
+        word = units[ints[2]];
+        words.push(`${word} hundred`);
       }
     }
   }
   finalWord = words.reverse().join(' ').trim();
-  if (capitalize) return capsFirstLetter(finalWord);
+  if (capitalize) finalWord = capsFirstLetter(finalWord);
   return finalWord;
 }

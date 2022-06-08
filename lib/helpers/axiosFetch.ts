@@ -9,7 +9,6 @@ export const axiosFetch = async (axiosParams: AxiosRequestConfig) => {
     const result = await axios.request(axiosParams);
     return result.data;
   } catch (error: any) {
-    console.error(error);
     return error;
   }
 };

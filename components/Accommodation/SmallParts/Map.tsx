@@ -2,9 +2,8 @@ import { Status } from '@googlemaps/react-wrapper';
 import { Title } from '@mantine/core';
 import React, { useRef, useState, useEffect } from 'react';
 
-export const render = (status: Status) => {
-  return <Title order={2}>{status}</Title>;
-};
+export const render = (status: Status) => <Title order={2}>{status}</Title>;
+
 export function MyMapComponent({
   center,
   zoom,
@@ -47,6 +46,7 @@ export function MyMapComponent({
           // set the map prop on the child component
           return React.cloneElement(child, { map });
         }
+        return null;
       })}
     </>
   );

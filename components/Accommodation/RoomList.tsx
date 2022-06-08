@@ -6,6 +6,50 @@ import { AccommodationClean } from 'types/accommodationClean';
 import { toEnglish, pluralCheck } from '@helpers/stringConversions';
 import { useMediaQuery } from '@mantine/hooks';
 
+export const useRoomStyles = createStyles((theme) => ({
+  cardOuter: {
+    borderBottom: `2px solid ${theme.colors.gray[1]}`,
+    paddingBottom: theme.other.largeSpacing.sm,
+    alignItems: 'flex-start',
+    flexWrap: 'nowrap',
+    flexDirection: 'row',
+    gap: theme.other.largeSpacing.sm,
+    [theme.fn.smallerThan('sm')]: {
+      flexWrap: 'wrap',
+      '& > *': {
+        maxWidth: '100%',
+        flexBasis: '100%',
+      },
+    },
+  },
+  image: {
+    [theme.fn.largerThan('sm')]: {
+      maxWidth: '445px',
+    },
+  },
+  textWrap: {
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+    [theme.fn.largerThan('sm')]: {
+      maxWidth: '100%',
+    },
+  },
+  roomTitle: {
+    margin: 0,
+  },
+  roomList: {
+    listStylePosition: 'outside',
+    '& > *:not(:last-of-type)': {
+      marginBottom: theme.other.smallSpacing.sm,
+    },
+  },
+  price: {
+    margin: 0,
+    marginTop: 'auto',
+    paddingTop: theme.other.largeSpacing.sm,
+  },
+}));
+
 export function RoomList({ rooms, images: { rooms: roomImages } }: AccommodationClean) {
   const { classes, cx } = useRoomStyles();
   const { classes: containerClass } = useContainerStyles();
@@ -27,9 +71,9 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
     const extraListItems =
       room.features.length < 1
         ? null
-        : room.features.map((item, index) => {
+        : room.features.map((item, featuresIndex) => {
             const { feature } = item;
-            return <List.Item key={index + 2}>{feature}</List.Item>;
+            return <List.Item key={featuresIndex + 2}>{feature}</List.Item>;
           });
     return (
       <article key={index}>
@@ -98,46 +142,3 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
   );
 }
 
-export const useRoomStyles = createStyles((theme) => ({
-  cardOuter: {
-    borderBottom: `2px solid ${theme.colors.gray[1]}`,
-    paddingBottom: theme.other.largeSpacing.sm,
-    alignItems: 'flex-start',
-    flexWrap: 'nowrap',
-    flexDirection: 'row',
-    gap: theme.other.largeSpacing.sm,
-    [theme.fn.smallerThan('sm')]: {
-      flexWrap: 'wrap',
-      '& > *': {
-        maxWidth: '100%',
-        flexBasis: '100%',
-      },
-    },
-  },
-  image: {
-    [theme.fn.largerThan('sm')]: {
-      maxWidth: '445px',
-    },
-  },
-  textWrap: {
-    justifyContent: 'space-between',
-    alignSelf: 'stretch',
-    [theme.fn.largerThan('sm')]: {
-      maxWidth: '100%',
-    },
-  },
-  roomTitle: {
-    margin: 0,
-  },
-  roomList: {
-    listStylePosition: 'outside',
-    '& > *:not(:last-of-type)': {
-      marginBottom: theme.other.smallSpacing.sm,
-    },
-  },
-  price: {
-    margin: 0,
-    marginTop: 'auto',
-    paddingTop: theme.other.largeSpacing.sm,
-  },
-}));
