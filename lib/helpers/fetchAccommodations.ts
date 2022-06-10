@@ -99,8 +99,8 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] {
       amenities,
       minPrice,
       maxGuests: maxBeds,
-      baths: `${minBaths}-${maxBaths}`,
-      beds: `${minBeds}-${maxBeds}`,
+      baths: minBaths === maxBaths ? `${maxBaths}` : `${minBaths}-${maxBaths}`,
+      beds: minBeds === maxBeds ? `${maxBeds}` : `${minBeds}-${maxBeds}`,
       rooms,
       images: {
         id: imagesId,

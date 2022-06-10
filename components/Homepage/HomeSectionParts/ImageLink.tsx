@@ -44,8 +44,8 @@ export default function ImageLink({ text, image, cards }: ImageLink) {
     <Box className={cards ? undefined : classes.root}>
       <Image
         imageProps={{
-          height: image.height || image.medium?.height,
-          width: image.width || image.medium?.width,
+          height: image.height || image.medium?.height || undefined,
+          width: image.width || image.medium?.width || undefined,
         }}
         classNames={{
           image: cards ? undefined : classes.image,
@@ -53,7 +53,7 @@ export default function ImageLink({ text, image, cards }: ImageLink) {
         radius="xs"
         src={image.src || image.medium?.src}
         className={classes.image}
-        alt={image.alt}
+        alt={image.alt || undefined}
       />
       <Box component="div" mt="-xl" className={classes.labelContainer}>
         <Paper radius="xs" p={theme.other.smallSpacing.lg} shadow="sm">

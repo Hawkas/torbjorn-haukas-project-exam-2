@@ -4,6 +4,7 @@ import { getBooking } from '@helpers/handleBookings';
 import { createStyles, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import { AdminProps } from 'types/commonProps';
 import { AccommodationAdmin } from '../components/Admin/AccommodationAdmin';

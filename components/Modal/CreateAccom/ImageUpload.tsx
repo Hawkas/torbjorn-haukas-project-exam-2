@@ -91,7 +91,7 @@ export const dropzoneChildren = (
                 Drag image here or click to select a file
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
-                Attach a single image file, the file should not exceed 5mb
+                Attach a single image file, the file should not exceed 10mb
               </Text>
             </>
           ) : (
@@ -100,7 +100,7 @@ export const dropzoneChildren = (
                 That image ain't gonna cut it bozo.
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
-                File should not exceed 5mb, and must be .jpg/jpeg, .png, .webp or .svg
+                File should not exceed 10mb, and must be .jpg/jpeg, .png, .webp or .svg
               </Text>
             </>
           )}
@@ -142,7 +142,7 @@ export function ImageUpload({
         className={classes.dropzone}
         radius="md"
         accept={IMAGE_MIME_TYPE}
-        maxSize={3 * 1024 ** 2}
+        maxSize={6 * 1024 ** 2}
       >
         {(status) => dropzoneChildren(imageStatus, status, theme, preview)}
       </Dropzone>

@@ -4,14 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
 import { useCreateAccomStyles } from '../CreateAccom.styles';
 import { roomFields } from '../CreateAccomListFields';
-import { RoomFields } from '../../../../types/createAccom';
+import { ImageLists, RoomFields } from '../../../../types/createAccom';
 
-export function StepTwo({ form, featuresForm, rooms, setRooms }: Omit<RoomFields, 'classes'>) {
+export function StepTwo({
+  form,
+  featuresForm,
+  rooms,
+  setRooms,
+  imagesForm,
+  setPreviewImages,
+}: Omit<RoomFields, 'classes'> & ImageLists) {
   const { classes } = useCreateAccomStyles();
 
   return (
     <>
-      {roomFields({ form, featuresForm, rooms, setRooms, classes })}
+      {roomFields({ form, featuresForm, rooms, setRooms, classes, imagesForm, setPreviewImages })}
       <Group position="center">
         <PrimaryButton
           mt="xl"
@@ -24,13 +31,15 @@ export function StepTwo({ form, featuresForm, rooms, setRooms }: Omit<RoomFields
               totalFeatures = item;
               return item;
             });
+            setPreviewImages.append('');
+            imagesForm.addListItem('rooms', { roomName: '', image: '' });
             setRooms.append(totalFeatures);
             form.addListItem('rooms', {
               roomName: '',
               price: 0,
               singleBeds: 0,
               doubleBeds: 0,
-              bathRooms: 0,
+              bathrooms: 0,
               features: [],
             });
           }}

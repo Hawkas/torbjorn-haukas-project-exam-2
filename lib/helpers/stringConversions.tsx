@@ -6,6 +6,15 @@ export function pluralCheck(str: string, num: number) {
   return str + (num > 1 ? 's' : '');
 }
 
+// https://www.30secondsofcode.org/js/s/slugify
+export const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 /**
  * Convert an integer to its words representation
  *

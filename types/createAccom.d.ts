@@ -11,7 +11,10 @@ import {
 
 export type EntryFormClassType = Record<'root' | 'input' | 'label' | 'numberInput', string>;
 export type EntryForm = UseFormReturnType<EntrySchema>;
-
+export interface ImageLists {
+  setPreviewImages: UseListStateHandler<string>;
+  imagesForm: UseFormReturnType<ImagesSchema>;
+}
 export interface RoomFields {
   form: EntryForm;
   featuresForm: UseFormReturnType<{ features: FeaturesSchema }>;

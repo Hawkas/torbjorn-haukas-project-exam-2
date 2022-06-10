@@ -20,10 +20,12 @@ export function AccommodationAdmin({ data }: Pick<AdminProps, 'data'>) {
   const { classes } = useAdminAccomStyles();
   const { classes: containerClass } = useContainerStyles();
   const modals = useModals();
-  const openCreateModal = () =>
-    modals.openModal({
+  const openCreateModal = () => {
+    const id = modals.openModal({
+      closeOnClickOutside: false,
       children: <CreateAccom />,
     });
+  };
   return (
     <>
       <FiltersHeader order={2} />

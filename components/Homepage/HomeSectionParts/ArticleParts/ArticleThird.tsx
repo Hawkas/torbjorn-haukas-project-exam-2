@@ -11,7 +11,6 @@ export function ArticleThird() {
   const openContactModal = () => {
     modals.openContextModal('contact', {
       innerProps: {
-        id: 'formModal',
         modalBody: <Contact />,
       },
     });

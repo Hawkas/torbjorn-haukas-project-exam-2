@@ -14,9 +14,10 @@ export const contactInfoSchema = z.object({
 export const featuresSchema = z.array(
   z.object({
     id: z.number().optional(),
-    feature: z.string().min(5, { message: 'Must be at least 5 characters long' }),
+    feature: z.string().trim().min(5, { message: 'Must be at least 5 characters long' }),
   })
 );
+export const featuresSchemaWrap = z.object({ features: featuresSchema }).optional();
 export const roomsObject = z.object({
   id: z.number().optional(),
   price: z
@@ -25,7 +26,7 @@ export const roomsObject = z.object({
     .max(9999, { message: "Okay now that's too much" }),
   doubleBeds: z.number().max(10, { message: "No, you can't have 10 double beds." }),
   singleBeds: z.number().max(20, { message: 'More than 20 beds? Why?' }),
-  bathRooms: z
+  bathrooms: z
     .number()
     .min(1, { message: 'Buckets count as toilets too, just add one' })
     .max(5, { message: 'No man can have more than 5 bathrooms' }),
@@ -111,6 +112,7 @@ export type NoImagesSchema = NoImagesSchemaPure & {
 export type FeaturesSchema =
   | FormList<{ feature: string; id?: number }>
   | { feature: string; id?: number }[];
+export type FeaturesSchemaWrap = { features: FeaturesSchema };
 export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema };
 
 export type EntrySchema = EntrySchemaPure & {

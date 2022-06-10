@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 
 declare module '@mantine/core' {
-  interface MantineThemeOther {
+  export interface MantineThemeOther {
     gradient: CSSProperties['background'];
     brandColor: CSSProperties['backgroundColor'];
     backgroundColor: CSSProperties['backgroundColor'];
@@ -110,12 +110,12 @@ declare module '@mantine/core' {
      * * **`extraBold`**: 800
      */
     fontWeights: {
-      light: CSSProperties['fontWeight'];
-      regular: CSSProperties['fontWeight'];
-      medium: CSSProperties['fontWeight'];
-      semiBold: CSSProperties['fontWeight'];
-      bold: CSSProperties['fontWeight'];
-      extraBold: CSSProperties['fontWeight'];
+      light: number;
+      regular: number;
+      medium: number;
+      semiBold: number;
+      bold: number;
+      extraBold: number;
     };
     headingSizes: {
       display: CSSProperties['fontSize'];

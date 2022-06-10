@@ -6,7 +6,7 @@ import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { holidazeTheme } from 'lib/styles/holidazeTheme';
 import { SessionProvider, useSession } from 'next-auth/react';
-import { AppProps } from 'next/app';
+import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
@@ -20,10 +20,15 @@ interface AuthProps {
   children: JSX.Element;
 }
 
+//* Route guard for admin dashboard */
+//* The admin page is the only one that requires a non-null session object,
+//* but rather than making server-side requests each time to check if session is valid
+//* I do an initial check with a loading state, and if it passes, every page transition afterward will be client side
+//* Aka no need to check with the server and regenerate pages
 function Auth({ children }: AuthProps) {
   const router = useRouter();
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
-  // Overriding the default redirect to log-in as well.
+  // Also overriding the default redirect when not authenticated to send the user to the homepage rather than a log-in page.
   const { status } = useSession({
     required: true,
     onUnauthenticated() {
@@ -48,6 +53,7 @@ function Auth({ children }: AuthProps) {
   return children;
 }
 export default function MyApp(props: AppPropsWithAuth) {
+  // Passing session as a prop to avoid server-side calls for session on every page, even where it's not needed.
   const {
     Component,
     pageProps: { session, ...pageProps },

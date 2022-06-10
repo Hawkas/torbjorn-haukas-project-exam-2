@@ -42,12 +42,7 @@ export function StepOne({ form, amenitiesForm, contactInfoForm }: DetailsFields)
         placeholder="Enter accommodation name"
         {...form.getInputProps('name')}
       />
-      <SimpleGrid
-        mt="xl"
-        spacing={28}
-        cols={2}
-        breakpoints={[{ maxWidth: 'xs', cols: 1, spacing: 'xl' }]}
-      >
+      <SimpleGrid mt="xl" spacing="xl" cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
         <Select
           label="Type"
           classNames={classes}
@@ -77,9 +72,9 @@ export function StepOne({ form, amenitiesForm, contactInfoForm }: DetailsFields)
         minRows={5}
         {...form.getInputProps('description')}
       />
-      <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
+      <SimpleGrid cols={2} spacing="xl" breakpoints={[{ maxWidth: 'xs', cols: 1 }]}>
         <InputWrapper
-          sx={{ alignSelf: 'stretch' }}
+          sx={{ display: 'flex', flexDirection: 'column' }}
           label="Amenities"
           classNames={{ label: classes.amenitiesLabel }}
           mt="xl"
@@ -88,7 +83,7 @@ export function StepOne({ form, amenitiesForm, contactInfoForm }: DetailsFields)
           onChange={() => form.setFieldValue('amenities', amenitiesForm.values)}
         >
           <Input
-            classNames={{ input: classes.amenityContainer }}
+            classNames={{ input: classes.amenityContainer, wrapper: classes.amenityWrapper }}
             component="div"
             multiline
             invalid={form.errors.amenities as boolean}

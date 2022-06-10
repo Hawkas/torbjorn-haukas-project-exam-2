@@ -22,26 +22,38 @@ export const useCreateAccomStyles = createStyles((theme) => {
       letterSpacing: theme.other.letterSpacing.xs,
       fontSize: theme.fontSizes.xs,
       fontWeight: theme.other.fontWeights.bold,
+      marginBottom: '4px',
     },
     amenityContainer: {
       display: 'flex',
       flexFlow: 'row wrap',
       padding: theme.other.smallSpacing.lg,
       gap: theme.other.smallSpacing.lg,
+      borderColor: theme.colors.gray[2],
       height: '100%',
       '& > *': {
         flexGrow: 1,
         flexBasis: '150px',
       },
     },
+    amenityWrapper: {
+      display: 'flex',
+      flexGrow: 1,
+    },
     contactInfoWrapper: {
+      paddingBlockStart: '0px',
+      paddingBlockEnd: '0px',
+      marginInlineStart: '0px',
+      marginInlineEnd: '0px',
+      paddingInlineStart: '0px',
+      paddingInlineEnd: '0px',
       border: 0,
       marginTop: theme.spacing.xl,
       [theme.fn.smallerThan('xs')]: {
         padding: 0,
       },
       '& > legend': {
-        display: 'inline-block',
+        display: 'flex',
         marginBottom: '4px',
         letterSpacing: theme.other.letterSpacing.xs,
         fontSize: theme.fontSizes.xs,
@@ -72,6 +84,9 @@ export const useCreateAccomStyles = createStyles((theme) => {
     },
     numberInput: {
       minWidth: '104px',
+    },
+    imageLabel: {
+      fontSize: theme.other.fontSizes.xxl,
     },
   };
 });

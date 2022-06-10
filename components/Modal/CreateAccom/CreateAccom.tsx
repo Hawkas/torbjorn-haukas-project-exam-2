@@ -1,17 +1,33 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { faClose } from '@fortawesome/pro-regular-svg-icons';
+import { CardBase } from '@components/Accommodations/Card';
+import { faCheckCircle, faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Box, Group, InputWrapper, Stepper } from '@mantine/core';
+import { axiosFetch } from '@helpers/axiosFetch';
+import { slugify } from '@helpers/stringConversions';
+import {
+  ActionIcon,
+  Box,
+  Center,
+  Group,
+  InputWrapper,
+  LoadingOverlay,
+  Stack,
+  Stepper,
+  Text,
+  Title,
+} from '@mantine/core';
 import { formList, useForm, zodResolver } from '@mantine/form';
 import { useDidUpdate, useListState } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { useCreateAccomStyles } from './CreateAccom.styles';
 import {
+  turnIntoCardData,
   validateFirst,
   validateSecond,
   validateThird,
 } from '../../../lib/helpers/createAccomFunctions';
+import { useCreateAccomStyles } from './CreateAccom.styles';
 import {
   AmenitySchema,
   amenitySchema,
@@ -21,25 +37,34 @@ import {
   EntrySchema,
   FeaturesSchema,
   featuresSchema,
+  FeaturesSchemaWrap,
+  featuresSchemaWrap,
   ImagesSchema,
   imagesSchema,
 } from './CreateAccomValidation';
+import { ImageUpload } from './ImageUpload';
 import { StepOne } from './Steps/StepOne';
 import { StepTwo } from './Steps/StepTwo';
-import { ImageUpload } from './ImageUpload';
 
 export function CreateAccom() {
   const { classes } = useCreateAccomStyles();
+  const { data: session } = useSession();
   const modals = useModals();
   const [active, setActive] = useState(0);
   const [stepOne, setStepOne] = useState(false);
   const [stepTwo, setStepTwo] = useState(false);
   const [stepThree, setStepThree] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<{ [key: string]: boolean | string }>({
+    rejected: false,
+    accepted: false,
+  });
   // Index each room added to the entry
   const [rooms, setRooms] = useListState([0]);
   // Preview images
   const [previewImages, setPreviewImages] = useListState<string>([]);
-
+  // Preview card
+  const [previewCard, setPreviewCard] = useState<JSX.Element>();
   // As this is an obscenely long form, prepare for boilerplate.
   // Also, Mantine's form hook doesn't do singular validation for formList arrays, e.g (images: [{image: file}, ...])
   // I need this as I'm splitting my form up in a three step page and validate each step.
@@ -56,8 +81,8 @@ export function CreateAccom() {
     },
   });
 
-  const featuresForm = useForm<{ features: FeaturesSchema }>({
-    schema: zodResolver(featuresSchema),
+  const featuresForm = useForm<FeaturesSchemaWrap>({
+    schema: zodResolver(featuresSchemaWrap),
     initialValues: {
       features: formList([{ feature: '' }]),
     },
@@ -92,55 +117,92 @@ export function CreateAccom() {
       type: '',
       location: '',
       description: '',
-      contactInfo: { ...contactInfoForm.values },
-      amenities: { ...amenitiesForm.values },
+      contactInfo: contactInfoForm.values,
+      amenities: amenitiesForm.values,
       images: imagesForm.values,
       rooms: formList([
         {
           price: 0,
           doubleBeds: 0,
           singleBeds: 0,
-          bathRooms: 0,
+          bathrooms: 0,
           roomName: '',
-          features: [] as any,
+          features: [] as FeaturesSchema,
         },
       ]),
     },
   });
-  const allForms = [form, imagesForm, contactInfoForm, amenitiesForm, featuresForm];
-  const formHasErrors = (forms: typeof allForms) => {
-    let hasErrors = false;
-    forms.forEach((formItem) => {
-      if (formItem.validate().hasErrors) {
-        hasErrors = true;
-      }
-      return null;
-    });
-    return hasErrors;
-  };
-  const handleSubmit = (e: React.FormEvent, forms: typeof allForms) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    forms: { fullForm: typeof form; images: typeof imagesForm }
+  ) => {
     e.preventDefault();
-    if (formHasErrors(forms)) return null;
-    const [fullForm] = forms;
-    console.log(fullForm.values);
-    return null;
+    setLoading(true);
+    const { fullForm, images } = forms;
+    const formData = new FormData();
+    const files = images.values.rooms.map((item, index) => ({
+      name: `testList[${index}].image`,
+      file: item.image,
+      fileName: `${slugify(fullForm.values.name)}-${slugify(
+        fullForm.values.images.rooms[index].roomName
+      )}`,
+    }));
+
+    files.push({
+      name: 'test',
+      file: images.values.cover,
+      fileName: `${slugify(fullForm.values.name)}-cover`,
+    });
+    files.forEach((item) => formData.append(`files.${item.name}`, item.file, item.fileName));
+    formData.append(
+      'data',
+      JSON.stringify({ slug: `${slugify(fullForm.values.name)}`, ...fullForm.values })
+    );
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${session!.jwt}`,
+    };
+    const response = await axiosFetch({
+      method: 'POST',
+      url: '/accommodations',
+      headers,
+      data: formData,
+    });
+    if (response.data) {
+      setSuccess((o) => ({ accepted: true, rejected: false }));
+      setLoading(false);
+      console.log(response);
+      return;
+    }
+    console.log(response);
+    setSuccess((o) => ({
+      accepted: false,
+      rejected: true,
+      errorMessage: response.response.data.error.message,
+    }));
+    setLoading(false);
+    return;
   };
   const validatePreviousStep = (step: number) => {
     console.log(form.values);
-    let validate = false;
+    let validationFailed = false;
     switch (step) {
       case 0:
-        validate = validateFirst({ form, contactInfoForm, amenitiesForm });
-        setStepOne(validate);
-        return validate;
+        validationFailed = validateFirst({ form, contactInfoForm, amenitiesForm });
+        setStepOne(validationFailed);
+        return validationFailed;
       case 1:
-        validate = validateSecond({ rooms, form, featuresForm });
-        setStepTwo(validate);
-        return validate;
+        validationFailed = validateSecond({ rooms, form, featuresForm });
+        setStepTwo(validationFailed);
+        return validationFailed;
       case 2:
-        validate = validateThird({ form, imagesForm });
-        setStepThree(validate);
-        return validate;
+        validationFailed = validateThird({ form, imagesForm });
+        if (!validationFailed) {
+          const cardProps = turnIntoCardData({ form, imagePreview: previewImages[0] });
+          setPreviewCard(<CardBase {...cardProps} />);
+        }
+        setStepThree(validationFailed);
+        return validationFailed;
       default:
         break;
     }
@@ -158,22 +220,19 @@ export function CreateAccom() {
   };
   useEffect(() => {
     // Clearing out the initial empty features item, so user has to specifically add if they want any.
-    if (featuresForm.values.features[0].feature && featuresForm.values.features[0].feature === '')
+    if (featuresForm.values.features[0].feature && featuresForm.values.features[0].feature === '') {
       featuresForm.removeListItem('features', 0);
+    }
   }, []);
   useDidUpdate(() => {
     form.setFieldValue('amenities', amenitiesForm.values);
   }, [amenitiesForm.values]);
   useDidUpdate(() => {
-    if (previewImages.length < rooms.length + 1)
-      rooms.forEach(() => {
-        if (previewImages.length < rooms.length + 1) setPreviewImages.append('');
-      });
     const newImageFields = rooms.map((_item, index) => (
       <InputWrapper
         key={index}
-        label={form.values.rooms[index].roomName}
-        classNames={{ label: classes.amenitiesLabel }}
+        label={form.values.rooms[index] ? form.values.rooms[index].roomName : `Room ${index}`}
+        classNames={{ label: classes.imageLabel }}
         mt="xl"
         {...imagesForm.getListInputProps('rooms', index, 'image')}
       >
@@ -186,6 +245,8 @@ export function CreateAccom() {
               roomName: form.values.rooms[index].roomName,
               image: files[0],
             });
+            //@ts-ignore
+            imagesForm.clearFieldError(`rooms.${index}.image`);
           }}
           preview={previewImages[index + 1]}
         />
@@ -197,14 +258,14 @@ export function CreateAccom() {
         URL.revokeObjectURL(item);
         return '';
       });
-  }, [active, rooms, previewImages]);
-
+  }, [rooms, previewImages]);
   return (
-    <Box className={classes.formWrapper}>
+    <Box sx={{ position: 'relative' }} className={classes.formWrapper}>
+      <LoadingOverlay visible={loading} />
       <form
         name="create-accommodation"
         className={classes.form}
-        onSubmit={(e) => handleSubmit(e, allForms)}
+        onSubmit={(e) => handleSubmit(e, { fullForm: form, images: imagesForm })}
       >
         <ActionIcon
           aria-label="Close"
@@ -237,7 +298,7 @@ export function CreateAccom() {
             label="First step"
             description="Basic details"
           >
-            <StepOne form={form} amenitiesForm={amenitiesForm} contactInfoForm={contactInfoForm} />
+            <StepOne {...{ form, amenitiesForm, contactInfoForm }} />
           </Stepper.Step>
           <Stepper.Step
             allowStepSelect={active > 1}
@@ -246,7 +307,16 @@ export function CreateAccom() {
             label="Second step"
             description="Rooms"
           >
-            <StepTwo form={form} featuresForm={featuresForm} rooms={rooms} setRooms={setRooms} />
+            <StepTwo
+              {...{
+                form,
+                featuresForm,
+                rooms,
+                setRooms,
+                imagesForm,
+                setPreviewImages,
+              }}
+            />
           </Stepper.Step>
           <Stepper.Step
             allowStepSelect={active > 2}
@@ -257,7 +327,7 @@ export function CreateAccom() {
           >
             <InputWrapper
               label="Cover"
-              classNames={{ label: classes.amenitiesLabel }}
+              classNames={{ label: classes.imageLabel }}
               mt="xl"
               {...imagesForm.getInputProps('cover')}
             >
@@ -267,6 +337,7 @@ export function CreateAccom() {
                   const previewUrl = URL.createObjectURL(files[0]);
                   setPreviewImages.setItem(0, previewUrl);
                   imagesForm.setFieldValue('cover', files[0]);
+                  imagesForm.clearFieldError('cover');
                 }}
                 preview={previewImages[0]}
               />
@@ -274,14 +345,58 @@ export function CreateAccom() {
             {imageFields}
           </Stepper.Step>
           <Stepper.Completed>
-            Completed, click back button to get to previous step
+            {success.accepted ? (
+              <Center mt="xl">
+                <Stack>
+                  <FontAwesomeIcon icon={faCheckCircle} color="green" size="6x" />
+                  <Text size="xl" color="green" mt="xl" weight="bold">
+                    Successfully uploaded
+                  </Text>
+                </Stack>
+              </Center>
+            ) : success.rejected ? (
+              <Center mt="xl">
+                <Stack>
+                  <FontAwesomeIcon icon={faClose} color="red" size="6x" />
+                  <Text size="xl" color="red" mt="xl" weight="bold">
+                    {`Failed to upload. Error message: ${success.errorMessage}`}
+                  </Text>
+                </Stack>
+              </Center>
+            ) : (
+              <>
+                <Text align="center" mt="xl" size="xl">
+                  All done!
+                </Text>
+                <Text align="center" size="sm" color="dimmed">
+                  Press submit to upload it!
+                </Text>
+                <Box sx={{ maxWidth: '408px', margin: '48px auto' }}>{previewCard}</Box>
+              </>
+            )}
+            <PrimaryButton
+              primary
+              type="submit"
+              mt={64}
+              sx={{ display: success.accepted ? 'none' : 'block' }}
+            >
+              Submit
+            </PrimaryButton>
           </Stepper.Completed>
         </Stepper>
         <Group position="center" pt="xl" mt="xl">
-          <PrimaryButton variant="default" onClick={prevStep}>
-            Back
+          <PrimaryButton
+            disabled={active === 0}
+            variant="default"
+            onClick={success.accepted ? () => modals.closeModal('create') : prevStep}
+          >
+            {success.accepted ? 'Close' : 'Back'}
           </PrimaryButton>
-          <PrimaryButton primary onClick={nextStep}>
+          <PrimaryButton
+            primary
+            onClick={nextStep}
+            sx={{ display: active === 3 ? 'none' : 'block' }}
+          >
             Next step
           </PrimaryButton>
         </Group>
