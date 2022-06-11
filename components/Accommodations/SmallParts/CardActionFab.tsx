@@ -15,12 +15,19 @@ const useCardActionStyles = createStyles((theme) => ({
   editButton: { color: theme.colors.blue[6] },
 }));
 
-export function CardActionFab({ deleteBtn }: { deleteBtn?: boolean }) {
+export function CardActionFab({
+  deleteBtn,
+  onClick,
+}: {
+  deleteBtn?: boolean;
+  onClick: () => void;
+}) {
   const { classes, cx } = useCardActionStyles();
   const tooltipId = deleteBtn ? 'delete-fab' : 'edit-fab';
   return (
     <Tooltip label={deleteBtn ? 'Delete' : 'Edit'} withArrow position="left" tooltipId={tooltipId}>
       <ActionIcon
+        onClick={onClick}
         aria-describedby={tooltipId}
         radius="lg"
         className={cx(classes.button, {

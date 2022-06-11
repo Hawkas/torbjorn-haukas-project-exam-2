@@ -91,7 +91,7 @@ export const dropzoneChildren = (
                 Drag image here or click to select a file
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
-                Attach a single image file, the file should not exceed 10mb
+                Attach a single image file, the file should not exceed 6mb
               </Text>
             </>
           ) : (
@@ -100,7 +100,7 @@ export const dropzoneChildren = (
                 That image ain't gonna cut it bozo.
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
-                File should not exceed 10mb, and must be .jpg/jpeg, .png, .webp or .svg
+                File should not exceed 6mb, and must be .jpg/jpeg, .png, .webp or .svg
               </Text>
             </>
           )}

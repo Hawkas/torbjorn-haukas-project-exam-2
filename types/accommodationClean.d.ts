@@ -5,16 +5,15 @@ export interface AccommodationsArray {
 }
 
 export interface AccommodationClean {
-  id: number;
+  id?: number;
   name: string;
   slug: string;
   location: string;
   description: string;
   type: string;
   contactInfo: ContactClean;
-  amenities: Omit<Amenities, 'id'>;
+  amenities: Amenities;
   minPrice: number;
-  maxGuests: number;
   baths: string;
   beds: string;
   rooms: AttributesRoom[];
@@ -33,9 +32,9 @@ export interface CleanImages {
 
 export interface Cover {
   alt: string;
-  large: ImageSizes;
-  medium: ImageSizes;
-  thumbnail: ImageSizes;
+  large?: ImageSizes;
+  medium?: ImageSizes;
+  thumbnail?: ImageSizes;
 }
 
 export interface ImageSizes {
@@ -45,6 +44,10 @@ export interface ImageSizes {
 }
 
 export interface ImagesRoom {
-  id: number;
-  image: Omit<Cover, 'thumbnail'>;
+  image: {
+    alt: string;
+    name: string;
+    large: ImageSizes;
+    medium: ImageSizes;
+  };
 }

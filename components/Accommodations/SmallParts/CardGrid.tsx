@@ -1,4 +1,5 @@
 import { Grid, Title } from '@mantine/core';
+import { Session } from 'next-auth';
 import { AccommodationClean } from 'types/accommodationClean';
 import { AdminCard, Card } from '../Card';
 
@@ -6,7 +7,8 @@ export const CardGrid = (
   array: AccommodationClean[] | null,
   wrapBp: boolean,
   classes: { cardColumn: string },
-  admin?: boolean
+  admin?: boolean,
+  session?: Session
 ) => {
   if (!array || array.length === 0) {
     return [
@@ -21,25 +23,11 @@ export const CardGrid = (
     <Grid.Col className={classes.cardColumn} key={item.slug} span={wrapBp ? 6 : 12} md={6} lg={4}>
       {admin ? (
         <AdminCard
-          name={item.name}
-          image={item.images.cover}
-          location={item.location}
-          beds={item.beds}
-          baths={item.baths}
-          type={item.type}
-          price={item.minPrice}
+          session={session!}
+          {...{ price: item.minPrice, image: item.images.cover, ...item }}
         />
       ) : (
-        <Card
-          href={item.slug}
-          name={item.name}
-          image={item.images.cover}
-          location={item.location}
-          beds={item.beds}
-          baths={item.baths}
-          type={item.type}
-          price={item.minPrice}
-        />
+        <Card {...{ price: item.minPrice, image: item.images.cover, href: item.slug, ...item }} />
       )}
     </Grid.Col>
   ));

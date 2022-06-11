@@ -25,12 +25,8 @@ export function StepTwo({
           variant="subtle"
           rightIcon={<FontAwesomeIcon fontSize={14} icon={faPlus} />}
           onClick={() => {
-            let totalFeatures = 0;
             // Apply the last room's feature count as the base value for next room
-            setRooms.apply((item) => {
-              totalFeatures = item;
-              return item;
-            });
+            let totalFeatures = rooms[rooms.length - 1];
             setPreviewImages.append('');
             imagesForm.addListItem('rooms', { roomName: '', image: '' });
             setRooms.append(totalFeatures);

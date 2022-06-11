@@ -3,7 +3,7 @@ export function capsFirstLetter(str: string) {
 }
 
 export function pluralCheck(str: string, num: number) {
-  return str + (num > 1 ? 's' : '');
+  return str + (num > 1 || num === 0 ? 's' : '');
 }
 
 // https://www.30secondsofcode.org/js/s/slugify

@@ -24,11 +24,13 @@ export interface AccommodationAttributes {
   bookings?: Bookings | null;
   rooms: AttributesRoom[];
   contactInfo: ContactInfo;
+  cover: Cover;
+  imagesRooms: { data: DAT[] };
 }
 
 export interface Amenities {
   [key: string]: boolean | null;
-  id: number;
+  id: any;
 }
 
 export interface Bookings {
@@ -82,7 +84,8 @@ export interface ImageAttributes {
 }
 
 export enum EXT {
-  JPEG = '.jpeg' | '.jpg' | '.png',
+  JPEG = '.jpeg' | '.jpg',
+  PNG = '.png',
 }
 
 export interface ImageSize {
@@ -107,6 +110,8 @@ export interface ImageFormatAttributes {
 
 export enum MIME {
   ImageJPEG = 'image/jpeg',
+  ImagePNG = 'image/png',
+  ImageWEBP = 'image/webp',
 }
 
 export interface ProviderMetadata {

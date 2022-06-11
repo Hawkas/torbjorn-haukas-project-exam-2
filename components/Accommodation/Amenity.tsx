@@ -83,6 +83,7 @@ export function Amenity({ amenities }: AccommodationClean) {
   const { classes: containerClass } = useContainerStyles();
   const keyStrings = Object.keys(amenities);
   const amenityArray = keyStrings.map((key, index) => {
+    // Return null when parsing the component ID, or just anything that shouldnt be there.
     if (!amenities[key] || !iconMatch[key]) return null;
     const { icon, label } = iconMatch[key];
     return (

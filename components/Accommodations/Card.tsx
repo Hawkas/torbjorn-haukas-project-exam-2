@@ -1,4 +1,6 @@
+import { CreateAccom } from '@components/Modal/CreateAccom/CreateAccom';
 import { faBed, faLocationDot, faToilet } from '@fortawesome/pro-solid-svg-icons';
+import { axiosFetch } from '@helpers/axiosFetch';
 import ImageLink, { ImageProps } from '@Homepage/HomeSectionParts/ImageLink';
 import {
   Anchor,
@@ -7,9 +9,15 @@ import {
   Group,
   SimpleGrid,
   Stack,
-  useMantineTheme
+  Text,
+  useMantineTheme,
 } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { Session } from 'next-auth';
 import Link from 'next/link';
+import { AccommodationClean, CleanImages, Cover } from 'types/accommodationClean';
+import { AttributesRoom } from 'types/accommodationRaw';
 import { CardActionFab } from './SmallParts/CardActionFab';
 import { IconText } from './SmallParts/IconText';
 import { TypePrice } from './SmallParts/TypePrice';
@@ -49,22 +57,12 @@ const useCardStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export interface CardProps {
-  image: ImageProps;
-  name: string;
-  location: string;
-  beds: string;
-  baths: string;
-  type: string;
-  price: string | number;
-}
-
-export function CardBase(props: CardProps) {
+export function CardBase(props: Omit<AccommodationClean, 'images'> & { images: { cover: Cover } }) {
   const { classes } = useCardStyles();
   const theme = useMantineTheme();
   return (
     <>
-      <ImageLink cards text={props.name} image={props.image} />
+      <ImageLink cards text={props.name} image={props.images.cover} />
       <Stack spacing={0} mx={theme.other.smallSpacing.lg}>
         <Group
           noWrap
@@ -78,13 +76,13 @@ export function CardBase(props: CardProps) {
             <IconText light icon={faToilet} text={props.baths} />
           </Group>
         </Group>
-        <TypePrice type={props.type} price={props.price} />
+        <TypePrice type={props.type} price={props.minPrice} />
       </Stack>
     </>
   );
 }
 
-export function Card(props: CardProps & { href: string }) {
+export function Card(props: AccommodationClean & { href: string }) {
   const { classes } = useCardStyles();
   return (
     <Box className={classes.cardOuter} component="article">
@@ -103,19 +101,53 @@ const useStyles = createStyles(() => ({
     right: 16,
   },
 }));
-export function AdminCard(props: CardProps) {
+export function AdminCard(props: AccommodationClean & { session: Session }) {
+  const { session, ...cardProps } = props;
+  const modals = useModals();
   const { classes } = useStyles();
+  const openEditModal = () => {
+    const id = modals.openModal({
+      closeOnClickOutside: false,
+      children: <CreateAccom session={session} data={cardProps} />,
+    });
+  };
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: `Are you sure you wish to delete ${cardProps.name}?`,
+      children: <Text size="sm">This action is irreversible</Text>,
+      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      styles: (theme) => ({ modal: { backgroundColor: theme.white } }),
+      size: 'sm',
+      padding: 'md',
+      onConfirm: async () => {
+        const response = await axiosFetch({
+          method: 'DELETE',
+          url: `/accommodations/${cardProps.id}`,
+          headers: {
+            Authorization: `Bearer ${session!.jwt}`,
+          },
+        });
+        if (response.data)
+          showNotification({
+            title: 'Delete successful',
+            message: `${cardProps.name} is gone forever.`,
+            autoClose: 5000,
+            color: 'green',
+            id: 'delete-message',
+          });
+      },
+    });
   return (
     <Box sx={{ position: 'relative' }}>
-      <CardBase {...props} />
+      <CardBase {...cardProps} />
       <SimpleGrid
         className={classes.buttonWrapper}
         cols={1}
         breakpoints={[{ maxWidth: 'md', cols: 2 }]}
         spacing="lg"
       >
-        <CardActionFab />
-        <CardActionFab deleteBtn />
+        <CardActionFab onClick={openEditModal} />
+        <CardActionFab deleteBtn onClick={openDeleteModal} />
       </SimpleGrid>
     </Box>
   );

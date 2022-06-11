@@ -22,7 +22,6 @@
       "@styles/*": ["lib/styles/*"],
       "@hooks/*": ["lib/hooks/*"],
       "@helpers/*": ["lib/helpers/*"],
-      "@types/*": ["types/*"],
       "@public/*": ["public/*"],
       "@components/*": ["components/*"],
       "@globals/*": ["lib/*"]

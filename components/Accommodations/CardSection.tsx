@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { DataProps } from 'types/commonProps';
 import { useEffect, useState } from 'react';
 import { CardGrid } from './SmallParts/CardGrid';
+import { Session } from 'next-auth';
 
 const useStyles = createStyles((theme) => ({
   cardsContainer: {
@@ -26,7 +27,11 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 const duration = 400;
-export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
+export function CardSection({
+  data,
+  admin,
+  session,
+}: DataProps & { admin?: boolean; session?: Session }) {
   const router = useRouter();
   const { classes } = useStyles();
   const {
@@ -40,7 +45,7 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
 
   const [transitionStage, setTransitionStage] = useState(false);
   const [dataArray, setDataArray] = useState(data);
-  const content = CardGrid(dataArray, wrapBp, classes, admin);
+  const content = CardGrid(dataArray, wrapBp, classes, admin, session);
 
   // This will run only once when the component mounts. Sort the data using query parameters if any,
   // and reveal it by changing transition stage.
@@ -53,19 +58,19 @@ export function CardSection({ data, admin }: DataProps & { admin?: boolean }) {
   // This is mantine's custom hook that will ONLY run when the state of its dependencies change from their initial value.
   // I.e it doesn't run at all when component mounts.
   useDidUpdate(() => {
-    //? If the query parameters change, it will fade out the cards.
+    // If the query parameters change, it will fade out the cards.
     setTransitionStage(false);
 
-    //? Then, in a timeout function delayed to the transition's timing duration:
+    // Then, in a timeout function delayed to the transition's timing duration:
     setTimeout(() => {
-      //? If router has either of these query parameters, re-sort the data array, else revert to the default array
+      // If router has either of these query parameters, re-sort the data array, else revert to the default array
       const newData =
         router.query.location || router.query.type ? filterArray({ array: data, router }) : data;
 
-      //? Set the new data as the rendered output state, while it's still invisible.
+      // Set the new data as the rendered output state, while it's still invisible.
       setDataArray(newData);
 
-      //? Then reveal it
+      // Then reveal it
       setTransitionStage(true);
     }, duration);
   }, [router.query]);

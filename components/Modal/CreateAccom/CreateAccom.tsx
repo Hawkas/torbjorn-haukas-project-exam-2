@@ -2,8 +2,7 @@ import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { CardBase } from '@components/Accommodations/Card';
 import { faCheckCircle, faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { axiosFetch } from '@helpers/axiosFetch';
-import { slugify } from '@helpers/stringConversions';
+import useAllForms from '@hooks/useAllForms';
 import {
   ActionIcon,
   Box,
@@ -14,41 +13,31 @@ import {
   Stack,
   Stepper,
   Text,
-  Title,
 } from '@mantine/core';
-import { formList, useForm, zodResolver } from '@mantine/form';
-import { useDidUpdate, useListState } from '@mantine/hooks';
+
+import { useDidUpdate, useListState, useValidatedState } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
+import { AccommodationClean } from 'types/accommodationClean';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import {
+  handleSubmit,
   turnIntoCardData,
   validateFirst,
   validateSecond,
   validateThird,
 } from '../../../lib/helpers/createAccomFunctions';
 import { useCreateAccomStyles } from './CreateAccom.styles';
-import {
-  AmenitySchema,
-  amenitySchema,
-  ContactInfoSchema,
-  contactInfoSchema,
-  createEntrySchema,
-  EntrySchema,
-  FeaturesSchema,
-  featuresSchema,
-  FeaturesSchemaWrap,
-  featuresSchemaWrap,
-  ImagesSchema,
-  imagesSchema,
-} from './CreateAccomValidation';
 import { ImageUpload } from './ImageUpload';
 import { StepOne } from './Steps/StepOne';
 import { StepTwo } from './Steps/StepTwo';
+import type { Session } from 'next-auth';
+import { slugify } from '@helpers/stringConversions';
 
-export function CreateAccom() {
+export function CreateAccom({ data, session }: { session: Session; data?: AccommodationClean }) {
   const { classes } = useCreateAccomStyles();
-  const { data: session } = useSession();
+  console.log(data);
+  console.log(slugify("Granddaughter's bedroom"));
   const modals = useModals();
   const [active, setActive] = useState(0);
   const [stepOne, setStepOne] = useState(false);
@@ -59,132 +48,47 @@ export function CreateAccom() {
     rejected: false,
     accepted: false,
   });
-  // Index each room added to the entry
-  const [rooms, setRooms] = useListState([0]);
-  // Preview images
-  const [previewImages, setPreviewImages] = useListState<string>([]);
-  // Preview card
-  const [previewCard, setPreviewCard] = useState<JSX.Element>();
   // As this is an obscenely long form, prepare for boilerplate.
-  // Also, Mantine's form hook doesn't do singular validation for formList arrays, e.g (images: [{image: file}, ...])
-  // I need this as I'm splitting my form up in a three step page and validate each step.
+  // Also, Mantine's form hook doesn't cooperate well with nested fields.
+  // I need this as I'm validating the payload for upload after all, and I'd rather not do it all twice.
+  // So I'm splitting my form up in a three step page to validate each step.
 
-  // So as a workaround, I'm creating multiple instances of the hook, and combining them all into the final output.
-  // This is also to avoid having to repackage for every new entry, and unpackaging for every edit.
+  // To do this, I'm creating multiple instances of the hook, and combining them all into the final output.
+  // This will also allow me to store my form data in nested objects and arrays beyond 1 level deep.
+  const { form, contactInfoForm, amenitiesForm, imagesForm, featuresForm } = useAllForms(
+    data ? { data } : {}
+  );
+  console.log(featuresForm.values);
+  const featureCount = data
+    ? data.rooms.map((roomItem, index, roomArray) =>
+        index === 0
+          ? roomItem.features.length
+          : roomItem.features.length + roomArray[index - 1].features.length
+      )
+    : [0];
+  // Index each room added to the entry, with a number that represents 'feature' count
+  const [rooms, setRooms] = useListState(featureCount);
+  // and also a hook to see how the values in this array changes to act upon it
+  const [{ value }, setValue] = useValidatedState(rooms, (value) => value === rooms);
 
-  const contactInfoForm = useForm<ContactInfoSchema>({
-    schema: zodResolver(contactInfoSchema),
-    initialValues: {
-      email: '',
-      phone: '',
-      address: '',
-    },
-  });
+  const imageUrlArray = data
+    ? [
+        data.images.cover.medium!.src,
+        ...data.rooms.map((roomItem) => {
+          const imageObj = data.images.rooms.find(
+            (roomImage) => slugify(roomItem.roomName) === roomImage.image.name
+          );
+          return imageObj ? imageObj.image.medium.src : '';
+        }),
+      ]
+    : [];
+  // Storing the URLs from user added image files
+  const [previewImages, setPreviewImages] = useListState<string>(imageUrlArray);
 
-  const featuresForm = useForm<FeaturesSchemaWrap>({
-    schema: zodResolver(featuresSchemaWrap),
-    initialValues: {
-      features: formList([{ feature: '' }]),
-    },
-  });
+  // Creating a preview card with the added data.
+  const [previewCard, setPreviewCard] = useState<JSX.Element>();
 
-  const imagesForm = useForm<ImagesSchema>({
-    schema: zodResolver(imagesSchema),
-    initialValues: {
-      cover: undefined,
-      rooms: formList([{ roomName: '', image: undefined }]),
-    },
-  });
-
-  const amenitiesForm = useForm<AmenitySchema>({
-    schema: zodResolver(amenitySchema),
-    initialValues: {
-      wifi: false,
-      airCondition: false,
-      elevator: false,
-      freeParking: false,
-      petsAllowed: false,
-      kitchen: false,
-      television: false,
-      refrigerator: false,
-      foodService: false,
-    },
-  });
-  const form = useForm<EntrySchema>({
-    schema: zodResolver(createEntrySchema),
-    initialValues: {
-      name: '',
-      type: '',
-      location: '',
-      description: '',
-      contactInfo: contactInfoForm.values,
-      amenities: amenitiesForm.values,
-      images: imagesForm.values,
-      rooms: formList([
-        {
-          price: 0,
-          doubleBeds: 0,
-          singleBeds: 0,
-          bathrooms: 0,
-          roomName: '',
-          features: [] as FeaturesSchema,
-        },
-      ]),
-    },
-  });
-  const handleSubmit = async (
-    e: React.FormEvent,
-    forms: { fullForm: typeof form; images: typeof imagesForm }
-  ) => {
-    e.preventDefault();
-    setLoading(true);
-    const { fullForm, images } = forms;
-    const formData = new FormData();
-    const files = images.values.rooms.map((item, index) => ({
-      name: `testList[${index}].image`,
-      file: item.image,
-      fileName: `${slugify(fullForm.values.name)}-${slugify(
-        fullForm.values.images.rooms[index].roomName
-      )}`,
-    }));
-
-    files.push({
-      name: 'test',
-      file: images.values.cover,
-      fileName: `${slugify(fullForm.values.name)}-cover`,
-    });
-    files.forEach((item) => formData.append(`files.${item.name}`, item.file, item.fileName));
-    formData.append(
-      'data',
-      JSON.stringify({ slug: `${slugify(fullForm.values.name)}`, ...fullForm.values })
-    );
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${session!.jwt}`,
-    };
-    const response = await axiosFetch({
-      method: 'POST',
-      url: '/accommodations',
-      headers,
-      data: formData,
-    });
-    if (response.data) {
-      setSuccess((o) => ({ accepted: true, rejected: false }));
-      setLoading(false);
-      console.log(response);
-      return;
-    }
-    console.log(response);
-    setSuccess((o) => ({
-      accepted: false,
-      rejected: true,
-      errorMessage: response.response.data.error.message,
-    }));
-    setLoading(false);
-    return;
-  };
   const validatePreviousStep = (step: number) => {
-    console.log(form.values);
     let validationFailed = false;
     switch (step) {
       case 0:
@@ -196,7 +100,7 @@ export function CreateAccom() {
         setStepTwo(validationFailed);
         return validationFailed;
       case 2:
-        validationFailed = validateThird({ form, imagesForm });
+        validationFailed = validateThird({ imagesForm, data: data ? data : undefined });
         if (!validationFailed) {
           const cardProps = turnIntoCardData({ form, imagePreview: previewImages[0] });
           setPreviewCard(<CardBase {...cardProps} />);
@@ -227,6 +131,28 @@ export function CreateAccom() {
   useDidUpdate(() => {
     form.setFieldValue('amenities', amenitiesForm.values);
   }, [amenitiesForm.values]);
+  useDidUpdate(() => {
+    setValue(rooms);
+    const lastFeatureIndex = featuresForm.values.features.length - 1;
+
+    // If it's just a new room being added, or a feature being removed, return.
+    if (value.length !== rooms.length) return;
+    if (value.some((item, index) => item > rooms[index])) return;
+
+    // Find which value changed by comparing each item with old state and creating an array of booleans
+    const sameValue = rooms.map((roomItem, index) => roomItem === value[index]);
+
+    // If only the value of the last item has changed, there's no need to do anything.
+    if (!sameValue[sameValue.length - 1] && sameValue[sameValue.length - 2]) return;
+
+    // Find out which index to sort the new list item to. Look for last truthy boolean, return the index above this one.
+    // If they're all false, i.e the first room added a feature, it'll return 0 rather than -1.
+    const changeOrigin = sameValue.lastIndexOf(true) + 1;
+    featuresForm.reorderListItem('features', {
+      from: lastFeatureIndex,
+      to: rooms[changeOrigin] - 1,
+    });
+  }, [rooms]);
   useDidUpdate(() => {
     const newImageFields = rooms.map((_item, index) => (
       <InputWrapper
@@ -265,7 +191,15 @@ export function CreateAccom() {
       <form
         name="create-accommodation"
         className={classes.form}
-        onSubmit={(e) => handleSubmit(e, { fullForm: form, images: imagesForm })}
+        onSubmit={(e) =>
+          handleSubmit(e, {
+            forms: { fullForm: form, images: imagesForm },
+            setSuccess,
+            setLoading,
+            session,
+            method: data ? 'PUT' : 'POST',
+          })
+        }
       >
         <ActionIcon
           aria-label="Close"
@@ -378,7 +312,12 @@ export function CreateAccom() {
               primary
               type="submit"
               mt={64}
-              sx={{ display: success.accepted ? 'none' : 'block' }}
+              mx="auto"
+              sx={{
+                display: success.accepted ? 'none' : 'block',
+                width: '100%',
+                maxWidth: '160px',
+              }}
             >
               Submit
             </PrimaryButton>

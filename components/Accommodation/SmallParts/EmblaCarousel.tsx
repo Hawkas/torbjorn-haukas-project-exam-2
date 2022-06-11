@@ -146,8 +146,8 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
     embla.on('select', onSelect);
   }, [embla, setScrollSnaps, onSelect]);
 
-  const carouselArray = roomImages.map((item) => (
-    <Box key={item.id} className={classes.emblaSlide}>
+  const carouselArray = roomImages.map((item, index) => (
+    <Box key={index} className={classes.emblaSlide}>
       <Image
         imageProps={{ height: item.image.large.height, width: item.image.large.width }}
         alt={item.image.alt}
@@ -162,9 +162,9 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
           <Box className={classes.emblaContainer}>
             <Box className={classes.emblaSlide}>
               <Image
-                imageProps={{ height: cover.large.height, width: cover.large.width }}
+                imageProps={{ height: cover.large!.height, width: cover.large!.width }}
                 alt={cover.alt}
-                src={cover.large.src}
+                src={cover.large!.src}
               />
             </Box>
             {carouselArray}
@@ -192,7 +192,7 @@ export function EmblaCarousel({ cover, roomImages }: CarouselProps) {
       <Box className={classes.emblaDots}>
         {scrollSnaps.map((_, index) => (
           <button
-          type="button"
+            type="button"
             aria-label={`Jump to image ${index}`}
             key={index}
             className={cx(classes.emblaDot, { 'is-selected': index === selectedIndex })}

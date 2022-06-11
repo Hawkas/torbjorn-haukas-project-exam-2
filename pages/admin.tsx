@@ -4,7 +4,7 @@ import { getBooking } from '@helpers/handleBookings';
 import { createStyles, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { AdminProps } from 'types/commonProps';
 import { AccommodationAdmin } from '../components/Admin/AccommodationAdmin';
@@ -72,6 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function AdminDashboard({ data, bookings }: AdminProps) {
   const title = 'Admin dashboard | Holidaze';
+  // Session is ALWAYS non-null inside this page, all the way down the react-tree.
+  const { data: session } = useSession();
   const { classes, cx } = useStyles();
   const { classes: containerClass } = useContainerStyles();
   return (
@@ -104,7 +106,7 @@ export default function AdminDashboard({ data, bookings }: AdminProps) {
           className={classes.tabs}
         >
           <Tabs.Tab label="Accommodations">
-            <AccommodationAdmin data={data} />
+            <AccommodationAdmin data={data} session={session!} />
           </Tabs.Tab>
           <Tabs.Tab label="Bookings"></Tabs.Tab>
           <Tabs.Tab label="Messages"></Tabs.Tab>

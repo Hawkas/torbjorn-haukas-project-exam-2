@@ -6,3 +6,7 @@ export interface AdminProps {
 export interface DataProps {
   data: AccommodationClean[] | null;
 }
+
+export interface EditAccom {
+  data?: AccommodationClean;
+}

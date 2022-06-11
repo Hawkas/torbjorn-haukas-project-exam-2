@@ -6,8 +6,8 @@ import ImageLink from './ImageLink';
 
 const useStyles = createStyles(() => ({
   // Even though I've removed underlines from <a> elements by default, webkit overrides it?
-  screwWebkit: {
-    '& a': {
+  whyIsThisDefault: {
+    '& a:hover': {
       textDecoration: 'none',
     },
   },
@@ -17,7 +17,7 @@ export function ImageLinks() {
   const { classes } = useStyles();
   return (
     <SimpleGrid
-      className={classes.screwWebkit}
+      className={classes.whyIsThisDefault}
       cols={3}
       spacing="xl"
       breakpoints={[{ maxWidth: 808, cols: 1 }]}

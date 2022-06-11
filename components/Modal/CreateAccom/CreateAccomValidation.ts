@@ -33,7 +33,16 @@ export const roomsObject = z.object({
   roomName: z.string().min(3, { message: 'Must include room name with at least 3 letters' }),
   features: featuresSchema.optional(),
 });
-export const roomsSchema = z.array(roomsObject);
+export const roomsSchema = z.array(roomsObject).refine(
+  (rooms) =>
+    rooms.every((room, index, array) =>
+      array.every((item, innerIndex) => {
+        if (innerIndex === index) return true;
+        return item.roomName.trim() !== room.roomName.trim();
+      })
+    ),
+  { message: "Room names can't be identical to eachother" }
+);
 export const imagesSchema = z.object({
   // id will only be included when updating
   id: z.number().optional(),
@@ -46,10 +55,7 @@ export const imagesSchema = z.object({
     })
   ),
 });
-export const noImagesSchema = z.object({
-  id: z.number().optional(),
-  rooms: z.array(z.object({ id: z.number().optional(), roomName: z.string() })),
-});
+
 export const amenitySchemaRaw = z.object({
   wifi: z.boolean(),
   airCondition: z.boolean(),
@@ -87,14 +93,13 @@ export const createEntrySchema = z.object({
     .min(30, { message: 'Must be at least 30 characters' })
     .max(600, { message: 'Must be less than 600 characters' }),
   contactInfo: contactInfoSchema,
-  images: noImagesSchema,
   amenities: amenitySchema,
   rooms: roomsSchema,
 });
 // Extracting types from schemas
 type EntrySchemaPure = z.infer<typeof createEntrySchema>;
 type RoomsObjectPure = z.infer<typeof roomsObject>;
-type NoImagesSchemaPure = z.infer<typeof noImagesSchema>;
+
 export type ImagesSchemaPure = z.infer<typeof imagesSchema>;
 export type AmenitySchema = z.infer<typeof amenitySchemaRaw>;
 
@@ -105,17 +110,13 @@ export type ImagesSchema = Omit<ImagesSchemaPure, 'rooms'> & {
     | FormList<{ image?: any; roomName: string; id?: number }>
     | { image?: any; roomName: string; id?: number }[];
 };
-// Appending images to FormData seperately, only keeping primitive data types in this object.
-export type NoImagesSchema = NoImagesSchemaPure & {
-  rooms: FormList<{ roomName: string; id?: number }> | { roomName: string; id?: number }[];
-};
+
 export type FeaturesSchema =
-  | FormList<{ feature: string; id?: number }>
-  | { feature: string; id?: number }[];
+  | FormList<{ feature: string; id?: number; key?: string }>
+  | { feature: string; id?: number; key?: string }[];
 export type FeaturesSchemaWrap = { features: FeaturesSchema };
 export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema };
 
 export type EntrySchema = EntrySchemaPure & {
   rooms: FormList<RoomsObject> | RoomsObject[];
-  images: NoImagesSchema;
 };

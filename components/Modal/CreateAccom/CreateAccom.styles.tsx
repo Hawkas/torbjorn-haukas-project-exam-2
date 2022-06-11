@@ -1,4 +1,9 @@
-import { createStyles } from '@mantine/core';
+import { createStyles, keyframes } from '@mantine/core';
+
+const fadeIn = keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+});
 
 export const useCreateAccomStyles = createStyles((theme) => {
   const paddingBreak = theme.fn.largerThan('xs');
@@ -71,7 +76,6 @@ export const useCreateAccomStyles = createStyles((theme) => {
       fontSize: theme.other.fontSizes.md,
       paddingTop: theme.other.smallSpacing.xxl,
     },
-
     label: {
       position: 'absolute',
       pointerEvents: 'none',
@@ -87,6 +91,13 @@ export const useCreateAccomStyles = createStyles((theme) => {
     },
     imageLabel: {
       fontSize: theme.other.fontSizes.xxl,
+    },
+    featureWrap: {
+      animation: `${fadeIn} 0.5s ease 1 alternate backwards`,
+      '&:focus, &:focus-within': {
+        // animation: `${fadeIn} 0.5s ease 1 alternate-reverse forwards`,
+        // opacity: '1 !important',
+      },
     },
   };
 });

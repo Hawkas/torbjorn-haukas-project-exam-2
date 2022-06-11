@@ -3,7 +3,7 @@ import { useContainerStyles } from '@styles/containerStyles';
 import { useTextStyles } from '@styles/typography';
 import { useEffect, useState } from 'react';
 import { AccommodationClean } from 'types/accommodationClean';
-import { toEnglish, pluralCheck } from '@helpers/stringConversions';
+import { toEnglish, pluralCheck, slugify } from '@helpers/stringConversions';
 import { useMediaQuery } from '@mantine/hooks';
 
 export const useRoomStyles = createStyles((theme) => ({
@@ -65,9 +65,10 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
   // Map out the room card components from array(TODO: clean this)
   const roomCard = rooms.map((room, index) => {
     const capitalize = true;
+    const imageObj = roomImages.find((item) => item.image.name === slugify(room.roomName));
     const {
-      image: { medium: image, alt },
-    } = roomImages[index];
+      image: { alt, medium: image },
+    } = imageObj! || roomImages[index];
     const extraListItems =
       room.features.length < 1
         ? null
@@ -141,4 +142,3 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
     </Box>
   );
 }
-
