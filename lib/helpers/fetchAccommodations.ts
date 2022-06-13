@@ -4,7 +4,7 @@ import { axiosFetch } from './axiosFetch';
 
 const qs = require('qs');
 
-const productsQuery = qs.stringify(
+export const productsQuery = qs.stringify(
   {
     populate: [
       'amenities',
@@ -43,7 +43,8 @@ export const rawAccommodations = async () => {
 //******* So I had to sort the images by naming the images the same as the room.
 // Boilerplate warning.
 
-export function removeFluff(rawData: Accommodations): AccommodationClean[] {
+export function removeFluff(rawData: Accommodations): AccommodationClean[] | null {
+  if (!rawData.data) return null;
   const mappedData = rawData.data.map((item) => {
     // Unpackage all the stuff that's already easy to reach.
     const {

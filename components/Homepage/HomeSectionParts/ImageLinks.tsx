@@ -2,7 +2,7 @@ import { Anchor, createStyles, SimpleGrid } from '@mantine/core';
 import { bnb, guesthouse, hotel } from 'lib/images';
 import Link from 'next/link';
 import React from 'react';
-import ImageLink from './ImageLink';
+import ImageLink from '../../DefaultTemplates/ImageLink';
 
 const useStyles = createStyles(() => ({
   // Even though I've removed underlines from <a> elements by default, webkit overrides it?

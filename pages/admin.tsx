@@ -1,12 +1,17 @@
 import { TitleSection } from '@components/DefaultTemplates/TitleSection';
-import { fetchAccommodations } from '@helpers/fetchAccommodations';
+import { fetchAccommodations, productsQuery, removeFluff } from '@helpers/fetchAccommodations';
 import { getBooking } from '@helpers/handleBookings';
-import { createStyles, Tabs } from '@mantine/core';
+import { createStyles, LoadingOverlay, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
+import axios from 'axios';
 import type { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
-import { AdminProps } from 'types/commonProps';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import type { AccommodationClean } from 'types/accommodationClean';
+import { Accommodations } from 'types/accommodationRaw';
+import type { AdminProps } from 'types/commonProps';
 import { AccommodationAdmin } from '../components/Admin/AccommodationAdmin';
 
 const useStyles = createStyles((theme, _params, getRef) => ({
@@ -64,7 +69,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const data = await fetchAccommodations();
   const bookings = await getBooking();
   return { props: { data, bookings } };
@@ -74,6 +79,10 @@ export default function AdminDashboard({ data, bookings }: AdminProps) {
   const title = 'Admin dashboard | Holidaze';
   // Session is ALWAYS non-null inside this page, all the way down the react-tree.
   const { data: session } = useSession();
+  const router = useRouter();
+  const pageRefresh = () => {
+    router.replace(router.asPath);
+  };
   const { classes, cx } = useStyles();
   const { classes: containerClass } = useContainerStyles();
   return (
@@ -106,7 +115,7 @@ export default function AdminDashboard({ data, bookings }: AdminProps) {
           className={classes.tabs}
         >
           <Tabs.Tab label="Accommodations">
-            <AccommodationAdmin data={data} session={session!} />
+            <AccommodationAdmin data={data} session={session!} refreshPage={pageRefresh} />
           </Tabs.Tab>
           <Tabs.Tab label="Bookings"></Tabs.Tab>
           <Tabs.Tab label="Messages"></Tabs.Tab>

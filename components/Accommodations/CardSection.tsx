@@ -2,7 +2,7 @@ import { filterArray } from '@helpers/filterArray';
 import { Box, createStyles, Grid, Transition, useMantineTheme } from '@mantine/core';
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { useContainerStyles } from '@styles/containerStyles';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { DataProps } from 'types/commonProps';
 import { useEffect, useState } from 'react';
 import { CardGrid } from './SmallParts/CardGrid';
@@ -31,21 +31,21 @@ export function CardSection({
   data,
   admin,
   session,
-}: DataProps & { admin?: boolean; session?: Session }) {
+  refreshPage,
+}: DataProps & { admin?: boolean; session?: Session; refreshPage?: () => void }) {
   const router = useRouter();
   const { classes } = useStyles();
   const {
     classes: { container },
   } = useContainerStyles();
   const theme = useMantineTheme();
-
   // Media query hooks to control Mantine prop values
   const gutterBp = useMediaQuery('(min-width: 1200px)');
   const wrapBp = useMediaQuery('(min-width: 680px)');
 
   const [transitionStage, setTransitionStage] = useState(false);
   const [dataArray, setDataArray] = useState(data);
-  const content = CardGrid(dataArray, wrapBp, classes, admin, session);
+  const content = CardGrid(dataArray, wrapBp, classes, admin, session, refreshPage);
 
   // This will run only once when the component mounts. Sort the data using query parameters if any,
   // and reveal it by changing transition stage.
@@ -73,7 +73,7 @@ export function CardSection({
       // Then reveal it
       setTransitionStage(true);
     }, duration);
-  }, [router.query]);
+  }, [router.query, data]);
   return (
     <Box className={container}>
       <Box

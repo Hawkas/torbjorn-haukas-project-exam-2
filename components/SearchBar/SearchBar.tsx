@@ -89,7 +89,7 @@ export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) 
   const [loading, setLoading] = useState(false);
   const autoComplete = data
     ? data.map((item) => ({
-        image: item.images.cover.thumbnail.src,
+        image: item.images.cover.thumbnail!.src,
         value: item.name,
         location: item.location,
         type: item.type,

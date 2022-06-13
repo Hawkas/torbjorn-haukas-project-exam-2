@@ -7,6 +7,8 @@ import { Box, createStyles } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useContainerStyles } from '@styles/containerStyles';
 import { Session } from 'next-auth';
+import { NextRouter } from 'next/router';
+import { useEffect } from 'react';
 import type { AdminProps } from 'types/commonProps';
 import { CreateAccom } from '../Modal/CreateAccom/CreateAccom';
 
@@ -20,14 +22,15 @@ const useAdminAccomStyles = createStyles((theme) => ({
 export function AccommodationAdmin({
   data,
   session,
-}: Pick<AdminProps, 'data'> & { session: Session }) {
+  refreshPage,
+}: Pick<AdminProps, 'data'> & { session: Session; refreshPage: () => void }) {
   const { classes } = useAdminAccomStyles();
   const { classes: containerClass } = useContainerStyles();
   const modals = useModals();
   const openCreateModal = () => {
     const id = modals.openModal({
       closeOnClickOutside: false,
-      children: <CreateAccom session={session} />,
+      children: <CreateAccom session={session} refreshPage={refreshPage} />,
     });
   };
   return (
@@ -43,7 +46,7 @@ export function AccommodationAdmin({
           Add new establishment
         </PrimaryButton>
       </Box>
-      <CardSection data={data} admin session={session} />
+      <CardSection data={data} admin session={session} refreshPage={refreshPage} />
     </>
   );
 }

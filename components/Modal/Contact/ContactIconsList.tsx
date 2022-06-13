@@ -78,7 +78,8 @@ const contactData = [
 //? Make data from API fit to the the defined object structure
 const mapContact = ({ ...contactInfo }: ContactClean) => {
   if (!contactInfo) return null;
-  const contactIcons: ContactIconProps[] = Object.keys(contactInfo).map((key) => ({
+  const { id, ...rest } = contactInfo;
+  const contactIcons: ContactIconProps[] = Object.keys(rest).map((key) => ({
     title: capsFirstLetter(key),
     description: contactInfo[key],
     icon: key === 'address' ? faLocationDot : key === 'email' ? faAt : faPhone,

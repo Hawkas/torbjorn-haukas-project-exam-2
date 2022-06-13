@@ -5,6 +5,7 @@ import { Group } from '@mantine/core';
 import { useCreateAccomStyles } from '../CreateAccom.styles';
 import { roomFields } from '../CreateAccomListFields';
 import { ImageLists, RoomFields } from '../../../../types/createAccom';
+import { randomId } from '@mantine/hooks';
 
 export function StepTwo({
   form,
@@ -28,7 +29,8 @@ export function StepTwo({
             // Apply the last room's feature count as the base value for next room
             let totalFeatures = rooms[rooms.length - 1];
             setPreviewImages.append('');
-            imagesForm.addListItem('rooms', { roomName: '', image: '' });
+            imagesForm.addListItem('rooms', { roomName: '', image: undefined, key: randomId() });
+            console.log(imagesForm.values.rooms);
             setRooms.append(totalFeatures);
             form.addListItem('rooms', {
               roomName: '',
@@ -37,6 +39,7 @@ export function StepTwo({
               doubleBeds: 0,
               bathrooms: 0,
               features: [],
+              key: randomId(),
             });
           }}
         >

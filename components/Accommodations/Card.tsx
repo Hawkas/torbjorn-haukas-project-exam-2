@@ -1,7 +1,6 @@
+import ImageLink from '@components/DefaultTemplates/ImageLink';
 import { CreateAccom } from '@components/Modal/CreateAccom/CreateAccom';
 import { faBed, faLocationDot, faToilet } from '@fortawesome/pro-solid-svg-icons';
-import { axiosFetch } from '@helpers/axiosFetch';
-import ImageLink, { ImageProps } from '@Homepage/HomeSectionParts/ImageLink';
 import {
   Anchor,
   Box,
@@ -14,10 +13,10 @@ import {
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
+import axios from 'axios';
 import { Session } from 'next-auth';
 import Link from 'next/link';
-import { AccommodationClean, CleanImages, Cover } from 'types/accommodationClean';
-import { AttributesRoom } from 'types/accommodationRaw';
+import { AccommodationClean, Cover } from 'types/accommodationClean';
 import { CardActionFab } from './SmallParts/CardActionFab';
 import { IconText } from './SmallParts/IconText';
 import { TypePrice } from './SmallParts/TypePrice';
@@ -101,14 +100,16 @@ const useStyles = createStyles(() => ({
     right: 16,
   },
 }));
-export function AdminCard(props: AccommodationClean & { session: Session }) {
-  const { session, ...cardProps } = props;
+export function AdminCard(
+  props: AccommodationClean & { session: Session; refreshPage: () => void }
+) {
+  const { session, refreshPage, ...cardProps } = props;
   const modals = useModals();
   const { classes } = useStyles();
   const openEditModal = () => {
     const id = modals.openModal({
       closeOnClickOutside: false,
-      children: <CreateAccom session={session} data={cardProps} />,
+      children: <CreateAccom session={session} data={cardProps} refreshPage={refreshPage} />,
     });
   };
   const openDeleteModal = () =>
@@ -120,14 +121,14 @@ export function AdminCard(props: AccommodationClean & { session: Session }) {
       size: 'sm',
       padding: 'md',
       onConfirm: async () => {
-        const response = await axiosFetch({
+        const response = await axios.request({
           method: 'DELETE',
-          url: `/accommodations/${cardProps.id}`,
+          url: `${process.env.NEXT_PUBLIC_LIVE_API}/accommodations/${cardProps.id}`,
           headers: {
             Authorization: `Bearer ${session!.jwt}`,
           },
         });
-        if (response.data)
+        if (response.status < 300)
           showNotification({
             title: 'Delete successful',
             message: `${cardProps.name} is gone forever.`,
@@ -135,6 +136,7 @@ export function AdminCard(props: AccommodationClean & { session: Session }) {
             color: 'green',
             id: 'delete-message',
           });
+        refreshPage();
       },
     });
   return (

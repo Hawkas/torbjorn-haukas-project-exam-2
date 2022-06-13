@@ -135,10 +135,14 @@ export function roomFields({
           classNames={classes}
           placeholder="Enter room name"
           {...form.getListInputProps('rooms', index, 'roomName')}
-          error={form.errors.rooms || undefined}
+          error={form.errors.rooms || form.errors[`rooms.${index}.roomName`]}
           onChange={(event) => {
             form.setListItem('rooms', index, {
               ...form.values.rooms[index],
+              roomName: event.currentTarget.value,
+            });
+            imagesForm.setListItem('rooms', index, {
+              ...imagesForm.values.rooms[index],
               roomName: event.currentTarget.value,
             });
 
@@ -158,6 +162,12 @@ export function roomFields({
               classNames={classes}
               label={numberItem.label}
               {...form.getListInputProps('rooms', index, numberItem.field)}
+              error={
+                numberItem.field === 'doubleBeds' || numberItem.field === 'singleBeds'
+                  ? form.errors[`rooms.${index}`] ||
+                    form.errors[`rooms.${index}.${numberItem.field}`]
+                  : form.errors[`rooms.${index}.${numberItem.field}`]
+              }
               onChange={(value) => {
                 form.setListItem('rooms', index, {
                   ...form.values.rooms[index],
@@ -165,6 +175,8 @@ export function roomFields({
                 });
                 //@ts-ignore
                 form.clearFieldError(`rooms.${index}.${numberItem.field}`);
+                //@ts-ignore
+                form.clearFieldError(`rooms.${index}`);
               }}
             />
           ))}

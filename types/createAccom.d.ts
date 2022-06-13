@@ -2,6 +2,7 @@ import { TextInputStylesNames } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form/lib/use-form';
 import { UseListStateHandler } from '@mantine/hooks/lib/use-list-state/use-list-state';
 import { Session } from 'next-auth';
+import { NextRouter } from 'next/router';
 import {
   AmenitySchema,
   ContactInfoSchema,
@@ -9,6 +10,7 @@ import {
   FeaturesSchema,
   ImagesSchema,
 } from '../components/Modal/CreateAccom/CreateAccomValidation';
+import { AccommodationClean } from './accommodationClean';
 
 export type EntryFormClassType = Record<
   'root' | 'input' | 'label' | 'numberInput' | 'featureWrap',
@@ -50,4 +52,5 @@ export interface HandleSubmit {
   setSuccess: SetSuccessState;
   session: Session | null;
   method: 'POST' | 'PUT';
+  data?: AccommodationClean;
 }

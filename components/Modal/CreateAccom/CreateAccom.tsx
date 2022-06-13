@@ -18,7 +18,6 @@ import {
 import { useDidUpdate, useListState, useValidatedState } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { AccommodationClean } from 'types/accommodationClean';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import {
   handleSubmit,
@@ -34,10 +33,16 @@ import { StepTwo } from './Steps/StepTwo';
 import type { Session } from 'next-auth';
 import { slugify } from '@helpers/stringConversions';
 
-export function CreateAccom({ data, session }: { session: Session; data?: AccommodationClean }) {
+export function CreateAccom({
+  data,
+  session,
+  refreshPage,
+}: {
+  session: Session;
+  data?: AccommodationClean;
+  refreshPage: () => void;
+}) {
   const { classes } = useCreateAccomStyles();
-  console.log(data);
-  console.log(slugify("Granddaughter's bedroom"));
   const modals = useModals();
   const [active, setActive] = useState(0);
   const [stepOne, setStepOne] = useState(false);
@@ -58,12 +63,16 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
   const { form, contactInfoForm, amenitiesForm, imagesForm, featuresForm } = useAllForms(
     data ? { data } : {}
   );
-  console.log(featuresForm.values);
+  const featureCountSimple = data ? data.rooms.map((roomItem) => roomItem.features.length) : [];
   const featureCount = data
-    ? data.rooms.map((roomItem, index, roomArray) =>
+    ? featureCountSimple.map((count, index, roomArray) =>
         index === 0
-          ? roomItem.features.length
-          : roomItem.features.length + roomArray[index - 1].features.length
+          ? count
+          : count +
+            roomArray.reduce((total, value, reduceIndex) => {
+              if (reduceIndex >= index) return total;
+              return total + value;
+            })
       )
     : [0];
   // Index each room added to the entry, with a number that represents 'feature' count
@@ -76,7 +85,7 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
         data.images.cover.medium!.src,
         ...data.rooms.map((roomItem) => {
           const imageObj = data.images.rooms.find(
-            (roomImage) => slugify(roomItem.roomName) === roomImage.image.name
+            (roomImage) => slugify(roomItem.roomName) === roomImage.image.name.split('.')[0]
           );
           return imageObj ? imageObj.image.medium.src : '';
         }),
@@ -154,10 +163,10 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
     });
   }, [rooms]);
   useDidUpdate(() => {
-    const newImageFields = rooms.map((_item, index) => (
+    const newImageFields = imagesForm.values.rooms.map((item, index) => (
       <InputWrapper
-        key={index}
-        label={form.values.rooms[index] ? form.values.rooms[index].roomName : `Room ${index}`}
+        key={item.key}
+        label={imagesForm.values.rooms[index].roomName}
         classNames={{ label: classes.imageLabel }}
         mt="xl"
         {...imagesForm.getListInputProps('rooms', index, 'image')}
@@ -170,6 +179,7 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
             imagesForm.setListItem('rooms', index, {
               roomName: form.values.rooms[index].roomName,
               image: files[0],
+              key: item.key,
             });
             //@ts-ignore
             imagesForm.clearFieldError(`rooms.${index}.image`);
@@ -184,7 +194,7 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
         URL.revokeObjectURL(item);
         return '';
       });
-  }, [rooms, previewImages]);
+  }, [rooms, previewImages, active, imagesForm.values.rooms.length]);
   return (
     <Box sx={{ position: 'relative' }} className={classes.formWrapper}>
       <LoadingOverlay visible={loading} />
@@ -198,13 +208,21 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
             setLoading,
             session,
             method: data ? 'PUT' : 'POST',
+            data,
           })
         }
       >
         <ActionIcon
           aria-label="Close"
           sx={{ position: 'absolute', top: 10, right: 10, zIndex: 9999 }}
-          onClick={() => modals.closeModal('create')}
+          onClick={
+            success.accepted
+              ? () => {
+                  modals.closeModal('create');
+                  refreshPage();
+                }
+              : () => modals.closeModal('create')
+          }
         >
           <FontAwesomeIcon icon={faClose} />
         </ActionIcon>
@@ -327,7 +345,14 @@ export function CreateAccom({ data, session }: { session: Session; data?: Accomm
           <PrimaryButton
             disabled={active === 0}
             variant="default"
-            onClick={success.accepted ? () => modals.closeModal('create') : prevStep}
+            onClick={
+              success.accepted
+                ? () => {
+                    modals.closeModal('create');
+                    refreshPage();
+                  }
+                : prevStep
+            }
           >
             {success.accepted ? 'Close' : 'Back'}
           </PrimaryButton>

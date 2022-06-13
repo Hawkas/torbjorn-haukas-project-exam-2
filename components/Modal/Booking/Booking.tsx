@@ -65,7 +65,7 @@ export function Booking({ rooms, id, contactInfo }: AccommodationClean) {
       phoneNumber: '',
       additionalDetails: '',
       room: '',
-      accommodation: id,
+      accommodation: id as number,
     },
   });
   const [success, setSuccess] = useState('waiting');

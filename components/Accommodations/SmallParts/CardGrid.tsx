@@ -8,7 +8,8 @@ export const CardGrid = (
   wrapBp: boolean,
   classes: { cardColumn: string },
   admin?: boolean,
-  session?: Session
+  session?: Session,
+  refreshPage?: () => void
 ) => {
   if (!array || array.length === 0) {
     return [
@@ -24,6 +25,7 @@ export const CardGrid = (
       {admin ? (
         <AdminCard
           session={session!}
+          refreshPage={refreshPage!}
           {...{ price: item.minPrice, image: item.images.cover, ...item }}
         />
       ) : (

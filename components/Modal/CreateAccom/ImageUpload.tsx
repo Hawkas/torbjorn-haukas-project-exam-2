@@ -68,7 +68,7 @@ export const dropzoneChildren = (
   preview?: string
 ) => (
   <Group position="center" spacing="xl" style={{ minHeight: 220, pointerEvents: 'none' }}>
-    {preview ? (
+    {preview && imageStatus ? (
       <Image
         height="288px"
         width="auto"

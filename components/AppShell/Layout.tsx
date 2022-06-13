@@ -1,8 +1,10 @@
 import { AppShell, createStyles, Footer, Header } from '@mantine/core';
+import { useDidUpdate } from '@mantine/hooks';
 import useFilledState from 'lib/hooks/useFilledState';
 import { settings } from 'lib/settings';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { AccommodationClean } from 'types/accommodationClean';
 import { FooterContent } from './Footer/FooterContent';
 import { HeaderDropdown, HeaderTop } from './Header';
 
@@ -54,14 +56,13 @@ type Props = Omit<React.ComponentPropsWithRef<'div'>, 'title'> & {
   children?: React.ReactNode;
 };
 
-export default function Layout({ children, ...others }: Props) {
+export default function Layout({ children, ...others }: Props & { data: AccommodationClean[] }) {
   const { classes, cx } = useStyles();
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const filledState = useFilledState();
-
   // Page transition effect
-  const [displayChildren, setDisplayChildren] = useState(children);
+  const [displayChildren, setDisplayChildren] = useState<React.ReactNode>(children);
   const [transitionStage, setTransitionStage] = useState(false);
 
   // Inputs changing on the location chips seem to re-render the whole page and I have no idea why.
@@ -72,6 +73,15 @@ export default function Layout({ children, ...others }: Props) {
     setTransitionStage(true);
   }, []);
 
+  // Big whoops. I noticed how pages weren't being regenerated with updated props with SSR.
+  // This is to force an update in case the 'data' prop changes on my one and only SSR page.
+  // In the future I wouldn't make the layout handle its children in any way. Lesson learned.
+  useDidUpdate(() => {
+    if (router.pathname === '/admin' && routerPath === router.pathname) {
+      setTransitionStage(false);
+      setDisplayChildren(children);
+    }
+  }, [others.data]);
   // Make the page content fade out
   useEffect(() => {
     if (routerPath === router.pathname) return;

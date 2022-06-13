@@ -17,6 +17,7 @@ export const featuresSchema = z.array(
     feature: z.string().trim().min(5, { message: 'Must be at least 5 characters long' }),
   })
 );
+
 export const featuresSchemaWrap = z.object({ features: featuresSchema }).optional();
 export const roomsObject = z.object({
   id: z.number().optional(),
@@ -33,7 +34,10 @@ export const roomsObject = z.object({
   roomName: z.string().min(3, { message: 'Must include room name with at least 3 letters' }),
   features: featuresSchema.optional(),
 });
-export const roomsSchema = z.array(roomsObject).refine(
+const roomWithBeds = roomsObject.refine((val) => Number(val.singleBeds) || Number(val.doubleBeds), {
+  message: 'You need at least one bed',
+});
+export const roomsSchema = z.array(roomWithBeds).refine(
   (rooms) =>
     rooms.every((room, index, array) =>
       array.every((item, innerIndex) => {
@@ -107,15 +111,15 @@ export type ContactInfoSchema = z.infer<typeof contactInfoSchema>;
 // Adding Mantine's FormList type for compatibility
 export type ImagesSchema = Omit<ImagesSchemaPure, 'rooms'> & {
   rooms:
-    | FormList<{ image?: any; roomName: string; id?: number }>
-    | { image?: any; roomName: string; id?: number }[];
+    | FormList<{ image?: any; roomName: string; id?: number; key?: string }>
+    | { image?: any; roomName: string; id?: number; key?: string }[];
 };
 
 export type FeaturesSchema =
   | FormList<{ feature: string; id?: number; key?: string }>
   | { feature: string; id?: number; key?: string }[];
 export type FeaturesSchemaWrap = { features: FeaturesSchema };
-export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema };
+export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema; key?: string };
 
 export type EntrySchema = EntrySchemaPure & {
   rooms: FormList<RoomsObject> | RoomsObject[];

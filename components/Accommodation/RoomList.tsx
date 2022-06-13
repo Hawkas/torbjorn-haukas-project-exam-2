@@ -65,7 +65,9 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
   // Map out the room card components from array(TODO: clean this)
   const roomCard = rooms.map((room, index) => {
     const capitalize = true;
-    const imageObj = roomImages.find((item) => item.image.name === slugify(room.roomName));
+    const imageObj = roomImages.find(
+      (item) => item.image.name.split('.')[0] === slugify(room.roomName)
+    );
     const {
       image: { alt, medium: image },
     } = imageObj! || roomImages[index];

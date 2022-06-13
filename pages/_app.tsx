@@ -9,6 +9,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
 
 config.autoAddCss = false;
@@ -58,6 +59,7 @@ export default function MyApp(props: AppPropsWithAuth) {
     Component,
     pageProps: { session, ...pageProps },
   } = props;
+
   return (
     <SessionProvider session={session}>
       <Head>
@@ -70,7 +72,7 @@ export default function MyApp(props: AppPropsWithAuth) {
           modalProps={formModalSettings}
         >
           <NotificationsProvider>
-            <Layout>
+            <Layout {...pageProps}>
               {Component.auth ? (
                 <Auth>
                   <Component {...pageProps} />

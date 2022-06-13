@@ -1,4 +1,5 @@
 import { randomId } from '@mantine/hooks';
+import axios from 'axios';
 import { AccommodationClean } from 'types/accommodationClean';
 
 import type {
@@ -8,8 +9,10 @@ import type {
   EntryForm,
   HandleSubmit,
 } from '../../types/createAccom';
-import { axiosFetch } from './axiosFetch';
+
 import { slugify } from './stringConversions';
+
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_LIVE_API;
 
 export function addNewFeature({
   rooms,
@@ -86,25 +89,24 @@ export function validateSecond({
     validateArray.push(typeof form.validate().errors[`rooms.${index}.singleBeds`] === 'string');
     validateArray.push(typeof form.validate().errors[`rooms.${index}.doubleBeds`] === 'string');
     validateArray.push(typeof form.validate().errors[`rooms.${index}.bathrooms`] === 'string');
+    // Ensure there is at least one bed
+    validateArray.push(typeof form.validate().errors[`rooms.${index}`] === 'string');
 
     const currentRoom = form.values.rooms[index];
-
     // If the starting index is the same as last room's, i.e the room is not supposed to have any features
     // Clean it up in case it does, and return.
-    if (roomFeatureCount === lastRoomFeatureCount) {
+    if (roomFeatureCount - lastRoomFeatureCount === 0) {
       currentRoom.features = [];
       form.setListItem('rooms', index, { ...currentRoom });
+      return;
     }
-    // If it's the very first room, or the previous rooms didn't have any features
-    // Make lastRoom and room be the same value, so the index starts at 0
-    if ((lastRoomFeatureCount === 0 && index === 0) || (lastRoomFeatureCount === 0 && index > 0))
-      lastRoomFeatureCount = roomFeatureCount;
+
     featuresArray = [];
     //* This loop iterates only the features that belong to each room specifically.
     // roomFeatureCount is always greater than the value of the last room's if it gets to here
-    // And the starting index is then found by subtracting the previous rooms feature count.
-    // The feature count is the amount of features; think array length. The actual index should be 1 less of course.
-    for (let i = roomFeatureCount - lastRoomFeatureCount; i < roomFeatureCount; i += 1) {
+    // The starting index is where the last one left off.
+    // The feature count is the amount of features, i.e array length. The actual index is of course 1 less.
+    for (let i = lastRoomFeatureCount; i < roomFeatureCount; i += 1) {
       // Push and validate any features that are not left blank.
       if (featuresForm.values.features[i] && featuresForm.values.features[i].feature) {
         featuresArray.push(featuresForm.values.features[i]);
@@ -125,13 +127,25 @@ export function validateSecond({
 }
 
 export function validateThird({ imagesForm, data }: ImagesFields & { data?: AccommodationClean }) {
-  if (data) return false;
   let hasErrors = false;
+  if (
+    data &&
+    imagesForm.values.rooms.every(
+      (obj) => typeof obj.image === 'boolean' || obj.image instanceof File
+    )
+  ) {
+    return false;
+  } else if (data) {
+    imagesForm.values.rooms.forEach((obj, index) => {
+      if (typeof obj.image !== 'boolean') imagesForm.validateField(`rooms.${index}.image`);
+    });
+    return true;
+  }
+
   const validateArray = [imagesForm.validate().hasErrors];
   imagesForm.values.rooms.forEach((_item, index) =>
     validateArray.push(typeof imagesForm.validate().errors[`rooms.${index}.image`] === 'string')
   );
-  console.log(imagesForm.values);
   validateArray.forEach((validationError) => {
     hasErrors = validationError ? true : hasErrors;
   });
@@ -170,7 +184,7 @@ export function turnIntoCardData({
 
 export const handleSubmit = async (
   e: React.FormEvent,
-  { forms, setLoading, setSuccess, session, method }: HandleSubmit
+  { forms, setLoading, setSuccess, session, method, data }: HandleSubmit
 ) => {
   e.preventDefault();
   setLoading(true);
@@ -179,50 +193,94 @@ export const handleSubmit = async (
   if (method === 'PUT') {
     formData.append('refId', `${fullForm.values.id}`);
     formData.append('ref', 'api::accommodation.accommodation');
+    formData.append('field', 'imagesRooms');
   }
   const files = [];
-
-  if (images.values.cover instanceof File)
+  const fileExtensions: { cover: string; rooms: string[] } = {
+    cover: '',
+    rooms: [],
+  };
+  // If there is an imagefile for the 'cover' field. If not an edit, there always will be.
+  if (images.values.cover instanceof File) {
+    fileExtensions.cover = images.values.cover.name.split('.')[1];
     files.push({
       name: 'cover',
       file: images.values.cover as File,
-      fileName: `${slugify(fullForm.values.name)}-cover`,
+      fileName: `${slugify(fullForm.values.name)}-cover.${fileExtensions.cover}`,
     });
-  formData.append('field', 'cover');
-  if (images.values.rooms.some((img) => img.image instanceof File))
-    images.values.rooms.forEach((item, index) => {
-      if (!(item.image instanceof File)) return;
+    // if this is an edit, append the old image's name (which I have designed to always follow a set pattern)
+    // This is so I can delete it using my code extension on Strapi's core controller.
+    if (data && method === 'PUT') formData.append('replaceCover', `${slugify(data.name)}-cover`);
+  } else if (data && data.name !== fullForm.values.name) {
+    formData.append('renameCover', `${slugify(fullForm.values.name)}-cover`);
+  }
+
+  const imagesToRename: { from: string; to: string }[] = [];
+  const imagesToReplace: string[] = [];
+  images.values.rooms.forEach((item, index) => {
+    if (item.image instanceof File) {
+      fileExtensions.rooms.push(item.image.name.split('.')[1]);
       files.push({
-        name: `imagesRooms`,
+        //Field name for strapi attribute
+        name: 'imagesRooms',
+        // The image file, duh
         file: item.image as File,
-        fileName: `${slugify(fullForm.values.rooms[index].roomName)}`,
+        // The name of the file in storage/cloudinary
+        fileName: `${slugify(fullForm.values.rooms[index].roomName)}.${
+          fileExtensions.rooms[index]
+        }`,
       });
-    });
-  formData.append('field', 'imagesRooms');
-  files.forEach((item) => formData.append(`files.${item.name}`, item.file, item.fileName));
+      // If this is an edit, push the name of the old image to the array above, so I can delete it in Strapi.
+      if (data && data.rooms.some((oldRooms) => oldRooms.roomName === item.roomName)) {
+        imagesToReplace.push(slugify(data.rooms[index].roomName));
+      }
+    } else {
+      fileExtensions.rooms.push('');
+      // If this is an edit, and the room at the specified index exists in the old data.
+      if (data && data.rooms[index]) {
+        const { roomName: oldRoomName } = data.rooms[index];
+        const { roomName: newRoomName } = fullForm.values.rooms[index];
+        if (oldRoomName !== newRoomName) {
+          imagesToRename.push({
+            from: slugify(data.rooms[index].roomName),
+            to: slugify(fullForm.values.rooms[index].roomName),
+          });
+        }
+      }
+    }
+  });
+  if (imagesToRename.length > 0) formData.append('imagesToRename', JSON.stringify(imagesToRename));
+  if (imagesToReplace.length > 0) {
+    formData.append('replaceRoomImages', JSON.stringify(imagesToReplace));
+  }
+
+  if (files.length > 0) {
+    files.forEach((item) => formData.append(`files.${item.name}`, item.file, item.fileName));
+  }
   formData.append(
     'data',
     JSON.stringify({ slug: slugify(fullForm.values.name), ...fullForm.values })
   );
-  const response = await axiosFetch({
-    method,
-    url: method === 'PUT' ? `/accommodations/${fullForm.values.id}` : '/accommodations',
-    headers: {
-      Authorization: `Bearer ${session!.jwt}`,
-    },
-    data: formData,
-  });
-  if (response.data) {
-    setSuccess({ accepted: true, rejected: false });
+  try {
+    const response = await axios.request({
+      method,
+      url: method === 'PUT' ? `/accommodations/${fullForm.values.id}` : '/accommodations',
+      headers: {
+        Authorization: `Bearer ${session!.jwt}`,
+      },
+      data: formData,
+    });
+    if (response.data) {
+      setSuccess({ accepted: true, rejected: false });
+    }
+  } catch (error: any) {
+    console.log(error);
+    setSuccess({
+      accepted: false,
+      rejected: true,
+      errorMessage: error.response.data.error.message,
+    });
+  } finally {
     setLoading(false);
-    console.log(response);
-    return;
   }
-  console.log(response);
-  setSuccess({
-    accepted: false,
-    rejected: true,
-    errorMessage: response.response.data.error.message,
-  });
-  setLoading(false);
 };

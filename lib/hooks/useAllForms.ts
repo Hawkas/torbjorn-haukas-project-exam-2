@@ -22,13 +22,17 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
     : { email: '', phone: '', address: '' };
 
   const featuresInit: FeaturesSchema = [];
-  if (data)
+  if (data && data.rooms.some((room) => room.features.length > 0)) {
     data.rooms.forEach((item) =>
       item.features.forEach((featureItem) =>
-        featuresInit.push({ feature: featureItem.feature, key: randomId(), id: featureItem.id })
+        featuresInit.push({
+          feature: featureItem.feature,
+          key: randomId(),
+          id: featureItem.id,
+        })
       )
     );
-  else featuresInit.push({ feature: '' });
+  } else featuresInit.push({ feature: '', key: randomId() });
   const amenitiesInit: AmenitySchema = data
     ? ({ ...data.amenities } as AmenitySchema)
     : {
@@ -43,7 +47,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
         foodService: false,
       };
   const roomsInit: RoomsObject[] = data
-    ? data.rooms
+    ? data.rooms.map((room) => ({ key: randomId(), ...room }))
     : [
         {
           price: 0,
@@ -52,6 +56,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
           bathrooms: 0,
           roomName: '',
           features: [] as FeaturesSchema,
+          key: randomId(),
         },
       ];
 
@@ -75,6 +80,21 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
         amenities: amenitiesInit,
         rooms: formList([...roomsInit]),
       };
+  const imagesInit: ImagesSchema = data
+    ? {
+        cover: undefined,
+        rooms: formList(
+          data.rooms.map((item) => ({
+            roomName: item.roomName,
+            image: true as any,
+            key: randomId(),
+          }))
+        ),
+      }
+    : {
+        cover: undefined,
+        rooms: formList([{ roomName: '', image: undefined as any, key: randomId() }]),
+      };
   const contactInfoForm = useForm<ContactInfoSchema>({
     schema: zodResolver(contactInfoSchema),
     initialValues: contactInfoInit,
@@ -89,10 +109,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
 
   const imagesForm = useForm<ImagesSchema>({
     schema: zodResolver(imagesSchema),
-    initialValues: {
-      cover: undefined,
-      rooms: formList([{ roomName: '', image: undefined }]),
-    },
+    initialValues: imagesInit,
   });
 
   const amenitiesForm = useForm<AmenitySchema>({
