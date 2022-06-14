@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react';
 const useTypeStyles = createStyles((theme, _params, getRef) => ({
   segmentRoot: {
     //? The borders around the entire component are actually padding,
-    //? so to color them we have to clip the background.
-    //* Essentially, we add two backgrounds with a single color gradient,
+    //? so to color them I have to clip the background.
+    //* Add two backgrounds with a single color gradient,
     //* clipping one of them to content, and the other to padding.
     backgroundImage: `linear-gradient(to bottom, ${theme.white} 0%, ${theme.white} 100%), linear-gradient(to bottom, ${theme.colors.gray[1]} 0%, ${theme.colors.gray[1]} 100%)`,
     backgroundClip: 'content-box, padding-box;',
@@ -52,11 +52,6 @@ const useTypeStyles = createStyles((theme, _params, getRef) => ({
     '&:last-of-type': {
       // To avoid weird edges due to subpixel width value.
       minWidth: '108px',
-    },
-    [theme.fn.largerThan(594)]: {
-      [`&.${getRef('segmentControlActive')}:last-of-type`]: {
-        borderWidth: '0 0 0 0',
-      },
     },
 
     //? Adjust last button, as its border being transparent reveals the white background.

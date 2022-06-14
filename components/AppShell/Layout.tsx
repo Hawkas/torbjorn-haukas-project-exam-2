@@ -76,7 +76,8 @@ export default function Layout({ children, ...others }: Props & { data: Accommod
 
   // Big whoops. I noticed how pages weren't being regenerated with updated props with SSR.
   // This is to force an update in case the 'data' prop changes on my one and only SSR page.
-  // In the future I wouldn't make the layout handle its children in any way. Lesson learned.
+  // I did this so early on, but of course saving an entire page as a state is a bad idea.
+  // I'm letting it stay as a reminder. Also time is up.
   useDidUpdate(() => {
     if (router.pathname === '/admin' && routerPath === router.pathname) {
       setTransitionStage(true);
@@ -90,7 +91,7 @@ export default function Layout({ children, ...others }: Props & { data: Accommod
       setTransitionStage(false);
       setRouterPath(router.pathname);
     }
-  }, [children, setDisplayChildren, displayChildren, router.pathname, routerPath, setRouterPath]);
+  }, [children]);
   const headerCheck = !filledState && !opened && router.pathname === '/' && transitionStage;
   const clickEvent = () => {
     setOpened((o) => !o);
