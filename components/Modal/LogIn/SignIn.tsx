@@ -61,7 +61,7 @@ export function SignIn() {
 
   useEffect(() => {
     router.prefetch('/admin');
-  });
+  }, []);
 
   async function handleSignIn(values: Credentials) {
     loadingToggle();

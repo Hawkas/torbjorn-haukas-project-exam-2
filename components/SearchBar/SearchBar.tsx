@@ -29,6 +29,7 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
     // As this list isn't actually rendered as HTML under the input itself,
     // I can't make use of next/link, and I have to push the url with router
     //* This makes the page transition rather slow, but oh well.
+    //! Never mind, it's actually way too fast in production, so it flickers.
 
     if (!value)
       // In case of API failure, or when I inevitably take down the API.
@@ -122,7 +123,10 @@ export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) 
       }
       onItemSubmit={(item) => {
         setLoading(true);
-        router.push(`/accommodations/${item.slug}`);
+        // I am desperately trying to figure out why this is so fast and flickery in production.
+        setTimeout(() => {
+          router.push(`/accommodations/${item.slug}`, undefined, { shallow: true });
+        }, 400);
       }}
       label={noLabel ? undefined : 'Plan your journey'}
       placeholder="Search for accommodations"
