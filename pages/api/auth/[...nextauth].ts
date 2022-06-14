@@ -54,7 +54,7 @@ export default NextAuth({
       },
     }),
   ],
-  // Theme for backup login page, in case someone tries to go to /admin directly.
+  // Theme for backup login page just in case
   theme: {
     colorScheme: 'light',
     brandColor: '#003355',
@@ -102,13 +102,6 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
     async jwt({ token, user }) {
       // When user signs in, assign jwt to token, to access with session object
       // ESLint complained about reassigning parameters, so I don't :)

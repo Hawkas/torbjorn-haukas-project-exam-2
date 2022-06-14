@@ -71,12 +71,10 @@ export function FooterContent() {
           <PrimaryButton
             variant="outline"
             className={classes.logIn}
-            onClick={async () => {
-              const data = await signOut({
-                callbackUrl: '/',
-                redirect: router.pathname === '/admin',
+            onClick={() => {
+              signOut({
+                redirect: false,
               });
-              if (data) router.push(data.url);
             }}
           >
             Log out
