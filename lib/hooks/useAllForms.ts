@@ -1,15 +1,15 @@
 import {
+  AmenitySchema,
+  amenitySchema,
   ContactInfoSchema,
   contactInfoSchema,
-  FeaturesSchemaWrap,
+  createEntrySchema,
+  EntrySchema,
+  FeaturesArray,
+  FeaturesSchema,
   featuresSchemaWrap,
   ImagesSchema,
   imagesSchema,
-  AmenitySchema,
-  amenitySchema,
-  EntrySchema,
-  createEntrySchema,
-  FeaturesSchema,
   RoomsObject,
 } from '@components/Modal/CreateAccom/CreateAccomValidation';
 import { formList, useForm, zodResolver } from '@mantine/form';
@@ -21,7 +21,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
     ? (data.contactInfo as ContactInfoSchema)
     : { email: '', phone: '', address: '' };
 
-  const featuresInit: FeaturesSchema = [];
+  const featuresInit: FeaturesArray = [];
   if (data && data.rooms.some((room) => room.features.length > 0)) {
     data.rooms.forEach((item) =>
       item.features.forEach((featureItem) =>
@@ -55,7 +55,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
           singleBeds: 0,
           bathrooms: 0,
           roomName: '',
-          features: [] as FeaturesSchema,
+          features: [] as FeaturesArray,
           key: randomId(),
         },
       ];
@@ -82,7 +82,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
       };
   const imagesInit: ImagesSchema = data
     ? {
-        cover: undefined,
+        cover: true as any,
         rooms: formList(
           data.rooms.map((item) => ({
             roomName: item.roomName,
@@ -100,7 +100,7 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
     initialValues: contactInfoInit,
   });
 
-  const featuresForm = useForm<FeaturesSchemaWrap>({
+  const featuresForm = useForm<FeaturesSchema>({
     schema: zodResolver(featuresSchemaWrap),
     initialValues: {
       features: formList(featuresInit),
@@ -120,7 +120,16 @@ const useAllForms = ({ data }: { data?: AccommodationClean }) => {
     schema: zodResolver(createEntrySchema),
     initialValues: entryInit,
   });
-  return { form, contactInfoForm, imagesForm, featuresForm, amenitiesForm };
+
+  const { values: formInitial } = form;
+  const { values: imagesInitial } = imagesForm;
+  const { values: featuresInitial } = featuresForm;
+  const initialValues = {
+    formInitial,
+    imagesInitial,
+    featuresInitial,
+  };
+  return { form, contactInfoForm, imagesForm, featuresForm, amenitiesForm, initialValues };
 };
 
 export default useAllForms;

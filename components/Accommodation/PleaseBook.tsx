@@ -1,11 +1,10 @@
-import { Box, createStyles, Title } from '@mantine/core';
-import { useContainerStyles } from '@styles/containerStyles';
-import { useTextStyles } from '@styles/typography';
-import React from 'react';
 import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { ReturnLink } from '@components/Accommodation/SmallParts/ReturnLink';
-import { useModals } from '@mantine/modals';
 import { Booking } from '@components/Modal/Booking/Booking';
+import { Box, createStyles, Title } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { useContainerStyles } from '@styles/containerStyles';
+import { useTextStyles } from '@styles/typography';
 import type { AccommodationClean } from 'types/accommodationClean';
 
 export const useStyles = createStyles((theme) => ({
@@ -32,7 +31,6 @@ export const useStyles = createStyles((theme) => ({
     },
   },
 }));
-
 
 export function PleaseBook({ ...data }: AccommodationClean) {
   const { classes } = useStyles();
@@ -88,4 +86,3 @@ export function PleaseBook({ ...data }: AccommodationClean) {
     </Box>
   );
 }
-

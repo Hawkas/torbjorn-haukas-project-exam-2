@@ -1,58 +1,42 @@
-import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { CardBase } from '@components/Accommodations/Card';
-import { faCheckCircle, faClose } from '@fortawesome/pro-regular-svg-icons';
+import { CardBase } from '@components/CardsSection/Cards/SmallParts/CardBase';
+import { faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAllForms from '@hooks/useAllForms';
-import {
-  ActionIcon,
-  Box,
-  Center,
-  Group,
-  InputWrapper,
-  LoadingOverlay,
-  Stack,
-  Stepper,
-  Text,
-} from '@mantine/core';
+import { ActionIcon, Box, LoadingOverlay, Stepper } from '@mantine/core';
 
-import { useDidUpdate, useListState, useValidatedState } from '@mantine/hooks';
-import { useModals } from '@mantine/modals';
-import { AccommodationClean } from 'types/accommodationClean';
-import { useEffect, useState } from 'react';
 import {
   handleSubmit,
   turnIntoCardData,
   validateFirst,
   validateSecond,
   validateThird,
-} from '../../../lib/helpers/createAccomFunctions';
+} from '@helpers/createAccomFunctions';
+import { useDidUpdate, useListState, useValidatedState } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
+import { CreateAccom } from 'types/createAccom';
 import { useCreateAccomStyles } from './CreateAccom.styles';
-import { ImageUpload } from './ImageUpload';
-import { StepOne } from './Steps/StepOne';
-import { StepTwo } from './Steps/StepTwo';
-import type { Session } from 'next-auth';
-import { slugify } from '@helpers/stringConversions';
+import { StepCompleted, StepNavigation, StepOne, StepThree, StepTwo } from './Steps';
 
-export function CreateAccom({
-  data,
-  session,
-  refreshPage,
-}: {
-  session: Session;
-  data?: AccommodationClean;
-  refreshPage: () => void;
-}) {
+export function CreateAccom({ data, session, refreshPage, modals }: CreateAccom) {
+  // This is quite verbose (like all my code is but whatever), but since the order of images is random, I have to.
+  const imageUrlArray = data
+    ? [
+        data.images.cover.medium!.src,
+        ...data.images.rooms.map((imgItem) => imgItem.image.medium.src),
+      ]
+    : [];
+  const successInitial = {
+    rejected: false,
+    accepted: false,
+    errorMessage: '',
+  };
   const { classes } = useCreateAccomStyles();
-  const modals = useModals();
   const [active, setActive] = useState(0);
   const [stepOne, setStepOne] = useState(false);
   const [stepTwo, setStepTwo] = useState(false);
   const [stepThree, setStepThree] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<{ [key: string]: boolean | string }>({
-    rejected: false,
-    accepted: false,
-  });
+  const [success, setSuccess] = useState(successInitial);
   // As this is an obscenely long form, prepare for boilerplate.
   // Also, Mantine's form hook doesn't cooperate well with nested fields.
   // I need this as I'm validating the payload for upload after all, and I'd rather not do it all twice.
@@ -60,9 +44,16 @@ export function CreateAccom({
 
   // To do this, I'm creating multiple instances of the hook, and combining them all into the final output.
   // This will also allow me to store my form data in nested objects and arrays beyond 1 level deep.
-  const { form, contactInfoForm, amenitiesForm, imagesForm, featuresForm } = useAllForms(
-    data ? { data } : {}
-  );
+  const {
+    form,
+    contactInfoForm,
+    amenitiesForm,
+    imagesForm,
+    featuresForm,
+    initialValues: startValues,
+  } = useAllForms(data ? { data } : {});
+
+  const [initialValues] = useState(startValues);
   const featureCountSimple = data ? data.rooms.map((roomItem) => roomItem.features.length) : [];
   const featureCount = data
     ? featureCountSimple.map((count, index, roomArray) =>
@@ -78,22 +69,14 @@ export function CreateAccom({
   // Index each room added to the entry, with a number that represents 'feature' count
   const [rooms, setRooms] = useListState(featureCount);
   // and also a hook to see how the values in this array changes to act upon it
-  const [{ value }, setValue] = useValidatedState(rooms, (value) => value === rooms);
+  const [{ value }, setValue] = useValidatedState(rooms, (val) => val === rooms);
 
-  const imageUrlArray = data
-    ? [
-        data.images.cover.medium!.src,
-        ...data.rooms.map((roomItem) => {
-          const imageObj = data.images.rooms.find(
-            (roomImage) => slugify(roomItem.roomName) === roomImage.image.name.split('.')[0]
-          );
-          return imageObj ? imageObj.image.medium.src : '';
-        }),
-      ]
-    : [];
   // Storing the URLs from user added image files
   const [previewImages, setPreviewImages] = useListState<string>(imageUrlArray);
-
+  const [selectedFiles, setSelectedFiles] = useListState<File | boolean | undefined>([
+    imagesForm.values.cover,
+    ...imagesForm.values.rooms.map((item) => item.image),
+  ]);
   // Creating a preview card with the added data.
   const [previewCard, setPreviewCard] = useState<JSX.Element>();
 
@@ -105,12 +88,21 @@ export function CreateAccom({
         setStepOne(validationFailed);
         return validationFailed;
       case 1:
-        validationFailed = validateSecond({ rooms, form, featuresForm });
+        validationFailed = validateSecond({
+          rooms,
+          form,
+          featuresForm,
+          initialValues,
+        });
         setStepTwo(validationFailed);
         return validationFailed;
       case 2:
-        validationFailed = validateThird({ imagesForm, data: data ? data : undefined });
+        validationFailed = validateThird({
+          imagesForm,
+          data,
+        });
         if (!validationFailed) {
+          setSuccess(successInitial);
           const cardProps = turnIntoCardData({ form, imagePreview: previewImages[0] });
           setPreviewCard(<CardBase {...cardProps} />);
         }
@@ -122,7 +114,6 @@ export function CreateAccom({
     return null;
   };
 
-  const [imageFields, setImageFields] = useState<JSX.Element[]>([]);
   const nextStep = () => {
     if (validatePreviousStep(active)) return;
     setActive((current) => (current < 3 ? current + 1 : current));
@@ -162,39 +153,7 @@ export function CreateAccom({
       to: rooms[changeOrigin] - 1,
     });
   }, [rooms]);
-  useDidUpdate(() => {
-    const newImageFields = imagesForm.values.rooms.map((item, index) => (
-      <InputWrapper
-        key={item.key}
-        label={imagesForm.values.rooms[index].roomName}
-        classNames={{ label: classes.imageLabel }}
-        mt="xl"
-        {...imagesForm.getListInputProps('rooms', index, 'image')}
-      >
-        <ImageUpload
-          name={`rooms-${index}`}
-          onDrop={(files: File[]) => {
-            const previewUrl = URL.createObjectURL(files[0]);
-            setPreviewImages.setItem(index + 1, previewUrl);
-            imagesForm.setListItem('rooms', index, {
-              roomName: form.values.rooms[index].roomName,
-              image: files[0],
-              key: item.key,
-            });
-            //@ts-ignore
-            imagesForm.clearFieldError(`rooms.${index}.image`);
-          }}
-          preview={previewImages[index + 1]}
-        />
-      </InputWrapper>
-    ));
-    setImageFields(newImageFields);
-    return () =>
-      setPreviewImages.apply((item) => {
-        URL.revokeObjectURL(item);
-        return '';
-      });
-  }, [rooms, previewImages, active, imagesForm.values.rooms.length]);
+
   return (
     <Box sx={{ position: 'relative' }} className={classes.formWrapper}>
       <LoadingOverlay visible={loading} />
@@ -209,6 +168,7 @@ export function CreateAccom({
             session,
             method: data ? 'PUT' : 'POST',
             data,
+            initialValues,
           })
         }
       >
@@ -267,6 +227,7 @@ export function CreateAccom({
                 setRooms,
                 imagesForm,
                 setPreviewImages,
+                setSelectedFiles,
               }}
             />
           </Stepper.Step>
@@ -277,93 +238,22 @@ export function CreateAccom({
             label="Final step"
             description="Images"
           >
-            <InputWrapper
-              label="Cover"
-              classNames={{ label: classes.imageLabel }}
-              mt="xl"
-              {...imagesForm.getInputProps('cover')}
-            >
-              <ImageUpload
-                name="cover"
-                onDrop={(files: File[]) => {
-                  const previewUrl = URL.createObjectURL(files[0]);
-                  setPreviewImages.setItem(0, previewUrl);
-                  imagesForm.setFieldValue('cover', files[0]);
-                  imagesForm.clearFieldError('cover');
-                }}
-                preview={previewImages[0]}
-              />
-            </InputWrapper>
-            {imageFields}
+            <StepThree
+              {...{
+                imagesForm,
+                form,
+                setSelectedFiles,
+                selectedFiles,
+                setPreviewImages,
+                previewImages,
+              }}
+            />
           </Stepper.Step>
           <Stepper.Completed>
-            {success.accepted ? (
-              <Center mt="xl">
-                <Stack>
-                  <FontAwesomeIcon icon={faCheckCircle} color="green" size="6x" />
-                  <Text size="xl" color="green" mt="xl" weight="bold">
-                    Successfully uploaded
-                  </Text>
-                </Stack>
-              </Center>
-            ) : success.rejected ? (
-              <Center mt="xl">
-                <Stack>
-                  <FontAwesomeIcon icon={faClose} color="red" size="6x" />
-                  <Text size="xl" color="red" mt="xl" weight="bold">
-                    {`Failed to upload. Error message: ${success.errorMessage}`}
-                  </Text>
-                </Stack>
-              </Center>
-            ) : (
-              <>
-                <Text align="center" mt="xl" size="xl">
-                  All done!
-                </Text>
-                <Text align="center" size="sm" color="dimmed">
-                  Press submit to upload it!
-                </Text>
-                <Box sx={{ maxWidth: '408px', margin: '48px auto' }}>{previewCard}</Box>
-              </>
-            )}
-            <PrimaryButton
-              primary
-              type="submit"
-              mt={64}
-              mx="auto"
-              sx={{
-                display: success.accepted ? 'none' : 'block',
-                width: '100%',
-                maxWidth: '160px',
-              }}
-            >
-              Submit
-            </PrimaryButton>
+            <StepCompleted {...{ success, previewCard }} />
           </Stepper.Completed>
         </Stepper>
-        <Group position="center" pt="xl" mt="xl">
-          <PrimaryButton
-            disabled={active === 0}
-            variant="default"
-            onClick={
-              success.accepted
-                ? () => {
-                    modals.closeModal('create');
-                    refreshPage();
-                  }
-                : prevStep
-            }
-          >
-            {success.accepted ? 'Close' : 'Back'}
-          </PrimaryButton>
-          <PrimaryButton
-            primary
-            onClick={nextStep}
-            sx={{ display: active === 3 ? 'none' : 'block' }}
-          >
-            Next step
-          </PrimaryButton>
-        </Group>
+        <StepNavigation {...{ nextStep, prevStep, success, active, refreshPage, modals }} />
       </form>
     </Box>
   );

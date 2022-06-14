@@ -1,10 +1,10 @@
-import { createStyles, Image, Title, Box, Stack, Group, List, Text } from '@mantine/core';
+import { pluralCheck, toEnglish } from '@helpers/stringConversions';
+import { Box, createStyles, Group, Image, List, Stack, Text, Title } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useContainerStyles } from '@styles/containerStyles';
 import { useTextStyles } from '@styles/typography';
 import { useEffect, useState } from 'react';
 import { AccommodationClean } from 'types/accommodationClean';
-import { toEnglish, pluralCheck, slugify } from '@helpers/stringConversions';
-import { useMediaQuery } from '@mantine/hooks';
 
 export const useRoomStyles = createStyles((theme) => ({
   cardOuter: {
@@ -65,9 +65,7 @@ export function RoomList({ rooms, images: { rooms: roomImages } }: Accommodation
   // Map out the room card components from array(TODO: clean this)
   const roomCard = rooms.map((room, index) => {
     const capitalize = true;
-    const imageObj = roomImages.find(
-      (item) => item.image.name.split('.')[0] === slugify(room.roomName)
-    );
+    const imageObj = roomImages[index];
     const {
       image: { alt, medium: image },
     } = imageObj! || roomImages[index];

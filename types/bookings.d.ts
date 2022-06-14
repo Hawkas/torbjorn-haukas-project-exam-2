@@ -1,28 +1,54 @@
 export interface Bookings {
-  data: BookingObject[] | BookingObject;
+  data: BookingObject[];
   meta: Meta;
 }
 
 export interface BookingObject {
   id: number;
-  attributes: BookingAttributes;
+  attributes: BookingAttrIngoing;
+}
+export interface BookingObjectIngoing {
+  id: number;
+  attributes: BookingAttrIngoing;
 }
 
-export interface BookingAttributes {
+export interface BookingCleaned {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  checkIn: string;
+  checkOut: string;
+  accommodation: string;
+  room: string;
+  additionalDetails?: string;
+  id: string;
+}
+
+export interface BookingAttrOutgoing {
   firstName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
   checkIn?: Date;
   checkOut?: Date;
+  room: string;
+  additionalDetails?: string;
+  accommodation: number | string;
+}
+export interface BookingAttrIngoing {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  checkIn: string;
+  checkOut: string;
   createdAt?: Date;
   updatedAt?: Date;
   publishedAt?: Date;
   room: string;
   additionalDetails?: string;
-  accommodation: number | string;
+  accommodation: RelatedAccommodation;
 }
-
 export interface RelatedAccommodation {
   data: Data;
 }

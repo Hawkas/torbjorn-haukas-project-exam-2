@@ -1,11 +1,11 @@
-import { CardSection } from '@components/Accommodations/CardSection';
 import { FiltersHeader } from '@components/Accommodations/FiltersHeader';
+import { CardSection } from '@components/CardsSection/CardSection';
 import { fetchAccommodations } from '@helpers/fetchAccommodations';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import type { DataProps } from 'types/commonProps';
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   const data = await fetchAccommodations();
   return { props: { data }, revalidate: 300 };
 };

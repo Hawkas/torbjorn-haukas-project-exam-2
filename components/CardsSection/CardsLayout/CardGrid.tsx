@@ -1,16 +1,25 @@
 import { Grid, Title } from '@mantine/core';
-import { Session } from 'next-auth';
-import { AccommodationClean } from 'types/accommodationClean';
-import { AdminCard, Card } from '../Card';
+import type { Session } from 'next-auth';
+import type { AccommodationClean } from 'types/accommodationClean';
+import { AdminCard, Card } from '../Cards';
 
-export const CardGrid = (
-  array: AccommodationClean[] | null,
-  wrapBp: boolean,
-  classes: { cardColumn: string },
-  admin?: boolean,
-  session?: Session,
-  refreshPage?: () => void
-) => {
+interface CardGrid {
+  array: AccommodationClean[] | null;
+  wrapBp: boolean;
+  classes: { cardColumn: string };
+  admin?: boolean;
+  session?: Session;
+  refreshPage?: () => void;
+}
+
+export function CardGrid({
+  array,
+  wrapBp,
+  classes,
+  admin,
+  session,
+  refreshPage,
+}: CardGrid): JSX.Element[] {
   if (!array || array.length === 0) {
     return [
       <Grid.Col className={classes.cardColumn} key="Nothing" span={12}>
@@ -33,4 +42,4 @@ export const CardGrid = (
       )}
     </Grid.Col>
   ));
-};
+}

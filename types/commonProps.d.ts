@@ -1,11 +1,11 @@
 import type { AccommodationClean } from './accommodationClean';
 import type { Accommodations } from './accommodationRaw';
-import type { Bookings } from './bookings';
+import type { BookingCleaned } from './bookings';
 
 export interface AdminProps {
-  rawData: Accommodations | null;
-  bookings: Bookings | null;
+  bookings: BookingCleaned[] | null;
   data: AccommodationClean[] | null;
+  messages: Message[];
 }
 
 export interface DataProps {

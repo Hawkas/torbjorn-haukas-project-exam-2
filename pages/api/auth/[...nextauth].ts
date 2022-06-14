@@ -1,6 +1,6 @@
+import axios from 'axios';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import axios from 'axios';
 
 type Credentials =
   | {
@@ -110,21 +110,18 @@ export default NextAuth({
       return baseUrl;
     },
     async jwt({ token, user }) {
-      // When user signs in, assign user data to token, to access with session object
+      // When user signs in, assign jwt to token, to access with session object
+      // ESLint complained about reassigning parameters, so I don't :)
+      const newToken = { ...token };
       if (user) {
-        token.jwt = user.jwt;
-        token.id = user.user.id;
-        token.name = user.user.username;
-        token.email = user.user.email;
+        newToken.jwt = user.jwt;
       }
-      return token;
+      return newToken;
     },
     async session({ session, token }) {
-      session.jwt = token.jwt;
-      session.id = token.id;
-      session.email = token.email;
-      session.name = token.username;
-      return session;
+      const newSession = { ...session };
+      newSession.jwt = token.jwt;
+      return newSession;
     },
   },
   debug: true,

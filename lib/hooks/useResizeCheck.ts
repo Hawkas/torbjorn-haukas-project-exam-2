@@ -1,4 +1,4 @@
-import { useViewportSize, useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue, useViewportSize } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
 const useResizeCheck = () => {
@@ -16,6 +16,8 @@ const useResizeCheck = () => {
       resizeCheck();
       return () => window.removeEventListener('resize', resizeCheck);
     }
+    // ESLint wants consistent returns. Well then, have a void I guess?
+    return () => {};
   }, [debounced, resizing]);
   return resizing;
 };

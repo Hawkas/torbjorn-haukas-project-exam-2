@@ -1,6 +1,9 @@
-import { AccommodationClean } from 'types/accommodationClean';
+import { AccommodationClean, ImagesRoom } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
+import { BookingCleaned, Bookings } from 'types/bookings';
+import { MessageClean, MessageInc } from 'types/messages';
 import { axiosFetch } from './axiosFetch';
+import { getFormattedDate, slugify } from './stringConversions';
 
 const qs = require('qs');
 
@@ -14,6 +17,23 @@ export const productsQuery = qs.stringify(
       'rooms',
       'rooms.features',
       'contactInfo',
+    ],
+  },
+  { encodeValuesOnly: true }
+);
+export const everythingQuery = qs.stringify(
+  {
+    populate: [
+      'messages',
+      'bookings',
+      'bookings.accommodation',
+      'accommodations',
+      'accommodations.cover',
+      'accommodations.imagesRooms',
+      'accommodations.amenities',
+      'accommodations.contactInfo',
+      'accommodations.rooms',
+      'accommodations.rooms.features',
     ],
   },
   { encodeValuesOnly: true }
@@ -71,21 +91,28 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] | nul
     const maxBaths = Math.max(...rooms.map((o) => o.bathrooms));
     const maxBeds = Math.max(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
     const minBeds = Math.min(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
-
-    // Sorting the room images array by room name.
-    const roomsImgArray = imagesRooms.map((room) => {
+    const roomsImgArray: ImagesRoom[] = [];
+    // Normalizing the room images to values I will use.
+    rooms.forEach((roomItem, index) => {
+      // Sort the list to the correct order (i.e based on the rooms list)
+      // If for whatever reason it can't find any match, (which should never happen but just in case) fallback to same index.
+      const roomImg =
+        imagesRooms.find(
+          // image-name (sans '.jpeg') === room-name slugified
+          (value) => value.attributes.name.split('.')[0] === slugify(roomItem.roomName)
+        ) || imagesRooms[index];
       // In case the image uploaded isn't big enough to be formatted into 'large' format (as defined on my cloudinary processor)
       // Fallback to use the same image size in both.
-      const { formats } = room.attributes;
-      const cardImg = formats.large ? formats.large : room.attributes;
-      return {
+      const { formats } = roomImg.attributes;
+      const cardImg = formats.large ? formats.large : roomImg.attributes;
+      roomsImgArray.push({
         image: {
-          alt: `${hotelName} - ${room.attributes.name}`,
-          name: room.attributes.name,
+          alt: `${hotelName} - ${roomImg.attributes.name}`,
+          name: roomImg.attributes.name,
           large: {
-            src: room.attributes.url,
-            height: room.attributes.height,
-            width: room.attributes.width,
+            src: roomImg.attributes.url,
+            height: roomImg.attributes.height,
+            width: roomImg.attributes.width,
           },
           medium: {
             src: cardImg.url,
@@ -93,8 +120,9 @@ export function removeFluff(rawData: Accommodations): AccommodationClean[] | nul
             width: cardImg.width,
           },
         },
-      };
+      });
     });
+    // Further sorting the above into the correct order based on room names.
     // Similar to above, fallback in case image sizes aren't as expected
     const coverImgCardSize = coverImgFormats.large ? coverImgFormats.large : coverImg;
     // Assemble
@@ -141,4 +169,56 @@ export const fetchAccommodations = async () => {
   const rawData = await rawAccommodations();
   if (!rawData) return null;
   return removeFluff(rawData);
+};
+
+export const everythingFetch = async () => {
+  try {
+    const result = await axiosFetch({
+      url: `/holidazes?${everythingQuery}`,
+      method: 'GET',
+      headers: { Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}` },
+    });
+
+    const {
+      accommodations,
+      messages,
+      bookings,
+    }: { accommodations: Accommodations; messages: MessageInc; bookings: Bookings } =
+      result.data[0].attributes;
+    const cleanAccom = removeFluff(accommodations);
+    const bookingData: BookingCleaned[] = bookings.data.map((item) => {
+      const {
+        id,
+        attributes: {
+          createdAt,
+          updatedAt,
+          publishedAt,
+          firstName,
+          lastName,
+          accommodation: {
+            data: {
+              attributes: { name: accommodation },
+            },
+          },
+          ...rest
+        },
+      } = item;
+      const name = `${firstName} ${lastName}`;
+      return { id: id.toString(), name, accommodation, ...rest };
+    });
+    const cleanMessages: MessageClean[] = messages.data.map((item) => {
+      const {
+        attributes: { updatedAt, publishedAt, createdAt, ...cleanMessage },
+        id,
+      } = item;
+      return {
+        id: id.toString(),
+        createdAt: getFormattedDate(new Date(createdAt)),
+        ...cleanMessage,
+      };
+    });
+    return { cleanAccom, bookingData, cleanMessages };
+  } catch (error: any) {
+    return error;
+  }
 };

@@ -1,51 +1,112 @@
-import { TextInputStylesNames } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form/lib/use-form';
-import { UseListStateHandler } from '@mantine/hooks/lib/use-list-state/use-list-state';
-import { Session } from 'next-auth';
-import { NextRouter } from 'next/router';
-import {
+import type { TextInputStylesNames } from '@mantine/core';
+import type { UseFormReturnType } from '@mantine/form/lib/use-form';
+import type { UseListStateHandler } from '@mantine/hooks/lib/use-list-state/use-list-state';
+import type { ModalsContextProps } from '@mantine/modals/lib/context';
+import type { Session } from 'next-auth';
+import type { SetStateAction } from 'react';
+import type {
   AmenitySchema,
   ContactInfoSchema,
   EntrySchema,
   FeaturesSchema,
   ImagesSchema,
 } from '../components/Modal/CreateAccom/CreateAccomValidation';
-import { AccommodationClean } from './accommodationClean';
+import type { AccommodationClean } from './accommodationClean';
 
-export type EntryFormClassType = Record<
-  'root' | 'input' | 'label' | 'numberInput' | 'featureWrap',
-  string
->;
-export type EntryForm = UseFormReturnType<EntrySchema>;
-export type ImagesForm = UseFormReturnType<ImagesSchema>;
-export type SetStateBoolean = Dispatch<SetStateAction<boolean>>;
-export type SetSuccessState = Dispatch<
-  SetStateAction<{
-    [key: string]: string | boolean;
-  }>
->;
-export interface ImageLists {
-  setPreviewImages: UseListStateHandler<string>;
-  imagesForm: ImagesForm;
+type InputExtraClassNames = Partial<Record<TextInputStylesNames, string>> &
+  Record<'numberInput' | 'featureWrap' | 'imageLabel', string>;
+type EntryForm = UseFormReturnType<EntrySchema>;
+type ImagesForm = UseFormReturnType<ImagesSchema>;
+type FeaturesForm = UseFormReturnType<FeaturesSchema>;
+type SetStateBoolean = Dispatch<SetStateAction<boolean>>;
+type SetRoomsList = UseListStateHandler<number>;
+type RoomsList = number[];
+interface SuccessState {
+  accepted: boolean;
+  rejected: boolean;
+  errorMessage: string;
 }
-export interface RoomFields {
-  form: EntryForm;
-  featuresForm: UseFormReturnType<{ features: FeaturesSchema }>;
-  rooms: number[];
-  setRooms: UseListStateHandler<number>;
-  classes: Partial<Record<TextInputStylesNames, string>> & EntryFormClassType;
-}
+type SetSuccessState = Dispatch<SetStateAction<SuccessState>>;
+type Modal = ModalsContextProps;
+type InitialValues = {
+  formInitial: EntrySchema;
+  imagesInitial: ImagesSchema;
+  featuresInitial: FeaturesSchema;
+};
 
-export interface DetailsFields {
+export interface CreateAccom extends ModalStuff {
+  session: Session;
+  data?: AccommodationClean;
+  refreshPage: () => void;
+  modals: Modal;
+}
+export interface StepOne {
   form: EntryForm;
   amenitiesForm: UseFormReturnType<AmenitySchema>;
   contactInfoForm: UseFormReturnType<ContactInfoSchema>;
 }
-
-export interface ImagesFields {
-  imagesForm: UseFormReturnType<ImagesSchema>;
+export interface StepTwo {
+  form: EntryForm;
+  featuresForm: FeaturesForm;
+  rooms: RoomsList;
+  setRooms: SetRoomsList;
+}
+export interface ImageLists {
+  setPreviewImages: UseListStateHandler<string>;
+  setSelectedFiles: UseListStateHandler<File | boolean | undefined>;
+  imagesForm: ImagesForm;
+}
+export interface StepThree extends ImageLists {
+  previewImages: string[];
+  selectedFiles: (File | boolean | undefined)[];
+  form: EntryForm;
+}
+export interface ImagesFields extends Omit<StepThree, 'setPreviewImages' | 'selectedFiles'> {
+  classes: InputExtraClasses;
 }
 
+export interface RoomFields extends StepTwo, ImageLists {
+  classes: InputExtraClassNames;
+}
+export interface FeatureFields extends Omit<StepTwo, 'form'> {
+  index: number;
+  classes: InputExtraClassNames;
+}
+
+export interface ValidateSecond {
+  rooms: RoomsList;
+  form: EntryForm;
+  featuresForm: FeaturesForm;
+  initialValues: InitialValues;
+}
+
+export interface ValidateThird {
+  imagesForm: ImagesForm;
+  data?: AccommodationClean;
+}
+
+export interface AddNewFeature {
+  rooms: RoomsList;
+  index: number;
+  setRooms: SetRoomsList;
+  featuresForm: FeaturesForm;
+}
+export interface StepCompleted {
+  success: SuccessState;
+  previewCard?: JSX.Element;
+}
+export interface StepNavigation {
+  nextStep: () => void;
+  prevStep: () => void;
+  refreshPage: () => void;
+  success: SuccessState;
+  active: number;
+  modals: Modal;
+}
+export interface TurnIntoCard {
+  form: EntryForm;
+  imagePreview: string;
+}
 export interface HandleSubmit {
   forms: { fullForm: EntryForm; images: ImagesForm };
   setLoading: SetStateBoolean;
@@ -53,4 +114,5 @@ export interface HandleSubmit {
   session: Session | null;
   method: 'POST' | 'PUT';
   data?: AccommodationClean;
+  initialValues: InitialValues;
 }

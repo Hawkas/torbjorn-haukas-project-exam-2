@@ -3,9 +3,10 @@ import { useContainerStyles } from '@styles/containerStyles';
 
 interface StyleProps {
   darkBg?: boolean;
+  anyChildren?: boolean;
 }
 
-const useStyles = createStyles((theme, { darkBg }: StyleProps) => ({
+const useStyles = createStyles((theme, { darkBg, anyChildren }: StyleProps) => ({
   fluidContainer: {
     backgroundColor: darkBg ? theme.colors.blue[7] : theme.colors.blue[0],
     width: '100%',
@@ -28,17 +29,18 @@ const useStyles = createStyles((theme, { darkBg }: StyleProps) => ({
     justifyContent: 'center',
     margin: '0',
     marginTop: theme.other.sectionSpacing.md,
-    paddingBottom: theme.other.sectionSpacing.sm,
+    paddingBottom: anyChildren ? theme.other.sectionSpacing.sm : '12.875rem',
     color: darkBg ? theme.white : theme.other.brandColor,
   },
 }));
-interface Props extends StyleProps {
-  children: React.ReactNode;
+interface Props extends Omit<StyleProps, 'anyChildren'> {
+  children?: React.ReactNode;
   title: string;
   order?: 1 | 2;
 }
 export function TitleSection({ children, title, darkBg, order }: Props) {
-  const { classes, cx } = useStyles({ darkBg });
+  const anyChildren = Boolean(children);
+  const { classes, cx } = useStyles({ darkBg, anyChildren });
   const {
     classes: { container, firstContainer },
   } = useContainerStyles();

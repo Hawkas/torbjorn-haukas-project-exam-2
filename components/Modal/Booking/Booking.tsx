@@ -24,7 +24,7 @@ import { useModals } from '@mantine/modals';
 import { useTextStyles } from 'lib/styles/typography';
 import { useEffect, useState } from 'react';
 import { AccommodationClean } from 'types/accommodationClean';
-import { BookingAttributes } from 'types/bookings';
+import { BookingAttrOutgoing } from 'types/bookings';
 import { z } from 'zod';
 import { useStyles } from '../Contact/Contact.styles';
 import { ContactIconsList } from '../Contact/ContactIconsList';
@@ -54,7 +54,7 @@ export function Booking({ rooms, id, contactInfo }: AccommodationClean) {
   useEffect(() => {
     setCurrentDate(new Date());
   }, []);
-  const form = useForm<BookingAttributes>({
+  const form = useForm<BookingAttrOutgoing>({
     schema: zodResolver(bookingSchema),
     initialValues: {
       firstName: '',

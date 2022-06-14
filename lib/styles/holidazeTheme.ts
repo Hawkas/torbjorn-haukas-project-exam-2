@@ -1,4 +1,4 @@
-import type { MantineThemeOverride, MantineThemeOther } from '@mantine/core';
+import type { MantineThemeOverride } from '@mantine/core';
 
 const lineHeight = 1.3;
 

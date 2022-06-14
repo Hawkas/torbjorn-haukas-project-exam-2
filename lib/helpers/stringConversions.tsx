@@ -15,6 +15,14 @@ export const slugify = (str: string) =>
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
+// https://stackoverflow.com/a/15764763 from comment by user Ore4444
+export function getFormattedDate(date: Date) {
+  const year = date.getFullYear();
+  const month = (1 + date.getMonth()).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  return `${month}/${day}/${year}`;
+}
 /**
  * Convert an integer to its words representation
  *
@@ -37,7 +45,7 @@ export function toEnglish(
   let finalWord;
 
   /* Is number zero? */
-  if (parseInt(string) === 0) {
+  if (parseInt(string, 10) === 0) {
     return 'zero';
   }
 
@@ -123,7 +131,7 @@ export function toEnglish(
   /* Stringify each integer in each chunk */
   const words = [];
   for (i = 0; i < chunksLen; i += 1) {
-    chunk = parseInt(chunks[i]);
+    chunk = parseInt(chunks[i], 10);
 
     if (chunk) {
       /* Split chunk into array of individual integers */

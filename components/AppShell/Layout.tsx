@@ -5,6 +5,7 @@ import { settings } from 'lib/settings';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AccommodationClean } from 'types/accommodationClean';
+
 import { FooterContent } from './Footer/FooterContent';
 import { HeaderDropdown, HeaderTop } from './Header';
 
@@ -78,7 +79,7 @@ export default function Layout({ children, ...others }: Props & { data: Accommod
   // In the future I wouldn't make the layout handle its children in any way. Lesson learned.
   useDidUpdate(() => {
     if (router.pathname === '/admin' && routerPath === router.pathname) {
-      setTransitionStage(false);
+      setTransitionStage(true);
       setDisplayChildren(children);
     }
   }, [others.data]);

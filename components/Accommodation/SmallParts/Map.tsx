@@ -1,6 +1,6 @@
 import { Status } from '@googlemaps/react-wrapper';
 import { Title } from '@mantine/core';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const render = (status: Status) => <Title order={2}>{status}</Title>;
 

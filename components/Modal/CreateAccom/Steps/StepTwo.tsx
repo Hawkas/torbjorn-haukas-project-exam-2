@@ -2,24 +2,17 @@ import { PrimaryButton } from '@Buttons/PrimaryButton';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
-import { useCreateAccomStyles } from '../CreateAccom.styles';
-import { roomFields } from '../CreateAccomListFields';
-import { ImageLists, RoomFields } from '../../../../types/createAccom';
 import { randomId } from '@mantine/hooks';
+import type { ImageLists, StepTwo } from 'types/createAccom';
+import { useCreateAccomStyles } from '../CreateAccom.styles';
+import { generateRoomFields } from './ListFields/generateRoomFields';
 
-export function StepTwo({
-  form,
-  featuresForm,
-  rooms,
-  setRooms,
-  imagesForm,
-  setPreviewImages,
-}: Omit<RoomFields, 'classes'> & ImageLists) {
+export function StepTwo(props: StepTwo & ImageLists) {
   const { classes } = useCreateAccomStyles();
-
+  const { form, rooms, setRooms, imagesForm, setPreviewImages, setSelectedFiles } = props;
   return (
     <>
-      {roomFields({ form, featuresForm, rooms, setRooms, classes, imagesForm, setPreviewImages })}
+      {generateRoomFields({ classes, ...props })}
       <Group position="center">
         <PrimaryButton
           mt="xl"
@@ -27,10 +20,10 @@ export function StepTwo({
           rightIcon={<FontAwesomeIcon fontSize={14} icon={faPlus} />}
           onClick={() => {
             // Apply the last room's feature count as the base value for next room
-            let totalFeatures = rooms[rooms.length - 1];
+            const totalFeatures = rooms[rooms.length - 1];
             setPreviewImages.append('');
+            setSelectedFiles.append(undefined);
             imagesForm.addListItem('rooms', { roomName: '', image: undefined, key: randomId() });
-            console.log(imagesForm.values.rooms);
             setRooms.append(totalFeatures);
             form.addListItem('rooms', {
               roomName: '',

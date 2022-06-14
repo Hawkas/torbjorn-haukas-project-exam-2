@@ -10,11 +10,11 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { DetailsFields } from 'types/createAccom';
+import { StepOne } from 'types/createAccom';
 import { useCreateAccomStyles } from '../CreateAccom.styles';
 import { AmenitySchema } from '../CreateAccomValidation';
 
-export function StepOne({ form, amenitiesForm, contactInfoForm }: DetailsFields) {
+export function StepOne({ form, amenitiesForm, contactInfoForm }: StepOne) {
   const { classes } = useCreateAccomStyles();
   const type = ['Guesthouse', 'Bed & Breakfast', 'Hotel'];
   const location = ['Bergen', 'Voss', 'Hardanger'];

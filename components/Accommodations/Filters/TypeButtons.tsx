@@ -1,6 +1,6 @@
 import { handleChange } from '@helpers/handleQueryChange';
 import useResizeCheck from '@hooks/useResizeCheck';
-import { SegmentedControl, createStyles } from '@mantine/core';
+import { createStyles, SegmentedControl } from '@mantine/core';
 import { useTextStyles } from '@styles/typography';
 import { NextRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -48,6 +48,10 @@ const useTypeStyles = createStyles((theme, _params, getRef) => ({
     '&:not(:first-of-type)': {
       borderWidth: '0 0 0 1px',
       borderColor: theme.colors.gray[1],
+    },
+    '&:last-of-type': {
+      // To avoid weird edges due to subpixel width value.
+      minWidth: '108px',
     },
     [theme.fn.largerThan(594)]: {
       [`&.${getRef('segmentControlActive')}:last-of-type`]: {
@@ -99,6 +103,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
     setTimeout(() => {
       setTransition(200);
     }, 500);
+    return () => setTransition(0);
   }, []);
   const { classes: textClass } = useTextStyles();
   const { classes, cx } = useTypeStyles();
@@ -113,7 +118,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
       transitionDuration={resizing ? 0 : transition}
       name="type-filters"
       color="blue"
-      radius='xs'
+      radius="xs"
       size="lg"
       classNames={{
         root: classes.segmentRoot,
@@ -123,6 +128,7 @@ export function TypeButtons({ router }: { router: NextRouter }) {
         controlActive: classes.segmentControlActive,
         active: classes.activeCover,
       }}
+      defaultValue="all"
       value={typeValue}
       onChange={(value) => {
         setTypeValue(value);

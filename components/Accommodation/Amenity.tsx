@@ -1,3 +1,4 @@
+import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import {
   faAirConditioner,
   faElevator,
@@ -9,11 +10,10 @@ import {
   faUtensils,
   faWifi,
 } from '@fortawesome/pro-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { createStyles, Box, Text, Grid, Title } from '@mantine/core';
-import { useTextStyles } from '@styles/typography';
+import { Box, createStyles, Grid, Text, Title } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
+import { useTextStyles } from '@styles/typography';
 import { AccommodationClean } from 'types/accommodationClean';
 
 const useAmenityStyles = createStyles((theme) => ({

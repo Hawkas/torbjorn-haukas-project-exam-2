@@ -3,23 +3,19 @@ import axios from 'axios';
 import { AccommodationClean } from 'types/accommodationClean';
 
 import type {
-  RoomFields,
-  DetailsFields,
-  ImagesFields,
-  EntryForm,
+  AddNewFeature,
   HandleSubmit,
-} from '../../types/createAccom';
+  StepOne,
+  TurnIntoCard,
+  ValidateSecond,
+  ValidateThird,
+} from 'types/createAccom';
 
 import { slugify } from './stringConversions';
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_LIVE_API;
 
-export function addNewFeature({
-  rooms,
-  index,
-  setRooms,
-  featuresForm,
-}: Omit<RoomFields, 'form' | 'classes'> & { index: number }) {
+export function addNewFeature({ rooms, index, setRooms, featuresForm }: AddNewFeature) {
   // Since any time a room is added, the feature count is set to be where the previous room left off
   // the 'plusPrev' is already in there, so I only increment the current value by 1.
   let featuresCountPlusPrev = rooms[index] + 1;
@@ -56,10 +52,14 @@ export function addNewFeature({
   // Add the feature input element.
   featuresForm.addListItem('features', { feature: '', key: randomId() });
 }
-export function validateFirst({ form, contactInfoForm, amenitiesForm }: DetailsFields) {
+export function validateFirst({ form, contactInfoForm }: StepOne) {
   let hasErrors = false;
-  form.setFieldValue('amenities', amenitiesForm.values);
-  form.setFieldValue('contactInfo', contactInfoForm.values);
+  // This is to retain the state of the form's initial state to validate if nothing is changed.
+  if (
+    JSON.stringify({ ...form.values.contactInfo }) !== JSON.stringify({ ...contactInfoForm.values })
+  ) {
+    form.setFieldValue('contactInfo', contactInfoForm.values);
+  }
   const validateArray = [
     form.validateField('name').hasError,
     form.validateField('type').hasError,
@@ -74,11 +74,14 @@ export function validateFirst({ form, contactInfoForm, amenitiesForm }: DetailsF
   return hasErrors;
 }
 
-export function validateSecond({
-  rooms,
-  form,
-  featuresForm,
-}: Omit<RoomFields, 'classes' | 'setRooms'>) {
+export function validateSecond({ rooms, form, featuresForm, initialValues }: ValidateSecond) {
+  if (
+    form.values.id &&
+    JSON.stringify(initialValues.featuresInitial) === JSON.stringify(featuresForm.values) &&
+    JSON.stringify(initialValues.formInitial.rooms) === JSON.stringify(form.values.rooms)
+  ) {
+    return false;
+  }
   let hasErrors = false;
   let lastRoomFeatureCount = 0;
   const validateArray: boolean[] = [];
@@ -119,32 +122,39 @@ export function validateSecond({
     form.setListItem('rooms', index, { ...currentRoom });
     lastRoomFeatureCount = roomFeatureCount;
   });
-  validateArray.push(typeof form.validate().errors['rooms'] === 'string');
+  validateArray.push(typeof form.validate().errors.rooms === 'string');
   validateArray.forEach((validationError) => {
     hasErrors = validationError ? true : hasErrors;
   });
   return hasErrors;
 }
 
-export function validateThird({ imagesForm, data }: ImagesFields & { data?: AccommodationClean }) {
+export function validateThird({ imagesForm, data }: ValidateThird) {
   let hasErrors = false;
-  if (
-    data &&
-    imagesForm.values.rooms.every(
-      (obj) => typeof obj.image === 'boolean' || obj.image instanceof File
+
+  // I skip the validation where it's not needed, i.e on edits where there already is an image
+  // But it's not as a file, so it would fail validation.
+  if (data) {
+    if (
+      imagesForm.values.rooms.every(
+        (obj) => typeof obj.image === 'boolean' || obj.image instanceof File
+      ) &&
+      imagesForm.values.cover
     )
-  ) {
-    return false;
-  } else if (data) {
+      return hasErrors;
+    // If it gets to here one of the images fields were, but not correctly. Validate those fields specifically.
+    if (typeof imagesForm.values.cover !== 'boolean') imagesForm.validateField('cover');
     imagesForm.values.rooms.forEach((obj, index) => {
       if (typeof obj.image !== 'boolean') imagesForm.validateField(`rooms.${index}.image`);
     });
-    return true;
+    hasErrors = true;
+    // And return true to prevent going to the next step.
+    return hasErrors;
   }
 
-  const validateArray = [imagesForm.validate().hasErrors];
+  const validateArray = [imagesForm.validateField('cover').hasError];
   imagesForm.values.rooms.forEach((_item, index) =>
-    validateArray.push(typeof imagesForm.validate().errors[`rooms.${index}.image`] === 'string')
+    validateArray.push(imagesForm.validateField(`rooms.${index}.image`).hasError)
   );
   validateArray.forEach((validationError) => {
     hasErrors = validationError ? true : hasErrors;
@@ -152,13 +162,7 @@ export function validateThird({ imagesForm, data }: ImagesFields & { data?: Acco
   return hasErrors;
 }
 
-export function turnIntoCardData({
-  form,
-  imagePreview,
-}: {
-  form: EntryForm;
-  imagePreview: string;
-}) {
+export function turnIntoCardData({ form, imagePreview }: TurnIntoCard) {
   const { rooms, name } = form.values;
   const slug = slugify(name);
   const minPrice = Math.min(...rooms.map((o) => o.price));
@@ -167,14 +171,15 @@ export function turnIntoCardData({
   const maxBeds = Math.max(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
   const minBeds = Math.min(...rooms.map((o) => o.doubleBeds * 2 + o.singleBeds));
   return {
-    ...(form.values as unknown as AccommodationClean),
+    ...(form.values as Omit<AccommodationClean, 'minPrice' | 'beds' | 'baths' | 'slug' | 'images'>),
     baths: minBaths === maxBaths ? `${maxBaths}` : `${minBaths}-${maxBaths}`,
     beds: minBeds === maxBeds ? `${maxBeds}` : `${minBeds}-${maxBeds}`,
     minPrice,
-    id: 134125,
     images: {
       cover: {
-        src: imagePreview,
+        medium: {
+          src: imagePreview,
+        },
         alt: 'Preview cover image',
       },
     },
@@ -184,11 +189,21 @@ export function turnIntoCardData({
 
 export const handleSubmit = async (
   e: React.FormEvent,
-  { forms, setLoading, setSuccess, session, method, data }: HandleSubmit
+  { forms, setLoading, setSuccess, session, method, data, initialValues }: HandleSubmit
 ) => {
   e.preventDefault();
-  setLoading(true);
   const { fullForm, images } = forms;
+  const { formInitial, imagesInitial } = initialValues;
+  if (
+    JSON.stringify(fullForm.values) === JSON.stringify(formInitial) &&
+    JSON.stringify(images.values) === JSON.stringify(imagesInitial)
+  ) {
+    setSuccess({ accepted: false, rejected: true, errorMessage: "You haven't changed a thing" });
+    return;
+  }
+
+  setLoading(true);
+
   const formData = new FormData();
   if (method === 'PUT') {
     formData.append('refId', `${fullForm.values.id}`);
@@ -202,7 +217,8 @@ export const handleSubmit = async (
   };
   // If there is an imagefile for the 'cover' field. If not an edit, there always will be.
   if (images.values.cover instanceof File) {
-    fileExtensions.cover = images.values.cover.name.split('.')[1];
+    const [, coverExtension] = images.values.cover.name.split('.');
+    fileExtensions.cover = coverExtension;
     files.push({
       name: 'cover',
       file: images.values.cover as File,
@@ -259,7 +275,7 @@ export const handleSubmit = async (
   }
   formData.append(
     'data',
-    JSON.stringify({ slug: slugify(fullForm.values.name), ...fullForm.values })
+    JSON.stringify({ slug: slugify(fullForm.values.name), holidaze: 1, ...fullForm.values })
   );
   try {
     const response = await axios.request({
@@ -274,12 +290,20 @@ export const handleSubmit = async (
       setSuccess({ accepted: true, rejected: false });
     }
   } catch (error: any) {
-    console.log(error);
-    setSuccess({
-      accepted: false,
-      rejected: true,
-      errorMessage: error.response.data.error.message,
-    });
+    const successObj = { accepted: false, rejected: true, errorMessage: '' };
+    if (error.response) {
+      const errorMsg = error.response.data;
+      successObj.errorMessage = errorMsg.error
+        ? `${error.message}: ${errorMsg.error.message}`
+        : `${error.message}: ${errorMsg}`;
+      setSuccess(successObj);
+    } else if (error.request) {
+      successObj.errorMessage =
+        'The request was made but no response was received. The API is probably gone.';
+      setSuccess(successObj);
+    } else {
+      successObj.errorMessage = error.message;
+    }
   } finally {
     setLoading(false);
   }

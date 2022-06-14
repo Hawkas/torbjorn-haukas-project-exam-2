@@ -2,9 +2,9 @@ import { ContextModalProps } from '@mantine/modals';
 import { ModalSettings } from '@mantine/modals/lib/context';
 import React from 'react';
 
-export const FormModal = ({
-  innerProps,
-}: ContextModalProps<{ modalBody: React.ReactElement; id: string }>) => <>{innerProps.modalBody}</>;
+export const FormModal = ({ innerProps }: ContextModalProps<{ modalBody: React.ReactElement }>) => (
+  <>{innerProps.modalBody}</>
+);
 
 export const formModalSettings: ModalSettings = {
   styles: () => ({

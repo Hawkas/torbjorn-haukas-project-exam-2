@@ -1,5 +1,5 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { render, MyMapComponent, Marker } from '@components/Accommodation/SmallParts/Map';
+import { Marker, MyMapComponent, render } from '@components/Accommodation/SmallParts/Map';
 import { Booking } from '@components/Modal/Booking/Booking';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import { Box, createStyles, Group, Text } from '@mantine/core';

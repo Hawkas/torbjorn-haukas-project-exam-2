@@ -1,88 +1,12 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { faClose, faTrash } from '@fortawesome/pro-regular-svg-icons';
+import { faClose } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  ActionIcon,
-  createStyles,
-  Group,
-  keyframes,
-  NumberInput,
-  Paper,
-  Text,
-  TextInput,
-  Transition,
-} from '@mantine/core';
-import { addNewFeature } from '../../../lib/helpers/createAccomFunctions';
-import { ImageLists, RoomFields } from '../../../types/createAccom';
+import { addNewFeature } from '@helpers/createAccomFunctions';
+import { ActionIcon, Group, NumberInput, Paper, Text, TextInput } from '@mantine/core';
+import type { RoomFields } from 'types/createAccom';
+import { generateFeatureFields } from './generateFeatureFields';
 
-const fadeIn = keyframes({
-  from: { opacity: 1 },
-  to: { opacity: 0 },
-});
-const useStyles = createStyles((theme, _params, getRef) => ({
-  featureWrap: {
-    animation: `${fadeIn} 0.5s ease 1 backwards reverse`,
-    '&:focus, &:focus-within': {
-      animation: 'none',
-    },
-  },
-}));
-function generateFeatureFields({
-  featuresForm,
-  rooms,
-  index,
-  classes,
-  setRooms,
-}: Omit<RoomFields, 'form'> & { index: number }) {
-  return featuresForm.values.features.map((featureItem, trueFeatureIndex, featureArray) => {
-    let featureIndex = trueFeatureIndex;
-    // Due to the way Mantine's formList is coded, I have to split this single array on any amount of rooms that may appear
-    // This is very silly and confusing and I apologize. I'd definitely do it differently in the future :P
-
-    // If room is not the first item in the array, make sure the featureIndex starts counting from where the last room left off.
-    if (index > 0) {
-      featureIndex += rooms[index - 1];
-    }
-
-    // If the value at this index doesn't exist, the featureIndex is greater than the total feature count from prev room minus one,
-    // or if the feature count is 0, return nothing.
-    if (!featureArray[featureIndex] || featureIndex > rooms[index] - 1 || rooms[index] === 0) {
-      return null;
-    }
-
-    return (
-      <Group className={classes.featureWrap} key={featureItem.key} mt="xl">
-        <TextInput
-          sx={{ flex: 1 }}
-          label="Room feature"
-          classNames={classes}
-          placeholder="Enter room feature"
-          {...featuresForm.getListInputProps('features', featureIndex, 'feature')}
-          value={featuresForm.values.features[featureIndex].feature}
-          //@ts-ignore
-          onFocus={() => featuresForm.clearFieldError(`features.${featureIndex}.feature`)}
-        />
-        <ActionIcon
-          sx={{ alignSelf: 'center' }}
-          color="red"
-          variant="hover"
-          onClick={() => {
-            // When removing a feature, decrement all feature counts higher or equal by 1.
-            setRooms.applyWhere(
-              (roomItem) => roomItem >= rooms[index],
-              (roomItem) => roomItem - 1
-            );
-            featuresForm.removeListItem('features', featureIndex);
-          }}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </ActionIcon>
-      </Group>
-    );
-  });
-}
-
-export function roomFields({
+export function generateRoomFields({
   form,
   featuresForm,
   rooms,
@@ -90,7 +14,8 @@ export function roomFields({
   classes,
   imagesForm,
   setPreviewImages,
-}: RoomFields & ImageLists) {
+  setSelectedFiles,
+}: RoomFields) {
   return form.values.rooms.map((_item, index) => {
     const featureFields = generateFeatureFields({ featuresForm, rooms, index, setRooms, classes });
     const numberInputData: {
@@ -109,7 +34,8 @@ export function roomFields({
           onClick={() => {
             imagesForm.removeListItem('rooms', index);
 
-            setPreviewImages.remove(index);
+            setPreviewImages.remove(index + 1);
+            setSelectedFiles.remove(index + 1);
             form.removeListItem('rooms', index);
 
             setRooms.applyWhere(
@@ -122,7 +48,6 @@ export function roomFields({
             if (minIndex + maxIndex < 1) return;
             // If removed room had any features, clean them up.
             const indices = Array.from({ length: maxIndex - minIndex + 1 }, (_, i) => minIndex + i);
-            console.log(indices);
             featuresForm.removeListItem('features', indices);
           }}
           sx={{ position: 'absolute', top: 4, right: 4 }}

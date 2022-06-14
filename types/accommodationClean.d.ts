@@ -32,15 +32,15 @@ export interface CleanImages {
 
 export interface Cover {
   alt: string;
-  large?: ImageSizes;
-  medium?: ImageSizes;
-  thumbnail?: ImageSizes;
+  large: ImageSizes;
+  medium: ImageSizes;
+  thumbnail: ImageSizes;
 }
 
 export interface ImageSizes {
   src: string;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
 }
 
 export interface ImagesRoom {

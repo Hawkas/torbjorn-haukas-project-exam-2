@@ -17,8 +17,8 @@ export function NavMenu({ menuBreak, onClick }: Pick<NavLinkProps, 'menuBreak' |
   const { data: session, status } = useSession();
   const openContactModal = () => {
     modals.openContextModal('contact', {
+      id: 'contact-us',
       innerProps: {
-        id: 'formModal',
         modalBody: <Contact />,
       },
     });

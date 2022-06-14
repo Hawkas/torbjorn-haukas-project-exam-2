@@ -114,6 +114,7 @@ export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) 
       icon={loading ? <Loader size={20} /> : <FontAwesomeIcon icon={faSearch} />}
       iconWidth={58}
       size="xl"
+      dropdownPosition="bottom"
       nothingFound={
         <div>
           <Text weight="600">No results matching your query</Text>

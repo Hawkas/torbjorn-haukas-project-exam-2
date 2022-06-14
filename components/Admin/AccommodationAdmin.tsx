@@ -1,14 +1,12 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { CardSection } from '@components/Accommodations/CardSection';
 import { FiltersHeader } from '@components/Accommodations/FiltersHeader';
+import { CardSection } from '@components/CardsSection/CardSection';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, createStyles } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useContainerStyles } from '@styles/containerStyles';
 import { Session } from 'next-auth';
-import { NextRouter } from 'next/router';
-import { useEffect } from 'react';
 import type { AdminProps } from 'types/commonProps';
 import { CreateAccom } from '../Modal/CreateAccom/CreateAccom';
 
@@ -28,9 +26,12 @@ export function AccommodationAdmin({
   const { classes: containerClass } = useContainerStyles();
   const modals = useModals();
   const openCreateModal = () => {
-    const id = modals.openModal({
+    modals.openContextModal('create', {
       closeOnClickOutside: false,
-      children: <CreateAccom session={session} refreshPage={refreshPage} />,
+      id: 'create',
+      innerProps: {
+        modalBody: <CreateAccom {...{ session, refreshPage, modals }} />,
+      },
     });
   };
   return (

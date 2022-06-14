@@ -9,7 +9,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+
 import { FormModal, formModalSettings } from '../components/Modal/FormModal';
 
 config.autoAddCss = false;

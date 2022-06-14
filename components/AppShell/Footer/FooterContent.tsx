@@ -53,8 +53,8 @@ export function FooterContent() {
   } = useContainerStyles();
   const openSignInModal = () => {
     modals.openContextModal('signIn', {
+      id: 'sign-in',
       innerProps: {
-        id: 'signIn',
         modalBody: <SignIn />,
       },
     });

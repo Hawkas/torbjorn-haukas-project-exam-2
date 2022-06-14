@@ -1,4 +1,4 @@
-import type { BookingAttributes } from './bookings';
+import type { BookingAttrOutgoing } from './bookings';
 
 export interface Accommodations {
   data: AccommodationObject[];
@@ -39,7 +39,7 @@ export interface Bookings {
 
 export interface BookingsData {
   id: number;
-  attributes: BookingAttributes;
+  attributes: BookingAttrOutgoing;
 }
 
 export interface ContactInfo {

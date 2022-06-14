@@ -1,5 +1,5 @@
 import { EmblaCarousel } from '@components/Accommodation/SmallParts/EmblaCarousel';
-import { IconText } from '@components/Accommodations/SmallParts/IconText';
+import { IconText } from '@components/CardsSection/Cards/SmallParts/IconText';
 import { faBed, faLocationDot, faToilet } from '@fortawesome/pro-solid-svg-icons';
 import { Box, Divider, Group, Title } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';

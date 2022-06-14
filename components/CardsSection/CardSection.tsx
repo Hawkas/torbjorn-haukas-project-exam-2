@@ -1,17 +1,19 @@
 import { filterArray } from '@helpers/filterArray';
-import { Box, createStyles, Grid, Transition, useMantineTheme } from '@mantine/core';
+import { Box, createStyles, Grid, Transition } from '@mantine/core';
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { useContainerStyles } from '@styles/containerStyles';
-import { NextRouter, useRouter } from 'next/router';
-import { DataProps } from 'types/commonProps';
-import { useEffect, useState } from 'react';
-import { CardGrid } from './SmallParts/CardGrid';
 import { Session } from 'next-auth';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { DataProps } from 'types/commonProps';
+import { CardGrid } from './CardsLayout/CardGrid';
 
 const useStyles = createStyles((theme) => ({
   cardsContainer: {
     marginTop: theme.other.sectionSpacing.lg,
+    marginBottom: theme.other.sectionSpacing.xxl,
     color: theme.colors.gray[6],
+    minHeight: 'calc(100vh - 60px - 213px)',
   },
   cardColumn: {
     [theme.fn.smallerThan(680)]: {
@@ -22,7 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
   cardGrid: {
     // To avoid layout shifts.
-    minHeight: 'calc(100vh - 60px - 213px)',
+
     alignContent: 'flex-start',
   },
 }));
@@ -38,14 +40,20 @@ export function CardSection({
   const {
     classes: { container },
   } = useContainerStyles();
-  const theme = useMantineTheme();
   // Media query hooks to control Mantine prop values
   const gutterBp = useMediaQuery('(min-width: 1200px)');
   const wrapBp = useMediaQuery('(min-width: 680px)');
 
   const [transitionStage, setTransitionStage] = useState(false);
   const [dataArray, setDataArray] = useState(data);
-  const content = CardGrid(dataArray, wrapBp, classes, admin, session, refreshPage);
+  const content = CardGrid({
+    array: dataArray,
+    wrapBp,
+    classes,
+    admin,
+    session,
+    refreshPage,
+  });
 
   // This will run only once when the component mounts. Sort the data using query parameters if any,
   // and reveal it by changing transition stage.
@@ -76,11 +84,7 @@ export function CardSection({
   }, [router.query, data]);
   return (
     <Box className={container}>
-      <Box
-        mb={theme.other.sectionSpacing.xxl}
-        component="section"
-        className={classes.cardsContainer}
-      >
+      <Box component="section" className={classes.cardsContainer}>
         <Transition
           mounted={transitionStage}
           transition="pop"

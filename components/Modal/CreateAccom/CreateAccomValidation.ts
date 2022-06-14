@@ -76,7 +76,7 @@ export const amenitySchema = amenitySchemaRaw.refine(
   (object) => {
     const { id, ...amenities } = object;
     let hasAtleastOne = false;
-    Object.entries(amenities).forEach(([_key, value]) => {
+    Object.values(amenities).forEach((value) => {
       if (value) {
         hasAtleastOne = value;
       }
@@ -115,11 +115,16 @@ export type ImagesSchema = Omit<ImagesSchemaPure, 'rooms'> & {
     | { image?: any; roomName: string; id?: number; key?: string }[];
 };
 
-export type FeaturesSchema =
+export type FeaturesArray =
   | FormList<{ feature: string; id?: number; key?: string }>
   | { feature: string; id?: number; key?: string }[];
-export type FeaturesSchemaWrap = { features: FeaturesSchema };
-export type RoomsObject = RoomsObjectPure & { features: FeaturesSchema; key?: string };
+export interface FeaturesSchema {
+  features: FeaturesArray;
+}
+export interface RoomsObject extends RoomsObjectPure {
+  features: FeaturesArray;
+  key?: string;
+}
 
 export type EntrySchema = EntrySchemaPure & {
   rooms: FormList<RoomsObject> | RoomsObject[];

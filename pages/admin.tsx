@@ -1,18 +1,16 @@
+import { MessagesAdmin } from '@components/Admin/MessagesAdmin';
 import { TitleSection } from '@components/DefaultTemplates/TitleSection';
-import { fetchAccommodations, productsQuery, removeFluff } from '@helpers/fetchAccommodations';
-import { getBooking } from '@helpers/handleBookings';
-import { createStyles, LoadingOverlay, Tabs } from '@mantine/core';
+import { everythingFetch } from '@helpers/fetchAccommodations';
+import { createStyles, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
-import axios from 'axios';
 import type { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import type { AccommodationClean } from 'types/accommodationClean';
-import { Accommodations } from 'types/accommodationRaw';
 import type { AdminProps } from 'types/commonProps';
 import { AccommodationAdmin } from '../components/Admin/AccommodationAdmin';
+import { BookingsAdmin } from '../components/Admin/BookingsAdmin';
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   tabs: {
@@ -66,23 +64,62 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
   tabBody: {
     backgroundColor: theme.other.backgroundColor,
+    minHeight: 'calc(100vh - 60px - 213px)',
   },
 }));
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await fetchAccommodations();
-  const bookings = await getBooking();
-  return { props: { data, bookings } };
+  const everything = await everythingFetch();
+  // meh, if the API is wacky you can't get in here anyway. No fallbacks here im outta time.
+  const { cleanAccom: data, bookingData: bookings, cleanMessages: messages } = everything!;
+  return { props: { data, bookings, messages } };
 };
 
-export default function AdminDashboard({ data, bookings }: AdminProps) {
+export default function AdminDashboard({ data, bookings, messages: messageData }: AdminProps) {
   const title = 'Admin dashboard | Holidaze';
   // Session is ALWAYS non-null inside this page, all the way down the react-tree.
   const { data: session } = useSession();
+  const [messages, setMessages] = useState(messageData);
+  useEffect(() => {
+    setMessages(messageData);
+  }, [messageData]);
   const router = useRouter();
-  const pageRefresh = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const onChange = (active: number, tabKey: string) => {
+    setActiveTab(active);
+    router.replace(
+      {
+        query: tabKey,
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
+  };
+  const refreshPage = () => {
     router.replace(router.asPath);
   };
+  useEffect(() => {
+    if (Object.keys(router.query).length > 0) {
+      const key = Object.keys(router.query) as ('accommodations' | 'bookings' | 'messages')[];
+      switch (key[0]) {
+        case 'accommodations':
+          setActiveTab(0);
+          break;
+        case 'bookings':
+          setActiveTab(1);
+          break;
+        case 'messages':
+          setActiveTab(2);
+          refreshPage();
+          break;
+        default:
+          break;
+      }
+    }
+  }, []);
+
   const { classes, cx } = useStyles();
   const { classes: containerClass } = useContainerStyles();
   return (
@@ -92,16 +129,18 @@ export default function AdminDashboard({ data, bookings }: AdminProps) {
         <meta property="og:title" content={title} key="title" />
         <meta
           name="description"
-          content="Admin dashboard doesn't really need a description and shouldn't be indexed for SEO"
+          content="An admin dashboard doesn't really need a description anyway"
           key="description"
         />
       </Head>
       <TitleSection darkBg title="Admin dashboard">
         <Tabs
+          initialTab={0}
+          active={activeTab}
+          onTabChange={onChange}
           tabPadding={0}
           variant="outline"
           position="center"
-          initialTab={0}
           grow
           classNames={{
             tabsListWrapper: classes.tabsWrapper,
@@ -114,11 +153,21 @@ export default function AdminDashboard({ data, bookings }: AdminProps) {
           }}
           className={classes.tabs}
         >
-          <Tabs.Tab label="Accommodations">
-            <AccommodationAdmin data={data} session={session!} refreshPage={pageRefresh} />
+          <Tabs.Tab label="Accommodations" tabKey="accommodations">
+            <AccommodationAdmin data={data} session={session!} refreshPage={refreshPage} />
           </Tabs.Tab>
-          <Tabs.Tab label="Bookings"></Tabs.Tab>
-          <Tabs.Tab label="Messages"></Tabs.Tab>
+          <Tabs.Tab label="Bookings" tabKey="bookings">
+            <BookingsAdmin bookings={bookings} />
+          </Tabs.Tab>
+          <Tabs.Tab
+            onClick={() => {
+              refreshPage();
+            }}
+            label="Messages"
+            tabKey="messages"
+          >
+            <MessagesAdmin messages={messages} />
+          </Tabs.Tab>
         </Tabs>
       </TitleSection>
     </>

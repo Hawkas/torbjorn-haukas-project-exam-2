@@ -1,7 +1,7 @@
 export interface ImageObject {
   src: string;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   alt: string;
   id?: number;
 }

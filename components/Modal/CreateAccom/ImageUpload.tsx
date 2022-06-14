@@ -1,11 +1,10 @@
 import { PrimaryButton } from '@Buttons/PrimaryButton';
-import { FontawesomeObject } from '@fortawesome/fontawesome-svg-core';
 import { faClose, faCloudUpload, faImage } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createStyles, Group, Image, MantineTheme, Text, useMantineTheme } from '@mantine/core';
 import { Dropzone, DropzoneProps, DropzoneStatus, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { useDidUpdate } from '@mantine/hooks';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -97,7 +96,7 @@ export const dropzoneChildren = (
           ) : (
             <>
               <Text size="xl" inline>
-                That image ain't gonna cut it bozo.
+                That image ain&apos;t gonna cut it bozo.
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
                 File should not exceed 6mb, and must be .jpg/jpeg, .png, .webp or .svg
@@ -136,8 +135,11 @@ export function ImageUpload({
         onReject={() => setImageStatus(false)}
         multiple={false}
         name={name}
-        styles={(theme) => ({
-          reject: { backgroundColor: theme.colors.blue[0], borderColor: theme.colors.blue[5] },
+        styles={(argTheme) => ({
+          reject: {
+            backgroundColor: argTheme.colors.blue[0],
+            borderColor: argTheme.colors.blue[5],
+          },
         })}
         className={classes.dropzone}
         radius="md"
