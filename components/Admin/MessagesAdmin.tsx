@@ -272,7 +272,7 @@ interface MessagesAdmin {
 }
 
 export function MessagesAdmin({ messages }: MessagesAdmin) {
-  const messageData: MessageClean[] | [] = [...messages];
+  const messageData: MessageClean[] | [] = messages;
   const {
     classes: { container },
   } = useContainerStyles();

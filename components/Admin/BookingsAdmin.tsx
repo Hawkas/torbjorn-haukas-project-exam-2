@@ -272,11 +272,11 @@ export function TableSort({ data }: TableSortProps) {
 }
 
 interface BookingsAdmin {
-  bookings: BookingCleaned[] | null;
+  bookings: BookingCleaned[] | [];
 }
 
 export function BookingsAdmin({ bookings }: BookingsAdmin) {
-  const bookingData: BookingCleaned[] | [] = bookings || [];
+  const bookingData: BookingCleaned[] | [] = bookings;
   const {
     classes: { container },
   } = useContainerStyles();
