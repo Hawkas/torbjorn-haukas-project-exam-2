@@ -178,7 +178,6 @@ export const everythingFetch = async () => {
       method: 'GET',
       headers: { Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}` },
     });
-    console.log(result);
     const {
       accommodations,
       messages,
@@ -219,7 +218,6 @@ export const everythingFetch = async () => {
     });
     return { cleanAccom, bookingData, cleanMessages };
   } catch (error: any) {
-    console.log(error);
     return { cleanAccom: [], bookingData: [], cleanMessages: [] };
   }
 };

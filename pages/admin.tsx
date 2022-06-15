@@ -70,7 +70,6 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const everything = await everythingFetch();
-  console.log(everything.cleanAccom);
   const {
     cleanAccom: data,
     bookingData: bookings = null,
