@@ -185,37 +185,44 @@ export const everythingFetch = async () => {
     }: { accommodations: Accommodations; messages: MessageInc; bookings: Bookings } =
       result.data[0].attributes;
     const cleanAccom = removeFluff(accommodations);
-    const bookingData: BookingCleaned[] = bookings.data.map((item) => {
-      const {
-        id,
-        attributes: {
-          createdAt,
-          updatedAt,
-          publishedAt,
-          firstName,
-          lastName,
-          accommodation: {
-            data: {
-              attributes: { name: accommodation },
-            },
-          },
-          ...rest
-        },
-      } = item;
-      const name = `${firstName} ${lastName}`;
-      return { id: id.toString(), name, accommodation, ...rest };
-    });
-    const cleanMessages: MessageClean[] = messages.data.map((item) => {
-      const {
-        attributes: { updatedAt, publishedAt, createdAt, ...cleanMessage },
-        id,
-      } = item;
-      return {
-        id: id.toString(),
-        createdAt: getFormattedDate(new Date(createdAt)),
-        ...cleanMessage,
-      };
-    });
+    const bookingData: BookingCleaned[] =
+      bookings.data.length > 0
+        ? bookings.data.map((item) => {
+            const {
+              id,
+              attributes: {
+                createdAt,
+                updatedAt,
+                publishedAt,
+                firstName,
+                lastName,
+                accommodation: {
+                  data: {
+                    attributes: { name: accommodation },
+                  },
+                },
+                accommodation: removeThis,
+                ...rest
+              },
+            } = item;
+            const name = `${firstName} ${lastName}`;
+            return { id: id.toString(), name, accommodation, ...rest };
+          })
+        : [];
+    const cleanMessages: MessageClean[] =
+      messages.data.length > 0
+        ? messages.data.map((item) => {
+            const {
+              attributes: { updatedAt, publishedAt, createdAt, ...cleanMessage },
+              id,
+            } = item;
+            return {
+              id: id.toString(),
+              createdAt: getFormattedDate(new Date(createdAt)),
+              ...cleanMessage,
+            };
+          })
+        : [];
     return { cleanAccom, bookingData, cleanMessages };
   } catch (error: any) {
     return { cleanAccom: [], bookingData: [], cleanMessages: [] };
