@@ -42,7 +42,7 @@ export default NextAuth({
           // Now typescript will believe these values exist and stop bickering.
           const { ...values } = user(credentials);
 
-          const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/local`, {
+          const { data } = await axios.post(`${process.env.API_INTERNAL_URL}/auth/local`, {
             identifier: values.email,
             password: values.password,
           });

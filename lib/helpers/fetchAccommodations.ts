@@ -219,6 +219,7 @@ export const everythingFetch = async () => {
     });
     return { cleanAccom, bookingData, cleanMessages };
   } catch (error: any) {
+    console.log(error);
     return { cleanAccom: [], bookingData: [], cleanMessages: [] };
   }
 };

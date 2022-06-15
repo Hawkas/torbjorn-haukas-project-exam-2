@@ -29,7 +29,7 @@ import { useEffect, useState } from 'react';
 //   { encodeValuesOnly: true }
 // );
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
+axios.defaults.baseURL = process.env.API_INTERNAL_URL;
 
 export const useAxios = (axiosParams: AxiosRequestConfig) => {
   const [response, setResponse] = useState(undefined);
