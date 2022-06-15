@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     cleanAccom: data,
     bookingData: bookings = null,
     cleanMessages: messageData = null,
-  } = everything!;
+  } = everything;
   return { props: { data, bookings, messageData } };
 };
 
