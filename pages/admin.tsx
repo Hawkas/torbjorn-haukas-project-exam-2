@@ -102,7 +102,9 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
     );
   };
   const refreshPage = () => {
-    router.replace(router.asPath);
+    setTimeout(() => {
+      router.replace(router.asPath);
+    }, 1000);
   };
   useEffect(() => {
     if (Object.keys(router.query).length > 0) {
@@ -116,7 +118,6 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
           break;
         case 'messages':
           setActiveTab(2);
-          refreshPage();
           break;
         default:
           break;
