@@ -7,7 +7,6 @@ import { useContainerStyles } from '@styles/containerStyles';
 import { useTextStyles } from '@styles/typography';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 const useFooterStyles = createStyles((theme) => ({
   wrapper: {
@@ -44,7 +43,6 @@ const useFooterStyles = createStyles((theme) => ({
 
 export function FooterContent() {
   const { data: session } = useSession();
-  const router = useRouter();
   const modals = useModals();
   const { classes, cx } = useFooterStyles();
   const { classes: textClass } = useTextStyles();

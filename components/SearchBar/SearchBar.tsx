@@ -25,64 +25,48 @@ interface ItemProps extends SelectItemProps {
 }
 
 const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ location, value, image, type, slug, ...others }: ItemProps, ref) => {
-    // As this list isn't actually rendered as HTML under the input itself,
-    // I can't make use of next/link, and I have to push the url with router
-    //* This makes the page transition rather slow, but oh well.
-    //! Never mind, it's actually way too fast in production, so it flickers.
-
-    if (!value)
-      // In case of API failure, or when I inevitably take down the API.
-      return (
-        <div ref={ref} {...others}>
-          <Text weight="600" color="red">
-            The API is gone, so there&apos;s nothing
+  ({ location, value, image, type, slug, ...others }: ItemProps, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap>
+        <Avatar size="xl" alt={value} src={image} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            gap: '8px',
+            alignSelf: 'center',
+            minHeight: '100%',
+          }}
+        >
+          <Text weight="600" sx={{ lineHeight: 1.1 }}>
+            {value}
           </Text>
-        </div>
-      );
-    return (
-      <div ref={ref} {...others}>
-        <Group noWrap>
-          <Avatar size="xl" alt={value} src={image} />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              gap: '8px',
-              alignSelf: 'center',
-              minHeight: '100%',
-            }}
-          >
-            <Text weight="600" sx={{ lineHeight: 1.1 }}>
-              {value}
+          <Box>
+            <Text
+              size="sm"
+              color="dimmed"
+              sx={{
+                display: 'flex',
+                gap: '4px',
+                alignContent: 'baseline',
+                alignItems: 'baseline',
+              }}
+            >
+              <FontAwesomeIcon
+                style={{ color: ' #a7acb4', fontSize: '10px', lineHeight: 1 }}
+                icon={faLocationDot}
+              />
+              {location}
             </Text>
-            <Box>
-              <Text
-                size="sm"
-                color="dimmed"
-                sx={{
-                  display: 'flex',
-                  gap: '4px',
-                  alignContent: 'baseline',
-                  alignItems: 'baseline',
-                }}
-              >
-                <FontAwesomeIcon
-                  style={{ color: ' #a7acb4', fontSize: '10px', lineHeight: 1 }}
-                  icon={faLocationDot}
-                />
-                {location}
-              </Text>
-              <Text size="xs" color="#003355">
-                {type}
-              </Text>
-            </Box>
+            <Text size="xs" color="#003355">
+              {type}
+            </Text>
           </Box>
-        </Group>
-      </div>
-    );
-  }
+        </Box>
+      </Group>
+    </div>
+  )
 );
 
 export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) {
@@ -117,9 +101,18 @@ export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) 
       size="xl"
       dropdownPosition="bottom"
       nothingFound={
-        <div>
-          <Text weight="600">No results matching your query</Text>
-        </div>
+        data && data.length > 0 ? (
+          <div>
+            <Text weight="600">No results matching your query</Text>
+          </div>
+        ) : (
+          // In case of API failure, or when I inevitably take down the API.
+          <div>
+            <Text weight="600" color="red">
+              The API is gone or completely empty, so there&apos;s nothing
+            </Text>
+          </div>
+        )
       }
       onItemSubmit={(item) => {
         setLoading(true);

@@ -222,7 +222,7 @@ export function TableSort({ data }: TableSortProps) {
   });
 
   return (
-    <ScrollArea sx={{ height: '100vh' }} type="scroll">
+    <ScrollArea sx={{ height: '100vh' }} type="hover" offsetScrollbars>
       <TextInput
         placeholder="Search by any field"
         className={classes.searchBar}
@@ -254,7 +254,7 @@ export function TableSort({ data }: TableSortProps) {
             rows
           ) : (
             <tr>
-              <td colSpan={260}>
+              <td colSpan={195}>
                 <Text weight={500} align="center">
                   Nothing found
                 </Text>
@@ -268,10 +268,11 @@ export function TableSort({ data }: TableSortProps) {
 }
 
 interface MessagesAdmin {
-  messages: MessageClean[];
+  messages: MessageClean[] | [];
 }
 
 export function MessagesAdmin({ messages }: MessagesAdmin) {
+  const messageData: MessageClean[] | [] = [...messages];
   const {
     classes: { container },
   } = useContainerStyles();
@@ -280,7 +281,7 @@ export function MessagesAdmin({ messages }: MessagesAdmin) {
     <>
       <TitleSection title="Messages" order={2} />
       <Box mt={-102} pb={192} className={container}>
-        <TableSort data={messages} />
+        <TableSort data={messageData} />
       </Box>
     </>
   );

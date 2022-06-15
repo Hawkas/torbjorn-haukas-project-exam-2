@@ -219,6 +219,6 @@ export const everythingFetch = async () => {
     });
     return { cleanAccom, bookingData, cleanMessages };
   } catch (error: any) {
-    return error;
+    return { cleanAccom: [], bookingData: [], cleanMessages: [] };
   }
 };

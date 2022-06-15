@@ -226,7 +226,7 @@ export function TableSort({ data }: TableSortProps) {
   });
 
   return (
-    <ScrollArea sx={{ height: '100vh' }} type="hover">
+    <ScrollArea sx={{ height: '100vh' }} type="hover" offsetScrollbars>
       <TextInput
         placeholder="Search by any field"
         className={classes.searchBar}
