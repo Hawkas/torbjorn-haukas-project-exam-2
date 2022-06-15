@@ -5,7 +5,7 @@ import type { BookingCleaned } from './bookings';
 export interface AdminProps {
   bookings: BookingCleaned[] | null;
   data: AccommodationClean[] | null;
-  messages: Message[];
+  messageData: Message[];
 }
 
 export interface DataProps {

@@ -18,6 +18,45 @@ interface Props {
   googleData: any;
 }
 
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const allTheItems = await fetchAccommodations();
+
+  const data = allTheItems?.find((item) => item.slug === params?.slug);
+  let newData: any;
+  if (data) {
+    const {
+      contactInfo: { address },
+    } = data!;
+    const addressURL = encodeURIComponent(address);
+
+    // In case the google call fails
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+      );
+      const { data: googleData } = await response;
+      newData = googleData;
+    } catch (error) {
+      //console.log(error);
+      newData = null;
+    }
+  }
+  const notFound = !data;
+  // return { props: { data }, revalidate: 300, notFound };
+  return { props: { data, googleData: newData }, revalidate: 10, notFound };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const data = await fetchAccommodations();
+  if (data) {
+    const paths = data.map((item) => ({
+      params: { slug: item.slug },
+    }));
+    return { paths, fallback: true };
+  }
+  return { paths: [], fallback: true };
+};
+
 export default function Accommodation({ data, googleData }: Props) {
   const router = useRouter();
   if (data) {
@@ -68,38 +107,3 @@ export default function Accommodation({ data, googleData }: Props) {
   // It'll only ever get here if the automatic error page redirect doesn't fire.
   router.reload();
 }
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await fetchAccommodations();
-  if (!data) return { paths: [{ params: { slug: undefined } }], fallback: true };
-  const paths = data!.map((item) => ({
-    params: { slug: item.slug },
-  }));
-  return { paths, fallback: true };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const allTheItems = await fetchAccommodations();
-
-  const data = allTheItems?.find((item) => item.slug === params?.slug);
-  let newData: any;
-  const {
-    contactInfo: { address },
-  } = data!;
-  const addressURL = encodeURIComponent(address);
-
-  // In case the google call fails
-  try {
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
-    );
-    const { data: googleData } = await response;
-    newData = googleData;
-  } catch (error) {
-    //console.log(error);
-    newData = null;
-  }
-  const notFound = !data;
-  // return { props: { data }, revalidate: 300, notFound };
-  return { props: { data, googleData: newData }, revalidate: 300, notFound };
-};

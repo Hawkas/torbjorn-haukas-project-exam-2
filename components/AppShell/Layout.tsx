@@ -4,7 +4,7 @@ import useFilledState from 'lib/hooks/useFilledState';
 import { settings } from 'lib/settings';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AccommodationClean } from 'types/accommodationClean';
+import { AdminProps } from 'types/commonProps';
 
 import { FooterContent } from './Footer/FooterContent';
 import { HeaderDropdown, HeaderTop } from './Header';
@@ -57,7 +57,7 @@ type Props = Omit<React.ComponentPropsWithRef<'div'>, 'title'> & {
   children?: React.ReactNode;
 };
 
-export default function Layout({ children, ...others }: Props & { data: AccommodationClean[] }) {
+export default function Layout({ children, ...others }: Props & AdminProps) {
   const { classes, cx } = useStyles();
   const router = useRouter();
   const [opened, setOpened] = useState(false);
@@ -83,7 +83,7 @@ export default function Layout({ children, ...others }: Props & { data: Accommod
       setTransitionStage(true);
       setDisplayChildren(children);
     }
-  }, [others.data]);
+  }, [others.data, others.messageData, others.bookings]);
   // Make the page content fade out
   useEffect(() => {
     if (routerPath === router.pathname) return;

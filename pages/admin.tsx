@@ -71,11 +71,15 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 export const getServerSideProps: GetServerSideProps = async () => {
   const everything = await everythingFetch();
   // meh, if the API is wacky you can't get in here anyway. No fallbacks here im outta time.
-  const { cleanAccom: data, bookingData: bookings, cleanMessages: messages } = everything!;
-  return { props: { data, bookings, messages } };
+  const {
+    cleanAccom: data,
+    bookingData: bookings = null,
+    cleanMessages: messageData = null,
+  } = everything!;
+  return { props: { data, bookings, messageData } };
 };
 
-export default function AdminDashboard({ data, bookings, messages: messageData }: AdminProps) {
+export default function AdminDashboard({ data, bookings, messageData }: AdminProps) {
   const title = 'Admin dashboard | Holidaze';
   // Session is ALWAYS non-null inside this page, all the way down the react-tree.
   const { data: session } = useSession();

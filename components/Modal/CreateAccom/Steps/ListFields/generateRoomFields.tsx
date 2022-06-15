@@ -38,6 +38,8 @@ export function generateRoomFields({
             setSelectedFiles.remove(index + 1);
             form.removeListItem('rooms', index);
 
+            // Update feature counts for all rooms following the removed entity
+            // OldValue - RemovedRoomsValue + RoomBeforeRemovedRoomsValue
             setRooms.applyWhere(
               (_, roomIndex) => roomIndex > index,
               (roomItem) => roomItem - rooms[index] + rooms[index - 1]

@@ -7,7 +7,7 @@ import type { DataProps } from 'types/commonProps';
 
 export const getStaticProps: GetStaticProps = async () => {
   const data = await fetchAccommodations();
-  return { props: { data }, revalidate: 300 };
+  return { props: { data }, revalidate: 10 };
 };
 
 export default function Accommodations(props: DataProps) {
