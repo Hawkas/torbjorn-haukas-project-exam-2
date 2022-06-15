@@ -174,7 +174,7 @@ export const fetchAccommodations = async () => {
 export const everythingFetch = async () => {
   try {
     const result = await axiosFetch({
-      url: `/holidazes?${everythingQuery}`,
+      url: `/holidazes/1?${everythingQuery}`,
       method: 'GET',
       headers: { Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}` },
     });
@@ -183,9 +183,9 @@ export const everythingFetch = async () => {
       messages,
       bookings,
     }: { accommodations: Accommodations; messages: MessageInc; bookings: Bookings } =
-      result.data[0].attributes;
+      result.data.attributes;
     const cleanAccom = removeFluff(accommodations);
-    const bookingData: BookingCleaned[] =
+    const bookingData: BookingCleaned[] | [] =
       bookings.data.length > 0
         ? bookings.data.map((item) => {
             const {
@@ -209,7 +209,7 @@ export const everythingFetch = async () => {
             return { id: id.toString(), name, accommodation, ...rest };
           })
         : [];
-    const cleanMessages: MessageClean[] =
+    const cleanMessages: MessageClean[] | [] =
       messages.data.length > 0
         ? messages.data.map((item) => {
             const {
