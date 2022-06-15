@@ -80,7 +80,6 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // I'm letting it stay as a reminder. Also time is up.
   useDidUpdate(() => {
     if (router.pathname === '/admin' && routerPath === router.pathname) {
-      setTransitionStage(true);
       setDisplayChildren(children);
     }
   }, [others.data, others.messageData, others.bookings]);
