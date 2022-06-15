@@ -70,7 +70,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const everything = await everythingFetch();
-  // meh, if the API is wacky you can't get in here anyway. No fallbacks here im outta time.
+  console.log(everything.cleanAccom);
   const {
     cleanAccom: data,
     bookingData: bookings = null,
