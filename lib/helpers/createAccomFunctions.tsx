@@ -40,12 +40,7 @@ export function addNewFeature({ rooms, index, setRooms, featuresForm }: AddNewFe
       (roomItem) => roomItem - rooms[index] + featuresCountPlusPrev
     );
   }
-  // // Update the feature count on all subsequent rooms.
-  // // subsequentRoomNewValue = subsequentRoomOldValue - currentRoomOldValue + currentRoomNewValue
-  // setRooms.applyWhere(
-  //   (roomItem, roomIndex) => roomIndex > index && roomItem < featuresCountPlusPrev,
-  //   (roomItem) => roomItem - rooms[index] + featuresCountPlusPrev
-  // );
+
   // Update the feature count for the current room.
   setRooms.setItem(index, featuresCountPlusPrev);
 
