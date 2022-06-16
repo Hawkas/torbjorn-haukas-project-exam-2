@@ -65,8 +65,9 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // Page transition effect
   const [displayChildren, setDisplayChildren] = useState<React.ReactNode>(children);
   const [transitionStage, setTransitionStage] = useState(false);
+  const [data, setData] = useState(others.data);
 
-  // Inputs changing on the location chips seem to re-render the whole page and I have no idea why.
+  // Inputs changing on the location chips seem to re-render the whole page
   const [routerPath, setRouterPath] = useState(router.pathname);
 
   // Make the page content fade in immediately
@@ -79,7 +80,9 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // I did this so early on, but of course saving an entire page as a state is a bad idea.
   // I'm letting it stay as a reminder. Also time is up.
   useDidUpdate(() => {
-    setDisplayChildren(children);
+    if (router.pathname === '/admin' && routerPath === router.pathname) {
+      setDisplayChildren(children);
+    }
   }, [others.data, others.messageData, others.bookings]);
   // Make the page content fade out
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
       setTransitionStage(false);
       setRouterPath(router.pathname);
     }
-  }, [children]);
+  }, [children, router.pathname]);
   const headerCheck = !filledState && !opened && router.pathname === '/' && transitionStage;
   const clickEvent = () => {
     setOpened((o) => !o);

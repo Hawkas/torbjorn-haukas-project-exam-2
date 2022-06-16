@@ -11,13 +11,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     '&:hover a': {
       textDecoration: 'none',
     },
-    '& img': {
-      ref: getRef('image'),
-      transform: 'scale(1)',
-      transformOrigin: 'bottom',
-      transition: 'transform 0.3s ease',
-    },
-    [`&:hover .${getRef('image')}`]: {
+    [`&:hover .${getRef('ratioBox')}`]: {
       transform: 'scale(1.05)',
     },
   },

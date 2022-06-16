@@ -9,12 +9,12 @@ const useChipStyles = createStyles((theme, _params, getRef) => ({
     width: '100%',
     maxWidth: '27.8125rem',
     marginBottom: theme.other.largeSpacing.sm,
-  },
-  chip: {
-    borderRadius: theme.radius.xl,
-    [theme.fn.smallerThan('xs')]: {
-      flexBasis: 'calc(50% - 16px)',
-      flexGrow: 1,
+    '& > div': {
+      borderRadius: theme.radius.xl,
+      [theme.fn.smallerThan('xs')]: {
+        flexBasis: 'calc(50% - 16px)',
+        flexGrow: 1,
+      },
     },
   },
 
@@ -33,6 +33,17 @@ const useChipStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
+const chipItem = [
+  { label: 'Bergen', value: 'bergen' },
+  { label: 'Voss', value: 'voss' },
+  { label: 'Hardanger', value: 'hardanger' },
+  { label: 'All', value: 'all' },
+].map((item, index) => (
+  <Chip value={item.value} key={index}>
+    {item.label}
+  </Chip>
+));
+
 export function LocationChips({ router }: { router: NextRouter }) {
   const { classes: textClass } = useTextStyles();
   const [chipValue, setChipValue] = useState(
@@ -43,16 +54,6 @@ export function LocationChips({ router }: { router: NextRouter }) {
   }, []);
   const { classes, cx } = useChipStyles();
 
-  const chipItem = [
-    { label: 'Bergen', value: 'bergen' },
-    { label: 'Voss', value: 'voss' },
-    { label: 'Hardanger', value: 'hardanger' },
-    { label: 'All', value: 'all' },
-  ].map((item, index) => (
-    <Chip className={classes.chip} value={item.value} key={index}>
-      {item.label}
-    </Chip>
-  ));
   return (
     <Chips
       id="location-chips"
