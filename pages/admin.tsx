@@ -133,10 +133,6 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
         {/*I don't know why, but during production a refresh will cause the fonts on the admin page to revert to fallback webfont.
           In fact, the external font itself just disappears from the head altogether, and client-side page transitions afterwards
           will also not have the correct fonts. So even though it hurts performance, I'm adding the google font here explicitly */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Merienda&family=Mulish:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <TitleSection darkBg title="Admin dashboard">
         <Tabs
