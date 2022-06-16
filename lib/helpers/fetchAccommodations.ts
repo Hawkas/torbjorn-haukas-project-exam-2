@@ -40,7 +40,7 @@ export const everythingQuery = qs.stringify(
 );
 
 export const rawAccommodations = async () => {
-  const headers = { Authorization: `Bearer ${process.env.API_PUBLIC_TOKEN}` };
+  const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}` };
   const url = `/accommodations?${productsQuery}`;
   const method = 'GET';
   const params = { method, url, headers };
