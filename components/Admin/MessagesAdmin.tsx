@@ -15,7 +15,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MessageClean } from 'types/messages';
 
 const useStyles = createStyles((theme) => ({
