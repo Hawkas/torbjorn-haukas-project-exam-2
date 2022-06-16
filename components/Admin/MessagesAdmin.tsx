@@ -269,17 +269,14 @@ export function TableSort({ data }: TableSortProps) {
 
 interface MessagesAdmin {
   messages: MessageClean[] | [];
-  refreshPage: () => void;
 }
 
-export function MessagesAdmin({ messages, refreshPage }: MessagesAdmin) {
+export function MessagesAdmin({ messages }: MessagesAdmin) {
   const messageData: MessageClean[] | [] = messages;
   const {
     classes: { container },
   } = useContainerStyles();
-  useEffect(() => {
-    refreshPage();
-  }, []);
+
   return (
     <>
       <TitleSection title="Messages" order={2} />

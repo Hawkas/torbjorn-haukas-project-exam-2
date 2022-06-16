@@ -130,6 +130,12 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
           content="An admin dashboard doesn't really need a description anyway"
           key="description"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
       <TitleSection darkBg title="Admin dashboard">
         <Tabs
@@ -155,10 +161,10 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
             <AccommodationAdmin data={data} session={session!} refreshPage={refreshPage} />
           </Tabs.Tab>
           <Tabs.Tab label="Bookings" tabKey="bookings">
-            <BookingsAdmin bookings={bookings} refreshPage={refreshPage} />
+            <BookingsAdmin bookings={bookings} />
           </Tabs.Tab>
           <Tabs.Tab label="Messages" tabKey="messages">
-            <MessagesAdmin messages={messages} refreshPage={refreshPage} />
+            <MessagesAdmin messages={messages} />
           </Tabs.Tab>
         </Tabs>
       </TitleSection>

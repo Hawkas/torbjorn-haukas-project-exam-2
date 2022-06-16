@@ -273,17 +273,13 @@ export function TableSort({ data }: TableSortProps) {
 
 interface BookingsAdmin {
   bookings: BookingCleaned[] | [];
-  refreshPage: () => void;
 }
 
-export function BookingsAdmin({ bookings, refreshPage }: BookingsAdmin) {
+export function BookingsAdmin({ bookings }: BookingsAdmin) {
   const bookingData: BookingCleaned[] | [] = bookings;
   const {
     classes: { container },
   } = useContainerStyles();
-  useEffect(() => {
-    refreshPage();
-  }, []);
   return (
     <>
       <TitleSection title="Bookings" order={2} />
