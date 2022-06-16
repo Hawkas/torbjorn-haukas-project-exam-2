@@ -68,7 +68,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=20');
   const everything = await everythingFetch();
   const { cleanAccom: data, bookingData: bookings, cleanMessages: messageData } = everything;
   return { props: { data, bookings, messageData } };
@@ -98,6 +99,7 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
     router.replace(router.asPath);
   };
   useEffect(() => {
+    if (!router.isReady) return;
     if (Object.keys(router.query).length > 0) {
       const key = Object.keys(router.query) as ('accommodations' | 'bookings' | 'messages')[];
       switch (key[0]) {
