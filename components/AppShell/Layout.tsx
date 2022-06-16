@@ -79,9 +79,7 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // I did this so early on, but of course saving an entire page as a state is a bad idea.
   // I'm letting it stay as a reminder. Also time is up.
   useDidUpdate(() => {
-    if (router.pathname === '/admin' && routerPath === router.pathname) {
-      setDisplayChildren(children);
-    }
+    setDisplayChildren(children);
   }, [others.data, others.messageData, others.bookings]);
   // Make the page content fade out
   useEffect(() => {
