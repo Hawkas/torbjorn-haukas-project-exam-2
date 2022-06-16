@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { Session } from 'next-auth';
 import { AccommodationClean, ImagesRoom } from 'types/accommodationClean';
 import { Accommodations } from 'types/accommodationRaw';
 import { BookingCleaned, Bookings } from 'types/bookings';
@@ -171,19 +173,19 @@ export const fetchAccommodations = async () => {
   return removeFluff(rawData);
 };
 
-export const everythingFetch = async () => {
+export const everythingFetch = async (session: Session | null) => {
   try {
-    const result = await axiosFetch({
-      url: `/holidazes/1?${everythingQuery}`,
+    const result = await axios.request({
+      url: `${process.env.NEXT_PUBLIC_LIVE_API}/holidazes/1?${everythingQuery}`,
       method: 'GET',
-      headers: { Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}` },
+      headers: { Authorization: `Bearer ${session!.jwt}` },
     });
     const {
       accommodations,
       messages,
       bookings,
     }: { accommodations: Accommodations; messages: MessageInc; bookings: Bookings } =
-      result.data.attributes;
+      result.data.data.attributes;
     const cleanAccom = removeFluff(accommodations);
     const bookingData: BookingCleaned[] | [] =
       bookings.data.length > 0

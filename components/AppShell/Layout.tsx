@@ -65,7 +65,6 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // Page transition effect
   const [displayChildren, setDisplayChildren] = useState<React.ReactNode>(children);
   const [transitionStage, setTransitionStage] = useState(false);
-  const [data, setData] = useState(others.data);
 
   // Inputs changing on the location chips seem to re-render the whole page
   const [routerPath, setRouterPath] = useState(router.pathname);
@@ -83,6 +82,7 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
     if (router.pathname === '/admin' && routerPath === router.pathname) {
       setDisplayChildren(children);
     }
+    if (routerPath === router.pathname) setDisplayChildren(children);
   }, [others.data, others.messageData, others.bookings]);
   // Make the page content fade out
   useEffect(() => {

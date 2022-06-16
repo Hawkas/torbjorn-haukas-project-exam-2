@@ -4,7 +4,7 @@ import { everythingFetch } from '@helpers/fetchAccommodations';
 import { createStyles, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -68,8 +68,9 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const everything = await everythingFetch();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  const everything = await everythingFetch(session);
   const {
     cleanAccom: data,
     bookingData: bookings = null,
