@@ -64,7 +64,7 @@ export const rawAccommodations = async () => {
 // Boilerplate warning.
 
 export function removeFluff(rawData: Accommodations): AccommodationClean[] | null {
-  if (!rawData.data) return null;
+  if (!rawData.data || rawData.data.length < 1) return null;
   const mappedData = rawData.data.map((item) => {
     // Unpackage all the stuff that's already easy to reach.
     const {
