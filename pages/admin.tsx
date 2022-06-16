@@ -86,9 +86,13 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
   const [activeTab, setActiveTab] = useState(0);
   const onChange = (active: number, tabKey: string) => {
     setActiveTab(active);
-    router.replace({
-      query: tabKey,
-    });
+    router.replace(
+      {
+        query: tabKey,
+      },
+      undefined,
+      { shallow: active > 0 }
+    );
   };
   const refreshPage = () => {
     router.replace(router.asPath);
