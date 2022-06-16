@@ -153,10 +153,10 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
             <AccommodationAdmin data={data} session={session!} refreshPage={refreshPage} />
           </Tabs.Tab>
           <Tabs.Tab label="Bookings" tabKey="bookings">
-            <BookingsAdmin bookings={bookings} />
+            <BookingsAdmin bookings={bookings} refreshPage={refreshPage} />
           </Tabs.Tab>
           <Tabs.Tab label="Messages" tabKey="messages">
-            <MessagesAdmin messages={messages} />
+            <MessagesAdmin messages={messages} refreshPage={refreshPage} />
           </Tabs.Tab>
         </Tabs>
       </TitleSection>

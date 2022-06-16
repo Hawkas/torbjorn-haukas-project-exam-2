@@ -15,7 +15,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BookingCleaned } from 'types/bookings';
 
 const useStyles = createStyles((theme) => ({
@@ -273,13 +273,17 @@ export function TableSort({ data }: TableSortProps) {
 
 interface BookingsAdmin {
   bookings: BookingCleaned[] | [];
+  refreshPage: () => void;
 }
 
-export function BookingsAdmin({ bookings }: BookingsAdmin) {
+export function BookingsAdmin({ bookings, refreshPage }: BookingsAdmin) {
   const bookingData: BookingCleaned[] | [] = bookings;
   const {
     classes: { container },
   } = useContainerStyles();
+  useEffect(() => {
+    refreshPage();
+  }, []);
   return (
     <>
       <TitleSection title="Bookings" order={2} />

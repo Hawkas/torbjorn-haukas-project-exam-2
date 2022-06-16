@@ -15,7 +15,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MessageClean } from 'types/messages';
 
 const useStyles = createStyles((theme) => ({
@@ -269,14 +269,17 @@ export function TableSort({ data }: TableSortProps) {
 
 interface MessagesAdmin {
   messages: MessageClean[] | [];
+  refreshPage: () => void;
 }
 
-export function MessagesAdmin({ messages }: MessagesAdmin) {
+export function MessagesAdmin({ messages, refreshPage }: MessagesAdmin) {
   const messageData: MessageClean[] | [] = messages;
   const {
     classes: { container },
   } = useContainerStyles();
-
+  useEffect(() => {
+    refreshPage();
+  }, []);
   return (
     <>
       <TitleSection title="Messages" order={2} />
