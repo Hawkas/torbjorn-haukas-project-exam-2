@@ -91,7 +91,7 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
         query: tabKey,
       },
       undefined,
-      { shallow: active > 0 }
+      { shallow: true }
     );
   };
   const refreshPage = () => {
