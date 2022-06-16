@@ -4,7 +4,7 @@ import { everythingFetch } from '@helpers/fetchAccommodations';
 import { createStyles, Tabs } from '@mantine/core';
 import { useContainerStyles } from '@styles/containerStyles';
 import type { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -68,14 +68,9 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  const everything = await everythingFetch(session);
-  const {
-    cleanAccom: data,
-    bookingData: bookings = null,
-    cleanMessages: messageData = null,
-  } = everything;
+export const getServerSideProps: GetServerSideProps = async () => {
+  const everything = await everythingFetch();
+  const { cleanAccom: data, bookingData: bookings, cleanMessages: messageData } = everything;
   return { props: { data, bookings, messageData } };
 };
 
@@ -91,20 +86,12 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
   const [activeTab, setActiveTab] = useState(0);
   const onChange = (active: number, tabKey: string) => {
     setActiveTab(active);
-    router.replace(
-      {
-        query: tabKey,
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
+    router.replace({
+      query: tabKey,
+    });
   };
   const refreshPage = () => {
-    setTimeout(() => {
-      router.replace(router.asPath);
-    }, 1000);
+    router.replace(router.asPath);
   };
   useEffect(() => {
     if (Object.keys(router.query).length > 0) {
@@ -164,13 +151,7 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
           <Tabs.Tab label="Bookings" tabKey="bookings">
             <BookingsAdmin bookings={bookings} />
           </Tabs.Tab>
-          <Tabs.Tab
-            onClick={() => {
-              refreshPage();
-            }}
-            label="Messages"
-            tabKey="messages"
-          >
+          <Tabs.Tab label="Messages" tabKey="messages">
             <MessagesAdmin messages={messages} />
           </Tabs.Tab>
         </Tabs>

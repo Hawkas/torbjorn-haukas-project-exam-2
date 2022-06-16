@@ -1,5 +1,4 @@
 import { AppShell, createStyles, Footer, Header } from '@mantine/core';
-import { useDidUpdate } from '@mantine/hooks';
 import useFilledState from 'lib/hooks/useFilledState';
 import { settings } from 'lib/settings';
 import { useRouter } from 'next/router';
@@ -78,7 +77,7 @@ export default function Layout({ children, ...others }: Props & AdminProps) {
   // This is to force an update in case the 'data' prop changes on my one and only SSR page.
   // I did this so early on, but of course saving an entire page as a state is a bad idea.
   // I'm letting it stay as a reminder. Also time is up.
-  useDidUpdate(() => {
+  useEffect(() => {
     if (router.pathname === '/admin' && routerPath === router.pathname) {
       setDisplayChildren(children);
     }
