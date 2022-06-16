@@ -130,12 +130,13 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
           content="An admin dashboard doesn't really need a description anyway"
           key="description"
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/*I don't know why, but during production a refresh will cause the fonts on the admin page to revert to fallback webfont.
+          In fact, the external font itself just disappears from the head altogether, and client-side page transitions afterwards
+          will also not have the correct fonts. So even though it hurts performance, I'm adding the google font here explicitly */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Merienda&family=Mulish:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
-        ></link>
+        />
       </Head>
       <TitleSection darkBg title="Admin dashboard">
         <Tabs
