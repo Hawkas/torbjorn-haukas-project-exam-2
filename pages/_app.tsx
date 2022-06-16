@@ -67,17 +67,17 @@ export default function MyApp(props: AppPropsWithAuth) {
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={holidazeTheme}>
-        <SessionProvider session={session}>
-          <ModalsProvider
-            modals={{
-              contact: FormModal,
-              signIn: FormModal,
-              booking: FormModal,
-              create: FormModal,
-            }}
-            modalProps={formModalSettings}
-          >
-            <NotificationsProvider>
+        <ModalsProvider
+          modals={{
+            contact: FormModal,
+            signIn: FormModal,
+            booking: FormModal,
+            create: FormModal,
+          }}
+          modalProps={formModalSettings}
+        >
+          <NotificationsProvider>
+            <SessionProvider session={session}>
               <Layout {...pageProps}>
                 {Component.auth ? (
                   <Auth>
@@ -87,9 +87,9 @@ export default function MyApp(props: AppPropsWithAuth) {
                   <Component {...pageProps} />
                 )}
               </Layout>
-            </NotificationsProvider>
-          </ModalsProvider>
-        </SessionProvider>
+            </SessionProvider>
+          </NotificationsProvider>
+        </ModalsProvider>
       </MantineProvider>
     </>
   );
