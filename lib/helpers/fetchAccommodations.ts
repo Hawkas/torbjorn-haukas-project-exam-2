@@ -186,7 +186,7 @@ export const everythingFetch = async () => {
       result.data.attributes;
     const cleanAccom = removeFluff(accommodations);
     const bookingData: BookingCleaned[] | [] =
-      bookings.data.length > 0
+      bookings.data && bookings.data.length > 0
         ? bookings.data.map((item) => {
             const {
               id,
@@ -209,7 +209,7 @@ export const everythingFetch = async () => {
           })
         : [];
     const cleanMessages: MessageClean[] | [] =
-      messages.data.length > 0
+      messages.data && messages.data.length > 0
         ? messages.data.map((item) => {
             const {
               attributes: { updatedAt, publishedAt, createdAt, ...cleanMessage },
