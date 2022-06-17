@@ -4,6 +4,7 @@ export interface MessageOut {
   subject: string;
   message: string;
 }
+
 export interface MessageInc {
   data: MessageIncSingle[];
 }

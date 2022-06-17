@@ -72,15 +72,16 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 export function SearchBar({ data, noLabel }: DataProps & { noLabel?: boolean }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const autoComplete = data
-    ? data.map((item) => ({
-        image: item.images.cover.thumbnail!.src,
-        value: item.name,
-        location: item.location,
-        type: item.type,
-        slug: item.slug,
-      }))
-    : [{ value: '' }];
+  const autoComplete =
+    data && data.length > 0
+      ? data.map((item) => ({
+          image: item.images.cover.thumbnail!.src,
+          value: item.name,
+          location: item.location,
+          type: item.type,
+          slug: item.slug,
+        }))
+      : [];
   const { classes, cx } = useSearchStyles({ noLabel });
   const {
     classes: { subHeader },

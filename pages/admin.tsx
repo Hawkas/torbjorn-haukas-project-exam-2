@@ -130,9 +130,6 @@ export default function AdminDashboard({ data, bookings, messageData }: AdminPro
           content="An admin dashboard doesn't really need a description anyway"
           key="description"
         />
-        {/*I don't know why, but during production a refresh will cause the fonts on the admin page to revert to fallback webfont.
-          In fact, the external font itself just disappears from the head altogether, and client-side page transitions afterwards
-          will also not have the correct fonts. So even though it hurts performance, I'm adding the google font here explicitly */}
       </Head>
       <TitleSection darkBg title="Admin dashboard">
         <Tabs

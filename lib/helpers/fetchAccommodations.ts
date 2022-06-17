@@ -64,7 +64,7 @@ export const rawAccommodations = async () => {
 // Boilerplate warning.
 
 export function removeFluff(rawData: Accommodations): AccommodationClean[] | null {
-  if (!rawData.data || rawData.data.length < 1) return null;
+  if (!rawData.data || !(rawData.data.length > 0)) return null;
   const mappedData = rawData.data.map((item) => {
     // Unpackage all the stuff that's already easy to reach.
     const {
@@ -178,6 +178,7 @@ export const everythingFetch = async () => {
       method: 'GET',
       headers: { Authorization: `Bearer ${process.env.API_ADMIN_TOKEN}` },
     });
+
     const {
       accommodations,
       messages,
@@ -196,14 +197,15 @@ export const everythingFetch = async () => {
                 publishedAt,
                 firstName,
                 lastName,
-                // Fallback in case database has a hiccup and doesn't create a relation
-                accommodation: { data: relation = { attributes: { name: 'Unknown' } } },
+                accommodation: { data: relation },
                 ...rest
               },
             } = item;
+            // Fallback in case database has a hiccup and doesn't create a relation
+            const fallBack = { attributes: { name: 'Unknown' } };
             const {
               attributes: { name: accommodation },
-            } = relation;
+            } = relation ?? fallBack;
             const name = `${firstName} ${lastName}`;
             return { id: id.toString(), name, accommodation, ...rest };
           })
