@@ -18,28 +18,13 @@ If you decide to install this project, bear in mind that it relies heavily on my
 - `API_ADMIN_TOKEN` - ^^^^^^^
 
 
-## npm scripts
 
-### Build and dev scripts
-
-- `dev` – start dev server
-- `build` – bundle application for production
-- `export` – exports static website to `out` folder
-- `analyze` – analyzes application bundle with [@next/bundle-analyzer](https://www.npmjs.com/package/@next/bundle-analyzer)
-
-### Testing scripts
-
-- `typecheck` – checks TypeScript types
-- `lint` – runs ESLint
-- `prettier:check` – checks files with Prettier
-
-
-### Other scripts
-
-- `prettier:write` – formats all files with Prettier
-
-## How to use
-Download all the files and install by using the terminal
+## Getting started
+1. Clone the repo
+```git
+git clone git@github.com:Hawkas/torbjorn-haukas-project-exam-2.git
+```
+2. Install dependencies
 ```node
 npm install
 ``` 
@@ -47,12 +32,11 @@ npm install
 yarn install
 ```
 
-Run the project on localhost 3000 
+3. Run the app
 ```node
 npm run dev
 ```
 ```yarn
 yarn dev
 ```
-## Admin Access
-To access the username and password for the login and admin section please send an email to torbjornhaukas@gmail.com and request for admin access.
+
