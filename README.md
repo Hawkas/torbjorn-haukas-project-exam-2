@@ -8,6 +8,16 @@ This project relies on icons I've purchased from FontAwesome. As such, it will n
 
 But you can easily do so by using search and replace in VSCode.
 
+If you decide to install this project, bear in mind that it relies heavily on my public API, which of course you wouldn't be able to access. If you want to hook up your own API, you'll need to fill out these environment variables:
+
+- `FONTAWESOME_NPM_AUTH_TOKEN` - Will prevent installing dependencies if missing. A complete blockage unless you replace it.
+- `NEXT_PUBLIC_API_URL` - URL to an API. All my server-side API calls use this.
+- `NEXT_PUBLIC_LIVE_API`- URL to the same API. All my client-side API calls use this.
+- `NEXT_PUBLIC_GOOGLE_API_KEY` - google maps, for geocoding and map.
+- `API_PUBLIC_TOKEN` - API tokens used when doing server-side calls.
+- `API_ADMIN_TOKEN` - ^^^^^^^
+
+
 ## npm scripts
 
 ### Build and dev scripts
